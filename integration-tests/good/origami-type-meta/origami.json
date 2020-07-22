@@ -1,0 +1,12 @@
+{
+        "description": "Origami meta",
+        "keywords": [],
+        "origamiType": "meta",
+        "origamiVersion": 1,
+        "support": "https://github.com/Financial-Times/origami-meta/issues",
+        "supportContact": {
+                "email": "origami.support@ft.com",
+                "slack": "financialtimes/origami-support"
+        },
+        "supportStatus": "active"
+}

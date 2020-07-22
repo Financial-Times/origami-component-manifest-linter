@@ -1,0 +1,18 @@
+{
+	"description": "blob",
+	"keywords": ["blob"],
+	"origamiType": "module",
+	"origamiCategory": "components",
+	"origamiVersion": 1,
+	"brands": ["master"],
+	"support": "https://github.com/Financial-Times/origami-component/issues",
+	"supportContact": {
+		"email": "origami.support@ft.com",
+		"slack": "financialtimes/#origami-support"
+	},
+	"supportStatus": "experimental",
+	"browserFeatures": {
+		"required": ["IntersectionObserver"],
+		"optional": ["IntersectionObserverEntry"]
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"description": "big horsey",
+	"keywords": [ "big", "horsey" ],
+	"origamiType": "big horsey",
+	"origamiVersion": 1,
+	"support": "https://github.com/Financial-Times/o-big-horsey/issues",
+	"supportContact": {
+		"email": "origami.support@ft.com",
+		"slack": "financialtimes/origami-support"
+	},
+	"supportStatus": "active"
+}

@@ -1,0 +1,42 @@
+{
+	"name": "origami-component-manifest-validator",
+	"version": "1.0.0",
+	"description": "",
+	"main": "cjs/index.js",
+	"scripts": {
+		"build": "tsc",
+		"start": "tsc -w",
+		"pretty": "prettier --write src/*.ts src/**/*.ts",
+		"test": "tap"
+	},
+	"keywords": [],
+	"author": "chee <chee@snoot.club>",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^13.13.5",
+		"prettier": "^2.0.5",
+		"source-map-support": "^0.5.19",
+		"tap": "^14.10.7",
+		"typescript": "^3.9.2"
+	},
+	"dependencies": {
+		"@types/json-to-ast": "^2.1.1",
+		"@types/mdast": "^3.0.3",
+		"@types/tap": "^14.10.0",
+		"@types/unist": "^2.0.3",
+		"chalk": "^4.0.0",
+		"expect": "^26.0.1",
+		"json-path-position-info": "0.0.2",
+		"json-to-ast": "^2.1.0",
+		"just-typeof": "^2.0.0",
+		"lens.ts": "^0.5.1",
+		"lines-and-columns": "^1.1.6",
+		"monocle-ts": "^2.1.0",
+		"object-walk": "^0.1.1",
+		"optics-ts": "^1.1.0",
+		"polyfill-library": "^3.89.4",
+		"purify-ts": "^0.15.1",
+		"unist-util-visit": "^2.0.2",
+		"walk-object": "^4.0.0"
+	}
+}

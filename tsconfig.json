@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"outDir": "cjs",
+		"lib": ["es2019"],
+		"module": "commonjs",
+		"strict": true,
+		"noImplicitReturns": true,
+		"target": "ES2019",
+		"inlineSourceMap": true
+	},
+	"include": ["./src/**/*"]
+}

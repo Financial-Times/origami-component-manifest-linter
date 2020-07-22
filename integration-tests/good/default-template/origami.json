@@ -1,0 +1,26 @@
+{
+	"description": "defaults",
+	"keywords": [ "defaults" ],
+	"origamiType": "module",
+	"origamiCategory": "primitives",
+	"origamiVersion": 1,
+	"brands": [
+		"master"
+	],
+	"support": "https://github.com/Financial-Times/oh-yeah/issues",
+	"supportContact": {
+		"email": "origami.support@ft.com",
+		"slack": "financialtimes/origami-support"
+	},
+	"supportStatus": "active",
+	"demosDefaults": {
+		"template": "demos/src/default.mustache"
+	},
+	"demos": [
+		{
+			"title": "I have no template",
+			"name": "templateless",
+			"description": "I expect demoDefaults to provide me with a template."
+		}
+	]
+}

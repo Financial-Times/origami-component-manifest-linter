@@ -1,0 +1,12 @@
+{
+	"description": "order pizza from your terminal",
+	"keywords": [],
+	"origamiType": "cli",
+	"origamiVersion": 1,
+	"support": "https://github.com/Financial-Times/origami-delivery-kangaroo-cli/issues",
+	"supportContact": {
+		"email": "origami.support@ft.com",
+		"slack": "financialtimes/origami-support"
+	},
+	"supportStatus": "active"
+}
