@@ -164,7 +164,7 @@ export interface Name extends Node, Value<string> {
 	type: "name"
 }
 
-let name: NodeCreator<Required<Name>> = ({getBower, getNpm, getOrigami}) => {
+let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 	let problems = {
 		type: NODE_TYPE.PROBLEMS,
 		children: [] as Problem[],
@@ -314,8 +314,6 @@ export interface OrigamiType extends Node {
 }
 
 let origamiType: NodeCreator<Required<OrigamiType>> = ({
-	getBower,
-	getNpm,
 	getOrigami,
 }) => {
 	let {value: origamiType, source: origamiTypeSource} = getOrigami(
@@ -390,8 +388,6 @@ export let BRAND_NAME = {
 	INTERNAL: "internal",
 	WHITELABEL: "whitelabel",
 } as const
-
-let BRAND_VALUES = Object.values(BRAND_NAME)
 
 export type BrandName = typeof BRAND_NAME[keyof typeof BRAND_NAME]
 
