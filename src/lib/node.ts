@@ -895,6 +895,8 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 			if (dependencies.value.every(s => typeof s == "string")) {
 				node.dependencies = {
 					type: "demo dependencies",
+					// why does typescript not know this is
+					// an array of strings?
 					value: dependencies.value as string[],
 					source: dependencies.source,
 				}
