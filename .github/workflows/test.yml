@@ -1,4 +1,4 @@
-name: Test with node LTS and current
+name: Install build and test on current and latest LTS node.js
 on: [pull_request]
 jobs:
   build:
@@ -13,4 +13,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: make ci
+    - run: npm run build
+    - run: npm run test
