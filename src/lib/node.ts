@@ -77,18 +77,6 @@ interface NodeCreatorOptions {
 	prefix?: GetPath
 }
 
-type ValueNodeCreator<Value> = (
-	nodeType: NodeType,
-	value: JsonValueU,
-	source: Source
-) => Value
-
-type AsyncValueNodeCreator<Value> = (
-	nodeType: NodeType,
-	value: JsonValueU,
-	source: Source
-) => Promise<Value>
-
 type NodeCreator<Node> = (options: NodeCreatorOptions) => Node
 type AsyncNodeCreator<Node> = (options: NodeCreatorOptions) => Promise<Node>
 
@@ -478,8 +466,6 @@ export interface Category extends Node {
 }
 
 let category: NodeCreator<Required<Category>> = ({
-	getBower,
-	getNpm,
 	getOrigami,
 }) => {
 	let {value: category, source} = getOrigami("origamiCategory")
@@ -522,8 +508,6 @@ export interface Status extends Node {
 }
 
 let status: NodeCreator<Required<Status>> = ({
-	getBower,
-	getNpm,
 	getOrigami,
 }) => {
 	let {value: status, source} = getOrigami("supportStatus")
@@ -1445,30 +1429,6 @@ let getPathType = async (path: string): Promise<PathType> => {
 			// this could mean we don't have permissions, or that it's not there
 			return "unavailable"
 		})
-}
-
-let path: AsyncValueNodeCreator<Required<Node>> = async function path(
-	nodeType,
-	path,
-	source
-): Promise<Required<Node>> {
-	let node = {
-		type: nodeType,
-		source,
-		value: path,
-	}
-
-	if (typeof path != "string") {
-		return expected.string(path, source).problem()
-	}
-
-	return getPathType(path).then(type => {
-		if (type == "file") {
-			return node
-		} else {
-			return expected.file(path, source, `is ${type}`).problem()
-		}
-	})
 }
 
 interface JavaScriptEntry extends Node, Value<string> {
