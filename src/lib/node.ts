@@ -1,5 +1,3 @@
-// TODO replace all ` as ` casting with Partial<>
-
 import type * as Manifest from "./manifest"
 import get, {Source, GetPath} from "./get"
 import type {Get} from "./get"
