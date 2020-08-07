@@ -631,12 +631,10 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 
 	let problems = []
 
-	let node = {
-		source,
-		type: "browser features",
+	let node: Partial<BrowserFeatures> = {
 		optional: [],
 		required: [],
-	} as BrowserFeatures
+	}
 
 	for (let key in browserFeatures) {
 		if (key == "optional" || key == "required") {
@@ -656,7 +654,7 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 					}
 				})
 			} else {
-				return expected.array(list, source).problem()
+				problems.push(expected.array(list, source).problem())
 			}
 		} else {
 			problems.push(
@@ -679,7 +677,12 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 			children: problems,
 		}
 	} else {
-		return node
+		return {
+			source,
+			type: "browser features",
+			optional: node.optional || [],
+			required: node.required || [],
+		}
 	}
 }
 
@@ -941,7 +944,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 			type: "demo description",
 			value: description.value,
 			source: description.source,
-		} as Value<String>
+		}
 	} else {
 		node.description = expected
 			.string(description.value, description.source)
@@ -1527,9 +1530,10 @@ export async function createComponentNode(
 	let bowerManifest: Manifest.Bower
 	let origamiManifest: Manifest.Origami
 	let npmManifest: Manifest.Npm | false = false
-	let component = {
-		type: "component",
-	} as Component
+	let component: Partial<Component> = {
+		type: "component"
+	}
+	component.opinions = [] as Opinion[]
 
 	let bowerJson: string
 	let origamiJson: string
@@ -1662,5 +1666,30 @@ export async function createComponentNode(
 
 	component.demos = await demos(options)
 
-	return component
+	return {
+		type: "component",
+		source: {
+			file: "origami.json",
+			path: [],
+			value: origamiJson
+		},
+		opinions: component.opinions,
+		origamiVersion: component.origamiVersion,
+		origamiType: component.origamiType,
+		brands: component.brands,
+		category: component.category,
+		name: component.name,
+		description: component.description,
+		status: component.status,
+		keywords: component.keywords,
+		browserFeatures: component.browserFeatures,
+		ci: component.ci || empty({
+			file: "origami.json",
+			path: ["ci"],
+			value: undefined
+		}),
+		entries: component.entries,
+		support: component.support,
+		demos: component.demos,
+	}
 }
