@@ -1307,7 +1307,7 @@ export interface Component extends Node {
 		slack: Required<SlackContact>
 	}
 	demos: Optional<Demos>
-	dependencies: {}
+	//dependencies: {}
 	opinions: Opinion[]
 }
 
