@@ -29,7 +29,6 @@ export interface Origami extends JsonObject {
 		sass: string
 		js: string
 		data: string | {[key: string]: string}
-		// TODO a space separated string
 		documentClasses: string
 		dependencies: string[]
 	}
