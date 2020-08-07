@@ -107,45 +107,21 @@ function empty(source: Source): Empty {
 	}
 }
 
-let string: ValueNodeCreator<Required<Value<string>>> = (
-	nodeType,
-	value,
-	source
-) => {
-	if (typeof value == "string") {
-		return {
-			type: nodeType,
-			source,
-			value,
-		}
-	} else {
-		return expected.type(["string"], value, source).problem()
-	}
-}
-
-let number: ValueNodeCreator<Required<Value<number>>> = (
-	nodeType,
-	value,
-	source
-) => {
-	if (typeof value == "number") {
-		return {
-			type: nodeType,
-			source,
-			value,
-		}
-	} else {
-		return expected.type(["number"], value, source).problem()
-	}
-}
-
 export interface OrigamiVersion extends Node, Value<number> {
 	type: "origami version"
 }
 
 let origamiVersion: NodeCreator<Required<OrigamiVersion>> = ({getOrigami}) => {
 	let {value, source} = getOrigami("origamiVersion")
-	return number(NODE_TYPE.ORIGAMI_VERSION, value, source) as OrigamiVersion
+	if (typeof value == "number") {
+		return {
+			type: "origami version",
+			source,
+			value,
+		}
+	} else {
+		return expected.number(value, source).problem()
+	}
 }
 
 export interface Information extends Node {
@@ -406,7 +382,11 @@ let keywords: NodeCreator<Required<Keywords>> = ({getOrigami}) => {
 				index
 			)
 			if (typeof keyword == "string") {
-				node.children.push(string("keyword", keyword, keywordSource) as Keyword)
+				node.children.push({
+					type: "keyword",
+					value: keyword,
+					source: keywordSource,
+				})
 			} else {
 				node.children.push(expected.string(keyword, keywordSource).problem())
 			}
@@ -457,7 +437,13 @@ let brands: NodeCreator<Optional<Brands>> = ({getOrigami, prefix}) => {
 		brands.forEach((_, index) => {
 			let {value: brand, source: brandSource} = getOrigami("brands", index)
 			if (typeof brand == "string") {
-				node.children.push(string("brand", brand, brandSource) as Brand)
+				node.children.push(
+					node.children.push({
+						type: "brand",
+						value: brand,
+						source: brandSource,
+					})
+				)
 			} else {
 				node.children.push(expected.string(brand, brandSource).problem())
 			}
@@ -680,11 +666,16 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 
 			if (Array.isArray(list)) {
 				node[key] = list.map((element, index) => {
-					return string(
-						"browser feature",
-						element,
-						getOrigami("browserFeatures", key, index).source
-					) as Required<BrowserFeature>
+					let source = getOrigami("browserFeatures", key, index).source
+					if (typeof element == "string") {
+						return {
+							type: "browser feature",
+							value: element,
+							source,
+						}
+					} else {
+						return expected.string(element, source).problem()
+					}
 				})
 			} else {
 				return expected.array(list, source).problem()
@@ -731,7 +722,6 @@ export interface DemoSass extends Node, Value<string> {
 	type: "demo sass"
 }
 
-// TODO read the file into this if it's a file
 export interface DemoData extends Node {
 	type: "demo data"
 	data: {[key: string]: any}
@@ -904,11 +894,11 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 
 	if (documentClasses.value) {
 		if (typeof documentClasses.value == "string") {
-			node.documentClasses = string(
-				"demo document classes",
-				documentClasses.value,
-				documentClasses.source
-			)
+			node.documentClasses = {
+				type: "demo document classes",
+				value: documentClasses.value,
+				source: documentClasses.source,
+			}
 		} else {
 			node.documentClasses = expected
 				.string(documentClasses.value, documentClasses.source)
@@ -953,27 +943,25 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 	// TODO this and the 3 after it are the same
 	let title = getOrigami(...prefix, "title")
 	if (typeof title.value == "string") {
-		node.title = string("demo title", title.value, title.source) as Value<
-			String
-		>
+		node.title = {type: "demo title", value: title.value, source: title.source}
 	} else {
 		node.title = expected.string(title.value, title.source).problem()
 	}
 
 	let name = getOrigami(...prefix, "name")
 	if (typeof name.value == "string") {
-		node.name = string("demo name", name.value, name.source) as Value<String>
+		node.name = {type: "demo name", value: name.value, source: name.source}
 	} else {
 		node.name = expected.string(name.value, name.source).problem()
 	}
 
 	let description = getOrigami(...prefix, "description")
 	if (typeof description.value == "string") {
-		node.description = string(
-			"demo description",
-			description.value,
-			description.source
-		) as Value<String>
+		node.description = {
+			type: "demo description",
+			value: description.value,
+			source: description.source,
+		} as Value<String>
 	} else {
 		node.description = expected
 			.string(description.value, description.source)
@@ -1232,11 +1220,11 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 
 	if (documentClasses.value) {
 		if (typeof documentClasses.value == "string") {
-			node.documentClasses = string(
-				"demo document classes",
-				documentClasses.value,
-				documentClasses.source
-			)
+			node.documentClasses = {
+				type: "demo document classes",
+				value: documentClasses.value,
+				source: documentClasses.source,
+			}
 		} else {
 			node.documentClasses = expected
 				.string(documentClasses.value, documentClasses.source)
