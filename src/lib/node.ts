@@ -421,13 +421,11 @@ let brands: NodeCreator<Optional<Brands>> = ({getOrigami, prefix}) => {
 		brands.forEach((_, index) => {
 			let {value: brand, source: brandSource} = getOrigami("brands", index)
 			if (typeof brand == "string") {
-				node.children.push(
-					node.children.push({
-						type: "brand",
-						value: brand,
-						source: brandSource,
-					})
-				)
+				node.children.push({
+					type: "brand",
+					value: brand,
+					source: brandSource,
+				})
 			} else {
 				node.children.push(expected.string(brand, brandSource).problem())
 			}
