@@ -10,7 +10,15 @@ process.on("unhandledRejection", error => {
 })
 
 import {EOL} from "os"
-import {createComponentNode, Problem, Opinion} from "./lib/node"
+import {
+	createComponentNode,
+	Problem,
+	Opinion,
+	Component,
+	Node,
+	NodeType,
+	Parent,
+} from "./lib/node"
 
 import {promises as fs} from "fs"
 import * as chalk from "chalk"
@@ -64,7 +72,6 @@ function print(problem: Problem | Opinion, cwd: string) {
 
 	let e = problem.expectation
 
-	// TODO deal with "message" expectations
 	switch (e.type) {
 		case "valueOf": {
 			write(
@@ -108,6 +115,63 @@ function print(problem: Problem | Opinion, cwd: string) {
 	write("\n\n")
 }
 
+type SpecFn = (n: Node) => boolean
+
+export function* getProblemsAndOpinions(
+	component: Component,
+	spec?: NodeType | SpecFn
+): Generator<Opinion | Problem, void, undefined> {
+	let test: SpecFn
+	if (typeof spec == "string") {
+		test = (node: Node) => node.type == spec
+	} else if (typeof spec == "function") {
+		test = spec
+	} else {
+		test = (_node: Node) => true
+	}
+
+	if (test(component)) {
+		yield* component.opinions
+	}
+
+	function* testNode(
+		node: Node | Parent<Node>
+	): Generator<Opinion | Problem, void, undefined> {
+		if (test(node)) {
+			if (node.type == "problem") {
+				// WHY DO I HAVE TO DO THIS
+				yield node as Problem
+			} else if (node.opinions) {
+				yield* node.opinions
+			} else if ("children" in node) {
+				for (let child of node.children) {
+					yield* testNode(child)
+				}
+			}
+		}
+	}
+
+	for (let node of [
+		component.origamiVersion,
+		component.entries.javascript,
+		component.entries.sass,
+		component.support.url,
+		component.support.email,
+		component.support.slack,
+		component.origamiType,
+		component.brands,
+		component.category,
+		component.name,
+		component.description,
+		component.status,
+		component.keywords,
+		component.browserFeatures,
+		component.ci,
+	]) {
+		yield* testNode(node)
+	}
+}
+
 void (async function () {
 	let cwd = "./"
 	let dir = process.argv[2]
@@ -132,19 +196,12 @@ void (async function () {
 	if (component.type == "problem") {
 		print(component, cwd)
 		process.exit(131)
+	} else if (component.type == "problems") {
+		component.children.map(problem => print(problem, cwd))
+		process.exit(131)
 	} else {
-		// TODO write an actual walker
-		walkObject(component, (node: any) => {
-			if (
-				node &&
-				node.type &&
-				(node.type == "problem" || node.type == "opinion")
-			) {
-				print(node, cwd)
-			}
-		})
+		for (let problemOrOpinion of getProblemsAndOpinions(component)) {
+			print(problemOrOpinion, cwd)
+		}
 	}
 })()
-
-// @ts-ignore
-import * as walkObject from "object-walk"

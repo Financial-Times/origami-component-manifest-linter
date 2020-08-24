@@ -311,9 +311,7 @@ export interface OrigamiType extends Node {
 	value: OrigamiTypeValue
 }
 
-let origamiType: NodeCreator<Required<OrigamiType>> = ({
-	getOrigami,
-}) => {
+let origamiType: NodeCreator<Required<OrigamiType>> = ({getOrigami}) => {
 	let {value: origamiType, source: origamiTypeSource} = getOrigami(
 		"origamiType"
 	)
@@ -457,9 +455,7 @@ export interface Category extends Node {
 	value: CategoryName
 }
 
-let category: NodeCreator<Required<Category>> = ({
-	getOrigami,
-}) => {
+let category: NodeCreator<Required<Category>> = ({getOrigami}) => {
 	let {value: category, source} = getOrigami("origamiCategory")
 
 	if (typeof category == "string" && CATEGORY_VALUES.includes(category)) {
@@ -499,9 +495,7 @@ export interface Status extends Node {
 	value: StatusValue
 }
 
-let status: NodeCreator<Required<Status>> = ({
-	getOrigami,
-}) => {
+let status: NodeCreator<Required<Status>> = ({getOrigami}) => {
 	let {value: status, source} = getOrigami("supportStatus")
 
 	if (typeof status == "string" && STATUS_VALUES.includes(status)) {
@@ -1529,7 +1523,7 @@ export async function createComponentNode(
 	let origamiManifest: Manifest.Origami
 	let npmManifest: Manifest.Npm | false = false
 	let component: Partial<Component> = {
-		type: "component"
+		type: "component",
 	}
 	component.opinions = [] as Opinion[]
 
@@ -1618,8 +1612,22 @@ export async function createComponentNode(
 
 	let thisManifestKeys = Object.keys(origamiManifest)
 
-	for (let key in thisManifestKeys) {
+	for (let key of thisManifestKeys) {
 		if (!validOrigamiKeys.includes(key)) {
+			component.opinions.push({
+				type: "opinion",
+				message: `Invalid root-level key found: ${key}`,
+				expectation: {
+					type: "memberOf",
+					list: validOrigamiKeys,
+					received: key,
+				},
+				source: {
+					file: "package.json",
+					path: [key],
+					value: null,
+				},
+			})
 		}
 	}
 
@@ -1669,7 +1677,7 @@ export async function createComponentNode(
 		source: {
 			file: "origami.json",
 			path: [],
-			value: origamiJson
+			value: origamiJson,
 		},
 		opinions: component.opinions,
 		origamiVersion: component.origamiVersion,
@@ -1681,11 +1689,13 @@ export async function createComponentNode(
 		status: component.status,
 		keywords: component.keywords,
 		browserFeatures: component.browserFeatures,
-		ci: component.ci || empty({
-			file: "origami.json",
-			path: ["ci"],
-			value: undefined
-		}),
+		ci:
+			component.ci ||
+			empty({
+				file: "origami.json",
+				path: ["ci"],
+				value: undefined,
+			}),
 		entries: component.entries,
 		support: component.support,
 		demos: component.demos,
