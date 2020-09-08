@@ -1,0 +1,17 @@
+{
+	"problems": {},
+	"opinions": {
+		"origami-type-is-module": {
+			"line": 4,
+			"column": 17,
+			"file": "origami.json",
+			"path": ["origamiType"]
+		},
+		"non-o-prefix": {
+			"line": 2,
+			"column": 10,
+			"file": "bower.json",
+			"path": ["name"]
+		}
+	}
+}

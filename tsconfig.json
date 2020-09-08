@@ -6,7 +6,8 @@
 		"strict": true,
 		"noImplicitReturns": true,
 		"target": "ES2019",
-		"inlineSourceMap": true
+		"inlineSourceMap": true,
+		"allowJs": true
 	},
 	"include": ["./src/**/*"]
 }

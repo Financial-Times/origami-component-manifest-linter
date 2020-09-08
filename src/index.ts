@@ -175,36 +175,40 @@ export function* getProblemsAndOpinions(
 	}
 }
 
-void (async function () {
-	let cwd = "./"
-	let dir = process.argv[2]
-	if (dir) {
-		if (!dir.endsWith("/")) {
-			dir += "/"
+
+// we run the command line interface only if this file is being executed directly
+if (require.main === module) {
+	void (async function () {
+		let cwd = "./"
+		let dir = process.argv[2]
+		if (dir) {
+			if (!dir.endsWith("/")) {
+				dir += "/"
+			}
+			process.chdir(dir)
+			cwd = dir
 		}
-		process.chdir(dir)
-		cwd = dir
-	}
 
-	let option = process.argv[3]
-	let read = (path: string) => fs.readFile(resolvePath(path), "utf-8")
+		let option = process.argv[3]
+		let read = (path: string) => fs.readFile(resolvePath(path), "utf-8")
 
-	let component = await createComponentNode(read)
+		let component = await createComponentNode(read)
 
-	if (option == "print") {
-		process.stdout.write(JSON.stringify(component, null, "\t") + EOL)
-		process.exit(0)
-	}
-
-	if (component.type == "problem") {
-		print(component, cwd)
-		process.exit(131)
-	} else if (component.type == "problems") {
-		component.children.map(problem => print(problem, cwd))
-		process.exit(131)
-	} else {
-		for (let problemOrOpinion of getProblemsAndOpinions(component)) {
-			print(problemOrOpinion, cwd)
+		if (option == "opm") {
+			process.stdout.write(JSON.stringify(component, null, "\t") + EOL)
+			process.exit(0)
 		}
-	}
-})()
+
+		if (component.type == "problem") {
+			print(component, cwd)
+			process.exit(131)
+		} else if (component.type == "problems") {
+			component.children.map(problem => print(problem, cwd))
+			process.exit(131)
+		} else {
+			for (let problemOrOpinion of getProblemsAndOpinions(component)) {
+				print(problemOrOpinion, cwd)
+			}
+		}
+	})()
+}
