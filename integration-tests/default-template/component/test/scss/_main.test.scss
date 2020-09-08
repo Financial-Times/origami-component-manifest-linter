@@ -1,0 +1,18 @@
+@include describe('defaultTemplate mixins') {
+	@include describe('defaultTemplate') {
+		@include it('does something') {
+			@include assert() {
+				@include output($selector: false) {
+					.test-mixin {
+						@include defaultTemplate();
+					}
+				}
+				@include expect($selector: false) {
+					.test-mixin .default-template {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+}
