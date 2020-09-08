@@ -44,6 +44,7 @@ function print(problem: Problem | Opinion, cwd: string) {
 		write(chalk.yellowBright(problem.source.start.column))
 	}
 	write("\n")
+
 	if (problem.type == "problem") {
 		write(chalk.red.bold("oh no "))
 	} else if (problem.type == "opinion") {
@@ -109,8 +110,10 @@ function print(problem: Problem | Opinion, cwd: string) {
 
 	let help = helpUrl(problem)
 	if (help) {
-		write("\n" + chalk.magenta("check " + help + " for help"))
+		write("\n" + chalk.magenta("check " + help + " for help") + "\n")
 	}
+
+	write(chalk.grey(problem.code))
 
 	write("\n\n")
 }
