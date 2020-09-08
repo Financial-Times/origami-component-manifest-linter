@@ -106,12 +106,16 @@ let origamiVersion: NodeCreator<Required<OrigamiVersion>> = ({getOrigami}) => {
 			value,
 		}
 	} else {
-		return expected.number(value, source).problem()
+		return expected
+			.number(value, source)
+			.problem("origami-version-not-a-number")
 	}
 }
 
 export interface Information extends Node {
 	expectation: Expectation.Any
+	/** the error code */
+	code: string
 	/** an extra informative message */
 	message?: string
 }
@@ -127,12 +131,14 @@ export interface Problems extends Parent<Problem>, Node {
 export function problem(
 	expectation: Expectation.Any,
 	source: Source,
+	code: string,
 	message?: string
 ): Problem {
 	return {
 		type: "problem",
 		expectation,
 		source,
+		code,
 		message,
 	}
 }
@@ -144,12 +150,14 @@ export interface Opinion extends Information, Node {
 export function opinion(
 	expectation: Expectation.Any,
 	source: Source,
+	code: string,
 	message?: string
 ): Opinion {
 	return {
 		type: "opinion",
 		expectation,
 		source,
+		code,
 		message,
 	}
 }
@@ -192,7 +200,7 @@ let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 							bowerNameSource,
 							"component names should begin with o-"
 						)
-						.opinion()
+						.opinion("non-o-prefix")
 				)
 			}
 
@@ -205,7 +213,9 @@ let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 					return node
 				} else {
 					problems.children.push(
-						expected.value(bowerName, npmName, npmNameSource).problem()
+						expected
+							.value(bowerName, npmName, npmNameSource)
+							.problem("bower-npm-names-no-match")
 					)
 				}
 			} else {
@@ -220,12 +230,12 @@ let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 						bowerNameSource,
 						lowerCaseAsciiMessage
 					)
-					.problem()
+					.problem("name-not-ascii")
 			)
 		}
 	} else {
 		problems.children.push(
-			expected.type(["string"], bowerName, bowerNameSource).problem()
+			expected.string(bowerName, bowerNameSource).problem("no-bower-name")
 		)
 	}
 
@@ -268,7 +278,7 @@ let description: NodeCreator<Required<Description>> = ({
 							bowerDescriptionSource,
 							"origami.json and bower.json descriptions should be the same"
 						)
-						.opinion()
+						.opinion("bower-origami-description-no-match")
 				)
 			}
 		}
@@ -288,7 +298,7 @@ let description: NodeCreator<Required<Description>> = ({
 								npmDescriptionSource,
 								"origami.json and package.json descriptions should be the same"
 							)
-							.opinion()
+							.opinion("npm-origami-description-no-match")
 					)
 				}
 			}
@@ -296,7 +306,9 @@ let description: NodeCreator<Required<Description>> = ({
 
 		return node
 	} else {
-		return expected.string(description, descriptionSource).problem()
+		return expected
+			.string(description, descriptionSource)
+			.problem("description-not-string")
 	}
 }
 
@@ -330,13 +342,15 @@ let origamiType: NodeCreator<Required<OrigamiType>> = ({getOrigami}) => {
 			node.opinions = [
 				expected
 					.value("component", "module", origamiTypeSource, "can be component")
-					.opinion(),
+					.opinion("origami-type-is-module"),
 			]
 		}
 
 		return node
 	} else {
-		return expected.member(validTypes, origamiType, origamiTypeSource).problem()
+		return expected
+			.member(validTypes, origamiType, origamiTypeSource)
+			.problem("origami-type-not-valid")
 	}
 }
 
@@ -370,12 +384,16 @@ let keywords: NodeCreator<Required<Keywords>> = ({getOrigami}) => {
 					source: keywordSource,
 				})
 			} else {
-				node.children.push(expected.string(keyword, keywordSource).problem())
+				node.children.push(
+					expected.string(keyword, keywordSource).problem("keyword-not-string")
+				)
 			}
 		})
 		return node
 	} else {
-		return expected.array(keywords, keywordsSource).problem()
+		return expected
+			.array(keywords, keywordsSource)
+			.problem("keywords-not-array")
 	}
 }
 
@@ -423,7 +441,9 @@ let brands: NodeCreator<Optional<Brands>> = ({getOrigami, prefix}) => {
 					source: brandSource,
 				})
 			} else {
-				node.children.push(expected.string(brand, brandSource).problem())
+				node.children.push(
+					expected.string(brand, brandSource).problem("brand-not-string")
+				)
 			}
 		})
 
@@ -431,7 +451,7 @@ let brands: NodeCreator<Optional<Brands>> = ({getOrigami, prefix}) => {
 	} else if (brands == null) {
 		return empty(brandsSource)
 	} else {
-		return expected.array(brands, brandsSource).problem()
+		return expected.array(brands, brandsSource).problem("brands-not-array")
 	}
 }
 
@@ -469,7 +489,9 @@ let category: NodeCreator<Required<Category>> = ({getOrigami}) => {
 			value: category,
 		}
 	} else {
-		return expected.member(CATEGORY_VALUES, category, source).problem()
+		return expected
+			.member(CATEGORY_VALUES, category, source)
+			.problem("category-not-valid")
 	}
 }
 
@@ -510,7 +532,9 @@ let status: NodeCreator<Required<Status>> = ({getOrigami}) => {
 			value: status,
 		}
 	} else {
-		return expected.member(STATUS_VALUES, status, source).problem()
+		return expected
+			.member(STATUS_VALUES, status, source)
+			.problem("status-not-valid")
 	}
 }
 
@@ -534,7 +558,7 @@ export interface SlackContact extends Node {
 let supportUrl: NodeCreator<Required<Url>> = ({getOrigami}) => {
 	let {value: support, source} = getOrigami("support")
 	if (typeof support != "string") {
-		return expected.string(support, source).problem()
+		return expected.string(support, source).problem("support-not-string")
 	}
 	try {
 		return {
@@ -543,14 +567,14 @@ let supportUrl: NodeCreator<Required<Url>> = ({getOrigami}) => {
 			value: url.parse(support),
 		}
 	} catch {
-		return expected.url(support, source).problem()
+		return expected.url(support, source).problem("support-not-url")
 	}
 }
 
 let supportEmail: NodeCreator<Required<Email>> = ({getOrigami}) => {
 	let {value: email, source} = getOrigami("supportContact", "email")
 	if (typeof email != "string") {
-		return expected.string(email, source).problem()
+		return expected.string(email, source).problem("support-email-not-string")
 	}
 
 	let emailRegex = /^[^@]+@[^@]+$/
@@ -563,18 +587,24 @@ let supportEmail: NodeCreator<Required<Email>> = ({getOrigami}) => {
 				source,
 				type: "email",
 				value: email,
-				opinions: [expected.match(ftEmailRegex, email, source).opinion()],
+				opinions: [
+					expected
+						.match(ftEmailRegex, email, source)
+						.opinion("support-email-not-ft"),
+				],
 			}
 		}
 	} else {
-		return expected.match(emailRegex, email, source).problem()
+		return expected
+			.match(emailRegex, email, source)
+			.problem("support-email-not-email")
 	}
 }
 
 let supportSlack: NodeCreator<Required<SlackContact>> = ({getOrigami}) => {
 	let {value: slack, source} = getOrigami("supportContact", "slack")
 	if (typeof slack != "string") {
-		return expected.string(slack, source).problem()
+		return expected.string(slack, source).problem("support-slack-not-string")
 	}
 	let slackRegex = /([a-z0-9]+)\/(.*)/
 	let match = slackRegex.exec(slack)
@@ -587,7 +617,9 @@ let supportSlack: NodeCreator<Required<SlackContact>> = ({getOrigami}) => {
 			value: slack,
 		}
 	} else {
-		return expected.match(slackRegex, slack, source).problem()
+		return expected
+			.match(slackRegex, slack, source)
+			.problem("support-slack-not-org-channel")
 	}
 }
 
@@ -618,7 +650,7 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 				source,
 				"should be an object like: {optional: [], required: []}"
 			)
-			.problem()
+			.problem("browser-features-not-object")
 	}
 
 	let problems = []
@@ -642,11 +674,15 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 							source,
 						}
 					} else {
-						return expected.string(element, source).problem()
+						return expected
+							.string(element, source)
+							.problem("browser-feature-not-string")
 					}
 				})
 			} else {
-				problems.push(expected.array(list, source).problem())
+				problems.push(
+					expected.array(list, source).problem("browser-feature-set-not-array")
+				)
 			}
 		} else {
 			problems.push(
@@ -657,7 +693,7 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 						getOrigami(browserFeaturesPath, key).source,
 						"unexpected key. should be an object like: {required: [], optional: []}"
 					)
-					.problem()
+					.problem("browser-features-wrong-shape")
 			)
 		}
 	}
@@ -767,7 +803,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 	if (!demo) {
 		return expected
 			.object(demo, demoSource, "expected every item in the array to be a demo")
-			.problem()
+			.problem("demo-not-demo")
 	}
 
 	// TODO fallback everything to defaults
@@ -784,10 +820,10 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 					value: js.value,
 				}
 			} else {
-				node.js = expected.file(js.value, js.source).problem()
+				node.js = expected.file(js.value, js.source).problem("demo-js-not-file")
 			}
 		} else {
-			node.js = expected.file(js.value, js.source).problem()
+			node.js = expected.file(js.value, js.source).problem("demo-js-not-file")
 		}
 	} else {
 		node.js = empty(js.source)
@@ -805,10 +841,14 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 					value: sass.value,
 				}
 			} else {
-				node.sass = expected.file(sass.value, sass.source).problem()
+				node.sass = expected
+					.file(sass.value, sass.source)
+					.problem("demo-sass-not-file")
 			}
 		} else {
-			node.sass = expected.file(sass.value, sass.source).problem()
+			node.sass = expected
+				.file(sass.value, sass.source)
+				.problem("demo-sass-not-file")
 		}
 	} else {
 		node.sass = empty(sass.source)
@@ -826,10 +866,14 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 					value: template.value,
 				}
 			} else {
-				node.template = expected.file(template.value, template.source).problem()
+				node.template = expected
+					.file(template.value, template.source)
+					.problem("demo-template-not-file")
 			}
 		} else {
-			node.template = expected.file(template.value, template.source).problem()
+			node.template = expected
+				.file(template.value, template.source)
+				.problem("demo-template-not-file")
 		}
 	} else {
 		node.template = empty(template.source)
@@ -848,7 +892,9 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 					data: JSON.parse(await fs.readFile(data.value, "utf-8")),
 				}
 			} else {
-				node.data = expected.file(data.value, data.source).problem()
+				node.data = expected
+					.file(data.value, data.source)
+					.problem("demo-data-bad-file")
 			}
 		} else if (isObject(data.value)) {
 			node.data = {
@@ -857,7 +903,9 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 				data: data.value,
 			}
 		} else {
-			node.data = expected.file(data.value, data.source).problem()
+			node.data = expected
+				.file(data.value, data.source)
+				.problem("demo-js-not-good")
 		}
 	} else {
 		node.data = empty(data.source)
@@ -875,7 +923,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 		} else {
 			node.documentClasses = expected
 				.string(documentClasses.value, documentClasses.source)
-				.problem()
+				.problem("demo-classes-not-string")
 		}
 	} else {
 		node.documentClasses = empty(documentClasses.source)
@@ -900,7 +948,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 						dependencies.source,
 						"expected an array of strings"
 					)
-					.problem()
+					.problem("demo-deps-not-strings")
 			}
 		} else {
 			node.dependencies = expected
@@ -909,7 +957,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 					dependencies.source,
 					"expected an array of strings"
 				)
-				.problem()
+				.problem("demo-deps-not-array")
 		}
 	} else {
 		node.dependencies = empty(dependencies.source)
@@ -920,14 +968,18 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 	if (typeof title.value == "string") {
 		node.title = {type: "demo title", value: title.value, source: title.source}
 	} else {
-		node.title = expected.string(title.value, title.source).problem()
+		node.title = expected
+			.string(title.value, title.source)
+			.problem("demo-title-not-string")
 	}
 
 	let name = getOrigami(...prefix, "name")
 	if (typeof name.value == "string") {
 		node.name = {type: "demo name", value: name.value, source: name.source}
 	} else {
-		node.name = expected.string(name.value, name.source).problem()
+		node.name = expected
+			.string(name.value, name.source)
+			.problem("demo-name-not-string")
 	}
 
 	let description = getOrigami(...prefix, "description")
@@ -940,7 +992,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 	} else {
 		node.description = expected
 			.string(description.value, description.source)
-			.problem()
+			.problem("demo-description-not-string")
 	}
 
 	let {value: brandsValue, source: brandsSource} = getOrigami(
@@ -965,7 +1017,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 					) {
 						node.brands = expected
 							.member(rootBrandsNames, brandsValue, brandsSource)
-							.problem()
+							.problem("brand-not-valid")
 					} else {
 						node.brands = brandsNode
 					}
@@ -978,10 +1030,12 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 						brandsSource,
 						"demo brands have been specified, but there are no brands listed in the manifest root"
 					)
-					.problem()
+					.problem("demo-brands-not-supported")
 			}
 		} else {
-			node.brands = expected.array(brandsValue, brandsSource).problem()
+			node.brands = expected
+				.array(brandsValue, brandsSource)
+				.problem("demo-brands-not-array")
 		}
 	} else {
 		node.brands = empty(brandsSource)
@@ -1018,13 +1072,13 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 						displayHtml.source,
 						`should be an actual boolean, got the string "${displayHtml.value}"`
 					)
-					.opinion(),
+					.opinion("demo-display-html-is-boolean-string"),
 			],
 		}
 	} else {
 		node.displayHtml = expected
 			.boolean(displayHtml.value, displayHtml.source)
-			.problem()
+			.problem("demo-display-html-not-boolean")
 	}
 
 	let hidden = getOrigami(...prefix, "hidden")
@@ -1055,11 +1109,13 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 						hidden.source,
 						`should be an actual boolean, got the string "${hidden.value}"`
 					)
-					.opinion(),
+					.opinion("demo-hidden-is-boolean-string"),
 			],
 		}
 	} else {
-		node.hidden = expected.boolean(hidden.value, hidden.source).problem()
+		node.hidden = expected
+			.boolean(hidden.value, hidden.source)
+			.problem("demo-hidden-not-boolean")
 	}
 	let demoNode: Demo = {
 		type: "demo",
@@ -1112,10 +1168,10 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 					value: js.value,
 				}
 			} else {
-				node.js = expected.file(js.value, js.source).problem()
+				node.js = expected.file(js.value, js.source).problem("demo-js-not-file")
 			}
 		} else {
-			node.js = expected.file(js.value, js.source).problem()
+			node.js = expected.file(js.value, js.source).problem("demo-js-not-file")
 		}
 	} else {
 		node.js = empty(js.source)
@@ -1133,10 +1189,14 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 					value: sass.value,
 				}
 			} else {
-				node.sass = expected.file(sass.value, sass.source).problem()
+				node.sass = expected
+					.file(sass.value, sass.source)
+					.problem("demo-sass-not-file")
 			}
 		} else {
-			node.sass = expected.file(sass.value, sass.source).problem()
+			node.sass = expected
+				.file(sass.value, sass.source)
+				.problem("demo-sass-not-file")
 		}
 	} else {
 		node.sass = empty(sass.source)
@@ -1154,10 +1214,14 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 					value: template.value,
 				}
 			} else {
-				node.template = expected.file(template.value, template.source).problem()
+				node.template = expected
+					.file(template.value, template.source)
+					.problem("demo-template-not-file")
 			}
 		} else {
-			node.template = expected.file(template.value, template.source).problem()
+			node.template = expected
+				.file(template.value, template.source)
+				.problem("demo-template-not-file")
 		}
 	} else {
 		node.template = empty(template.source)
@@ -1176,7 +1240,9 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 					data: JSON.parse(await fs.readFile(data.value, "utf-8")),
 				}
 			} else {
-				node.data = expected.file(data.value, data.source).problem()
+				node.data = expected
+					.file(data.value, data.source)
+					.problem("demo-data-bad-file")
 			}
 		} else if (isObject(data.value)) {
 			node.data = {
@@ -1185,7 +1251,9 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 				data: data.value,
 			}
 		} else {
-			node.data = expected.file(data.value, data.source).problem()
+			node.data = expected
+				.file(data.value, data.source)
+				.problem("demo-data-not-file")
 		}
 	} else {
 		node.data = empty(data.source)
@@ -1203,7 +1271,7 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 		} else {
 			node.documentClasses = expected
 				.string(documentClasses.value, documentClasses.source)
-				.problem()
+				.problem("demo-classes-not-string")
 		}
 	} else {
 		node.documentClasses = empty(documentClasses.source)
@@ -1226,7 +1294,7 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 						dependencies.source,
 						"expected an array of strings"
 					)
-					.problem()
+					.problem("demo-deps-not-strings")
 			}
 		} else {
 			node.dependencies = expected
@@ -1235,7 +1303,7 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 					dependencies.source,
 					"expected an array of strings"
 				)
-				.problem()
+				.problem("demo-deps-not-array")
 		}
 	} else {
 		node.dependencies = empty(dependencies.source)
@@ -1273,7 +1341,9 @@ let demos: AsyncNodeCreator<Optional<Demos>> = async options => {
 				node.children.push(await demo({...options, prefix: ["demos", index]}))
 			}
 		} else {
-			return expected.array(demos.value, demos.source).problem()
+			return expected
+				.array(demos.value, demos.source)
+				.problem("demos-not-array")
 		}
 	}
 
@@ -1310,8 +1380,8 @@ import {promises as fs} from "fs"
 
 function po(expectation: Expectation.Any, source: Source, message?: string) {
 	return {
-		problem: () => problem(expectation, source, message),
-		opinion: () => opinion(expectation, source, message),
+		problem: (code: string) => problem(expectation, source, code, message),
+		opinion: (code: string) => opinion(expectation, source, code, message),
 	}
 }
 
@@ -1473,7 +1543,7 @@ let entry = async <EntryNode extends Node>(
 				bowerMainSource,
 				"a main.js file existed, so must be mentioned in bower.json#main"
 			)
-			.problem()
+			.problem("unreferenced-existing-main-js")
 	} else if (isMissing) {
 		if (typeof bowerMain == "string") {
 			if (bowerMain == entryPath) {
@@ -1484,7 +1554,7 @@ let entry = async <EntryNode extends Node>(
 						bowerMainSource,
 						"a main.js file did NOT exist, so should not be mentioned"
 					)
-					.problem()
+					.problem("referenced-missing-main-js")
 			}
 		} else if (Array.isArray(bowerMain)) {
 			for (let index = 0; index < bowerMain.length; index++) {
@@ -1496,7 +1566,7 @@ let entry = async <EntryNode extends Node>(
 							getBower("main", index).source,
 							"a main.js file did NOT exist, so should not be mentioned"
 						)
-						.problem()
+						.problem("referenced-missing-main-js")
 				}
 			}
 		} else {
@@ -1506,7 +1576,7 @@ let entry = async <EntryNode extends Node>(
 		// TODO bowerMainSource is not correct here
 		return expected
 			.file(entryPath, bowerMainSource, `is ${mainEntryFileType}`)
-			.problem()
+			.problem("non-file-main")
 	}
 
 	return empty(bowerMainSource)
@@ -1555,6 +1625,7 @@ export async function createComponentNode(
 				path: [],
 				value: null,
 			},
+			code: "no-package-json",
 		})
 	}
 
@@ -1627,6 +1698,7 @@ export async function createComponentNode(
 					path: [key],
 					value: null,
 				},
+				code: "origami-json-extra-keys",
 			})
 		}
 	}
@@ -1656,7 +1728,7 @@ export async function createComponentNode(
 				value: origamiManifest.ci,
 				path: ["ci"],
 			})
-			.problem()
+			.problem("ci")
 	}
 
 	component.entries = {
