@@ -1,11 +1,10 @@
 {
-	"problems": {
+	"errors": {
 		"bower-npm-names-no-match" : {
 			"file": "package.json",
 			"line": 2,
-			"column": 10,
-			"path": ["name"]
+			"column": 10
 		}
 	},
-	"opinions": {}
+	"warnings": {}
 }
