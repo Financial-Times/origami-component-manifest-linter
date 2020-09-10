@@ -11,7 +11,8 @@ The components are stored in a structure like this:
 │   │   ├── bower.json
 │   │   ├── origami.json
 │   │   └── package.json
-│   └── github.json
+│   │   github.json
+│   └── model.json
 ```
 
 The `github.json` file contains a structure the same as what is created by the
