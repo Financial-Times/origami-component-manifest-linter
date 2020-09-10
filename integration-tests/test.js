@@ -17,7 +17,7 @@ const {Dirent} = require("fs")
  * @property {string} code
  * @property {string} file
  * @property {number=} line
- * @property {number=} column
+ * @property {number=} col
  * @property {string} severity
  */
 
@@ -40,12 +40,8 @@ function parseInfo(info) {
 				result[key] = value
 				break
 			case "line":
-				result[key] = Number(value)
-				break
-			// The column number is called ~col~ in the github
-			// action, but we use ~column~ in our fixtures.
 			case "col":
-				result.column = Number(value)
+				result[key] = Number(value)
 		}
 	}
 	return result
@@ -54,7 +50,7 @@ function parseInfo(info) {
 // We parse =stdout= as a series of errors/warnings
 
 /** @param {import("execa").ExecaReturnValue} result */
-function parse(result) {
+function parseGithubOutput(result) {
 	let errors = {}
 	let warnings = {}
 
@@ -64,7 +60,6 @@ function parse(result) {
 		let {code, severity, ...info} = parseInfo(match.groups.info)
 
 		// the github log level should match the severity in the info fields
-
 		if (severity != match.groups.severity) {
 			tap.fail(
 				`severity should match problem level. got ${severity} and ${match.groups.severity}`
@@ -93,53 +88,77 @@ function parse(result) {
 // │   │   ├── bower.json
 // │   │   ├── origami.json
 // │   │   └── package.json
-// │   └── expected.json
+// │   │── github.json
+// │   └── model.json
 
-// The =expected.json= file contains a structure the same as what is created by
+// The =github.json= file contains a structure the same as what is created by
 // the parse functions above:
 // {
 //         "errors": {
 //                 "bower-npm-names-no-match" : {
 //                         "file": "package.json",
 //                         "line": 2,
-//                         "column": 10
+//                         "col": 10
 //                 }
 //         },
 //         "warnings": {}
 // }
 
+// The =model.json= file is the entire parsed model.
+
 // In the test runner, we execute the cli on each of the ~test-name/component~
 // directories, and create a [[https://node-tap.org/][tap]] test for each one,
-// checking that the parsed output matches the ~expected.json~ file.
+// checking that the parsed github output matches the ~github.json~ file,
+// and that the model output matches the model.json file.
 /** @param {string} testName */
 async function test(testName) {
 	let testDirectory = resolvePath(__dirname, testName)
-	let expectedFile = resolvePath(testDirectory, "expected.json")
-	let expected = JSON.parse(await fs.readFile(expectedFile))
+	let githubExpectedFile = resolvePath(testDirectory, "github.json")
+	let githubExpected = JSON.parse(await fs.readFile(githubExpectedFile))
+
+	let modelExpectedFile = resolvePath(testDirectory, "model.json")
+	let modelExpected = JSON.parse(await fs.readFile(modelExpectedFile))
 
 	let componentDirectory = resolvePath(testDirectory, "component")
-
-	let actual = parse(
-		await execa(
-			"node",
-			[resolvePath(__dirname, ".."), componentDirectory, "github"],
-			{
+	let execOptions = {
 				cwd: componentDirectory,
 				env: {
 					FORCE_COLOR: 0,
 					NODE_ENV: "inner-test",
 				},
-			}
+	}
+	let execArguments = [resolvePath(__dirname, ".."), componentDirectory]
+	let githubActual = parseGithubOutput(
+		await execa(
+			"node",
+			execArguments.concat("github"),
+			execOptions
 		)
 	)
+	let modelActual
+	try {
+		let {stdout} = await execa(
+			"node",
+			execArguments.concat("model"),
+			execOptions
+		)
+		modelActual = JSON.parse(stdout)
+	} catch (error) {
+		modelActual = error
+	}
 
 	tap.test(testName, t => {
-		t.strictDeepEqual(expected, actual)
+		tap.test("github output", t => {
+			t.strictDeepEqual(githubExpected, githubActual)
+			t.done()
+		})
+		tap.test("model output", t => {
+			t.strictDeepEqual(modelExpected, modelActual)
+			t.done()
+		})
 		t.done()
 	})
 }
-
-let all = (list, fn) => Promise.all(list.map(fn))
 
 /** @param {Dirent} entry */
 function maybeRunTest(entry) {
@@ -148,6 +167,4 @@ function maybeRunTest(entry) {
 	}
 }
 
-fs.readdir(__dirname, {withFileTypes: true}).then(async filenames => {
-	await all(filenames, maybeRunTest)
-})
+fs.readdir(__dirname, {withFileTypes: true}).then(files => files.forEach(maybeRunTest))

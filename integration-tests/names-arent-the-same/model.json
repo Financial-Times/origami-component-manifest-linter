@@ -1,0 +1,1044 @@
+{
+	"type": "component",
+	"source": {
+		"file": "origami.json",
+		"path": [],
+		"value": "{\n\t\"description\": \"names aren't the same\",\n\t\"keywords\": [\"template\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\",\"internal\",\"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\",\n\t\"browserFeatures\": {},\n\t\"demosDefaults\": {\n\t\t\"sass\": \"demos/src/demo.scss\",\n\t\t\"js\": \"demos/src/demo.js\",\n\t\t\"documentClasses\": \"\",\n\t\t\"dependencies\": []\n\t},\n\t\"demos\": [\n\t\t{\n\t\t\t\"title\": \"A Useful Demo\",\n\t\t\t\"name\": \"demo\",\n\t\t\t\"template\": \"demos/src/demo.mustache\",\n\t\t\t\"description\": \"Description of the demo\"\n\t\t},\n\t\t{\n\t\t\t\"title\": \"Pa11y\",\n\t\t\t\"name\": \"pa11y\",\n\t\t\t\"template\": \"demos/src/pa11y.mustache\",\n\t\t\t\"description\": \"Accessibility test will be run against this demo\",\n\t\t\t\"hidden\": true\n\t\t}\n\t]\n}\n"
+	},
+	"opinions": [],
+	"origamiVersion": {
+		"type": "origami version",
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"origamiVersion"
+			],
+			"start": {
+				"line": 6,
+				"column": 20,
+				"offset": 152
+			},
+			"end": {
+				"line": 6,
+				"column": 21,
+				"offset": 153
+			},
+			"value": 1
+		},
+		"value": 1
+	},
+	"origamiType": {
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"origamiType"
+			],
+			"start": {
+				"line": 4,
+				"column": 17,
+				"offset": 86
+			},
+			"end": {
+				"line": 4,
+				"column": 28,
+				"offset": 97
+			},
+			"value": "component"
+		},
+		"type": "origami type",
+		"value": "component",
+		"opinions": []
+	},
+	"brands": {
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"brands"
+			],
+			"start": {
+				"line": 7,
+				"column": 12,
+				"offset": 166
+			},
+			"end": {
+				"line": 7,
+				"column": 46,
+				"offset": 200
+			},
+			"value": [
+				"master",
+				"internal",
+				"whitelabel"
+			]
+		},
+		"type": "brands",
+		"master": false,
+		"whitelabel": false,
+		"internal": false,
+		"children": [
+			{
+				"type": "brand",
+				"value": "master",
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"brands",
+						0
+					],
+					"start": {
+						"line": 7,
+						"column": 13,
+						"offset": 167
+					},
+					"end": {
+						"line": 7,
+						"column": 21,
+						"offset": 175
+					},
+					"value": "master"
+				}
+			},
+			{
+				"type": "brand",
+				"value": "internal",
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"brands",
+						1
+					],
+					"start": {
+						"line": 7,
+						"column": 22,
+						"offset": 176
+					},
+					"end": {
+						"line": 7,
+						"column": 32,
+						"offset": 186
+					},
+					"value": "internal"
+				}
+			},
+			{
+				"type": "brand",
+				"value": "whitelabel",
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"brands",
+						2
+					],
+					"start": {
+						"line": 7,
+						"column": 33,
+						"offset": 187
+					},
+					"end": {
+						"line": 7,
+						"column": 45,
+						"offset": 199
+					},
+					"value": "whitelabel"
+				}
+			}
+		]
+	},
+	"category": {
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"origamiCategory"
+			],
+			"start": {
+				"line": 5,
+				"column": 21,
+				"offset": 119
+			},
+			"end": {
+				"line": 5,
+				"column": 33,
+				"offset": 131
+			},
+			"value": "components"
+		},
+		"type": "category",
+		"components": true,
+		"primitives": false,
+		"utilities": false,
+		"layouts": false,
+		"value": "components"
+	},
+	"name": {
+		"type": "problems",
+		"children": [
+			{
+				"type": "problem",
+				"expectation": {
+					"type": "valueOf",
+					"expected": "bower-json",
+					"received": "package-json"
+				},
+				"source": {
+					"file": "package.json",
+					"path": [
+						"name"
+					],
+					"start": {
+						"line": 2,
+						"column": 10,
+						"offset": 11
+					},
+					"end": {
+						"line": 2,
+						"column": 24,
+						"offset": 25
+					},
+					"value": "package-json"
+				},
+				"code": "bower-npm-names-no-match"
+			}
+		]
+	},
+	"description": {
+		"type": "description",
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"description"
+			],
+			"start": {
+				"line": 2,
+				"column": 17,
+				"offset": 18
+			},
+			"end": {
+				"line": 2,
+				"column": 40,
+				"offset": 41
+			},
+			"value": "names aren't the same"
+		},
+		"value": "names aren't the same",
+		"opinions": []
+	},
+	"status": {
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"supportStatus"
+			],
+			"start": {
+				"line": 13,
+				"column": 19,
+				"offset": 395
+			},
+			"end": {
+				"line": 13,
+				"column": 33,
+				"offset": 409
+			},
+			"value": "experimental"
+		},
+		"type": "status",
+		"active": false,
+		"maintained": false,
+		"deprecated": false,
+		"dead": false,
+		"experimental": true,
+		"value": "experimental"
+	},
+	"keywords": {
+		"type": "keywords",
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"keywords"
+			],
+			"start": {
+				"line": 3,
+				"column": 14,
+				"offset": 56
+			},
+			"end": {
+				"line": 3,
+				"column": 26,
+				"offset": 68
+			},
+			"value": [
+				"template"
+			]
+		},
+		"children": [
+			{
+				"type": "keyword",
+				"value": "template",
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"keywords",
+						0
+					],
+					"start": {
+						"line": 3,
+						"column": 15,
+						"offset": 57
+					},
+					"end": {
+						"line": 3,
+						"column": 25,
+						"offset": 67
+					},
+					"value": "template"
+				}
+			}
+		]
+	},
+	"browserFeatures": {
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"browserFeatures"
+			],
+			"start": {
+				"line": 14,
+				"column": 21,
+				"offset": 431
+			},
+			"end": {
+				"line": 14,
+				"column": 23,
+				"offset": 433
+			},
+			"value": {}
+		},
+		"type": "browser features",
+		"optional": [],
+		"required": []
+	},
+	"ci": {
+		"type": "empty",
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"ci"
+			]
+		}
+	},
+	"entries": {
+		"javascript": {
+			"type": "empty",
+			"source": {
+				"file": "bower.json",
+				"path": [
+					"main"
+				]
+			}
+		},
+		"sass": {
+			"type": "empty",
+			"source": {
+				"file": "bower.json",
+				"path": [
+					"main"
+				]
+			}
+		}
+	},
+	"support": {
+		"url": {
+			"source": {
+				"file": "origami.json",
+				"path": [
+					"support"
+				],
+				"start": {
+					"line": 8,
+					"column": 13,
+					"offset": 214
+				},
+				"end": {
+					"line": 8,
+					"column": 73,
+					"offset": 274
+				},
+				"value": "https://github.com/Financial-Times/default-template/issues"
+			},
+			"type": "url",
+			"value": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "github.com",
+				"port": null,
+				"hostname": "github.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/Financial-Times/default-template/issues",
+				"path": "/Financial-Times/default-template/issues",
+				"href": "https://github.com/Financial-Times/default-template/issues"
+			}
+		},
+		"email": {
+			"source": {
+				"file": "origami.json",
+				"path": [
+					"supportContact",
+					"email"
+				],
+				"start": {
+					"line": 10,
+					"column": 12,
+					"offset": 308
+				},
+				"end": {
+					"line": 10,
+					"column": 33,
+					"offset": 329
+				},
+				"value": "chee.rabbits@ft.com"
+			},
+			"type": "email",
+			"value": "chee.rabbits@ft.com"
+		},
+		"slack": {
+			"source": {
+				"file": "origami.json",
+				"path": [
+					"supportContact",
+					"slack"
+				],
+				"start": {
+					"line": 11,
+					"column": 12,
+					"offset": 342
+				},
+				"end": {
+					"line": 11,
+					"column": 42,
+					"offset": 372
+				},
+				"value": "financialtimes/#origami-chat"
+			},
+			"type": "slack contact",
+			"workspace": "financialtimes",
+			"channel": "#origami-chat",
+			"value": "financialtimes/#origami-chat"
+		}
+	},
+	"demos": {
+		"type": "demos",
+		"defaults": {
+			"type": "demos defaults",
+			"template": {
+				"type": "empty",
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demosDefaults",
+						"template"
+					]
+				}
+			},
+			"sass": {
+				"type": "problem",
+				"expectation": {
+					"type": "file",
+					"received": "demos/src/demo.scss"
+				},
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demosDefaults",
+						"sass"
+					],
+					"start": {
+						"line": 16,
+						"column": 11,
+						"offset": 465
+					},
+					"end": {
+						"line": 16,
+						"column": 32,
+						"offset": 486
+					},
+					"value": "demos/src/demo.scss"
+				},
+				"code": "demo-sass-not-file"
+			},
+			"js": {
+				"type": "problem",
+				"expectation": {
+					"type": "file",
+					"received": "demos/src/demo.js"
+				},
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demosDefaults",
+						"js"
+					],
+					"start": {
+						"line": 17,
+						"column": 9,
+						"offset": 496
+					},
+					"end": {
+						"line": 17,
+						"column": 28,
+						"offset": 515
+					},
+					"value": "demos/src/demo.js"
+				},
+				"code": "demo-js-not-file"
+			},
+			"data": {
+				"type": "empty",
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demosDefaults",
+						"data"
+					]
+				}
+			},
+			"documentClasses": {
+				"type": "empty",
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demosDefaults",
+						"documentClasses"
+					],
+					"start": {
+						"line": 18,
+						"column": 22,
+						"offset": 538
+					},
+					"end": {
+						"line": 18,
+						"column": 24,
+						"offset": 540
+					},
+					"value": ""
+				}
+			},
+			"dependencies": {
+				"type": "demo dependencies",
+				"value": [],
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demosDefaults",
+						"dependencies"
+					],
+					"start": {
+						"line": 19,
+						"column": 19,
+						"offset": 560
+					},
+					"end": {
+						"line": 19,
+						"column": 21,
+						"offset": 562
+					},
+					"value": []
+				}
+			},
+			"source": {
+				"file": "origami.json",
+				"path": [
+					"demosDefaults"
+				],
+				"start": {
+					"line": 15,
+					"column": 19,
+					"offset": 453
+				},
+				"end": {
+					"line": 20,
+					"column": 3,
+					"offset": 565
+				},
+				"value": {
+					"sass": "demos/src/demo.scss",
+					"js": "demos/src/demo.js",
+					"documentClasses": "",
+					"dependencies": []
+				}
+			}
+		},
+		"source": {
+			"file": "origami.json",
+			"path": [
+				"demos"
+			],
+			"start": {
+				"line": 21,
+				"column": 11,
+				"offset": 577
+			},
+			"end": {
+				"line": 35,
+				"column": 3,
+				"offset": 904
+			},
+			"value": [
+				{
+					"title": "A Useful Demo",
+					"name": "demo",
+					"template": "demos/src/demo.mustache",
+					"description": "Description of the demo"
+				},
+				{
+					"title": "Pa11y",
+					"name": "pa11y",
+					"template": "demos/src/pa11y.mustache",
+					"description": "Accessibility test will be run against this demo",
+					"hidden": true
+				}
+			]
+		},
+		"children": [
+			{
+				"type": "demo",
+				"template": {
+					"type": "problem",
+					"expectation": {
+						"type": "file",
+						"received": "demos/src/demo.mustache"
+					},
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"template"
+						],
+						"start": {
+							"line": 25,
+							"column": 16,
+							"offset": 646
+						},
+						"end": {
+							"line": 25,
+							"column": 41,
+							"offset": 671
+						},
+						"value": "demos/src/demo.mustache"
+					},
+					"code": "demo-template-not-file"
+				},
+				"sass": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"sass"
+						]
+					}
+				},
+				"js": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"js"
+						]
+					}
+				},
+				"data": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"data"
+						]
+					}
+				},
+				"brands": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"brands"
+						]
+					}
+				},
+				"documentClasses": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"documentClasses"
+						]
+					}
+				},
+				"dependencies": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"dependencies"
+						]
+					}
+				},
+				"index": 0,
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demos",
+						0
+					],
+					"start": {
+						"line": 22,
+						"column": 3,
+						"offset": 581
+					},
+					"end": {
+						"line": 27,
+						"column": 4,
+						"offset": 720
+					},
+					"value": {
+						"title": "A Useful Demo",
+						"name": "demo",
+						"template": "demos/src/demo.mustache",
+						"description": "Description of the demo"
+					}
+				},
+				"name": {
+					"type": "demo name",
+					"value": "demo",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"name"
+						],
+						"start": {
+							"line": 24,
+							"column": 12,
+							"offset": 623
+						},
+						"end": {
+							"line": 24,
+							"column": 18,
+							"offset": 629
+						},
+						"value": "demo"
+					}
+				},
+				"title": {
+					"type": "demo title",
+					"value": "A Useful Demo",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"title"
+						],
+						"start": {
+							"line": 23,
+							"column": 13,
+							"offset": 595
+						},
+						"end": {
+							"line": 23,
+							"column": 28,
+							"offset": 610
+						},
+						"value": "A Useful Demo"
+					}
+				},
+				"description": {
+					"type": "demo description",
+					"value": "Description of the demo",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"description"
+						],
+						"start": {
+							"line": 26,
+							"column": 19,
+							"offset": 691
+						},
+						"end": {
+							"line": 26,
+							"column": 44,
+							"offset": 716
+						},
+						"value": "Description of the demo"
+					}
+				},
+				"hidden": {
+					"type": "demo display html",
+					"value": false,
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"hidden"
+						]
+					}
+				},
+				"displayHtml": {
+					"type": "demo display html",
+					"value": false,
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0,
+							"display_html"
+						]
+					}
+				}
+			},
+			{
+				"type": "demo",
+				"template": {
+					"type": "problem",
+					"expectation": {
+						"type": "file",
+						"received": "demos/src/pa11y.mustache"
+					},
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"template"
+						],
+						"start": {
+							"line": 31,
+							"column": 16,
+							"offset": 782
+						},
+						"end": {
+							"line": 31,
+							"column": 42,
+							"offset": 808
+						},
+						"value": "demos/src/pa11y.mustache"
+					},
+					"code": "demo-template-not-file"
+				},
+				"sass": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"sass"
+						]
+					}
+				},
+				"js": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"js"
+						]
+					}
+				},
+				"data": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"data"
+						]
+					}
+				},
+				"brands": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"brands"
+						]
+					}
+				},
+				"documentClasses": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"documentClasses"
+						]
+					}
+				},
+				"dependencies": {
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"dependencies"
+						]
+					}
+				},
+				"index": 1,
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demos",
+						1
+					],
+					"start": {
+						"line": 28,
+						"column": 3,
+						"offset": 724
+					},
+					"end": {
+						"line": 34,
+						"column": 4,
+						"offset": 901
+					},
+					"value": {
+						"title": "Pa11y",
+						"name": "pa11y",
+						"template": "demos/src/pa11y.mustache",
+						"description": "Accessibility test will be run against this demo",
+						"hidden": true
+					}
+				},
+				"name": {
+					"type": "demo name",
+					"value": "pa11y",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"name"
+						],
+						"start": {
+							"line": 30,
+							"column": 12,
+							"offset": 758
+						},
+						"end": {
+							"line": 30,
+							"column": 19,
+							"offset": 765
+						},
+						"value": "pa11y"
+					}
+				},
+				"title": {
+					"type": "demo title",
+					"value": "Pa11y",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"title"
+						],
+						"start": {
+							"line": 29,
+							"column": 13,
+							"offset": 738
+						},
+						"end": {
+							"line": 29,
+							"column": 20,
+							"offset": 745
+						},
+						"value": "Pa11y"
+					}
+				},
+				"description": {
+					"type": "demo description",
+					"value": "Accessibility test will be run against this demo",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"description"
+						],
+						"start": {
+							"line": 32,
+							"column": 19,
+							"offset": 828
+						},
+						"end": {
+							"line": 32,
+							"column": 69,
+							"offset": 878
+						},
+						"value": "Accessibility test will be run against this demo"
+					}
+				},
+				"hidden": {
+					"type": "demo hidden",
+					"value": true,
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"hidden"
+						],
+						"start": {
+							"line": 33,
+							"column": 14,
+							"offset": 893
+						},
+						"end": {
+							"line": 33,
+							"column": 18,
+							"offset": 897
+						},
+						"value": true
+					}
+				},
+				"displayHtml": {
+					"type": "demo display html",
+					"value": false,
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1,
+							"display_html"
+						]
+					}
+				}
+			}
+		]
+	}
+}

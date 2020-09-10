@@ -210,7 +210,7 @@ if (require.main === module) {
 
 		let component = await createComponentNode(read)
 
-		if (style == "opm") {
+		if (style == "model") {
 			process.stdout.write(JSON.stringify(component, null, "\t") + EOL)
 			process.exit(0)
 		}
