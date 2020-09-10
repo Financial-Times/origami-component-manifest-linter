@@ -43,3 +43,6 @@ A second argument "may be passed to indicate the output style:
 |:----------:|:-------------------------------------------------------------------------------------:|
 | github     | outputs  in the  `::error`/`::warning` style used in github actions to annotate files |
 | opm        | outputs the entire component model in json format                                     |
+
+# License
+MIT
