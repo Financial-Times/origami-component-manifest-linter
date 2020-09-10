@@ -38,8 +38,10 @@ By default, the current working directory is expected to be the component
 directory but a user can also provide the directory as an argument:
 
 ```sh
-$ origami-component-manifest-inter
+$ origami-component-manifest-linter ~/projects/o-typography
 ```
+
+#### style
 
 A second argument "may be passed to indicate the output style:
 
