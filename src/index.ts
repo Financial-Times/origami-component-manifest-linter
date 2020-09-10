@@ -19,7 +19,7 @@ import {
 	NodeType,
 	Parent,
 } from "./lib/node"
-
+import type * as Expectation from "./lib/expectation"
 import {promises as fs} from "fs"
 import * as chalk from "chalk"
 import {resolve as resolvePath} from "path"
@@ -30,6 +30,60 @@ function helpUrl(problem: Problem | Opinion): string | undefined {
 		return `https://origami.ft.com/spec/v1/manifest/#${manifestKey}`
 	}
 	return undefined
+}
+
+function parseExpectation(e: Expectation.Any, cwd: string): string {
+	switch (e.type) {
+		case "valueOf": {
+			return `expected value ${chalk.greenBright(
+					e.expected
+				)}, but got ${chalk.magentaBright(JSON.stringify(e.received))}`
+                        }
+		case "memberOf": {
+			return `expected one of ${chalk.greenBright(
+					e.list.join(chalk.white("|"))
+				)}, but got ${chalk.magentaBright(`"${e.received}"`)}`
+                        }
+		case "typeOf": {
+			let expected = '"' + e.expected + '"'
+			let received = '"' + typeof e.received + '"'
+			return `expected type ${chalk.greenBright(
+					expected
+				)}, but got ${chalk.magentaBright(received)}`
+                        }
+		case "file": {
+			return `${chalk.magentaBright(e.received)} does not exist under ${chalk.grey(cwd)}`
+                        }
+	}
+	return ""
+}
+
+/**
+ * This provides the output used in github actions to annotate the files view in
+ * PRs with line-by-line info
+*/
+function ghPrint(problem: Problem | Opinion, cwd: string) {
+	let write = process.stdout.write.bind(process.stdout)
+	let severity = problem.type == "problem" ? "error" : "warning"
+	write("::")
+	write(severity)
+	write(" ")
+	write(`file=${problem.source.file},`)
+	write(`code=${problem.code},`)
+	if (problem.source.start) {
+                write(`line=${problem.source.start.line},`)
+		write(`col=${problem.source.start.column},`)
+	}
+	write(`severity=${severity}`)
+	write("::")
+        if (problem.message) {
+		write(problem.message + "\t(")
+	}
+	write(parseExpectation(problem.expectation, cwd))
+	if (problem.message) {
+		write(")")
+	}
+	write("\n")
 }
 
 function print(problem: Problem | Opinion, cwd: string) {
@@ -71,49 +125,11 @@ function print(problem: Problem | Opinion, cwd: string) {
 
 	write("\n")
 
-	let e = problem.expectation
-
-	switch (e.type) {
-		case "valueOf": {
-			write(
-				`expected value ${chalk.greenBright(
-					e.expected
-				)}, but got ${chalk.magentaBright(JSON.stringify(e.received))}`
-			)
-			break
-		}
-		case "memberOf": {
-			write(
-				`expected one of ${chalk.greenBright(
-					e.list.join(chalk.white("|"))
-				)}, but got ${chalk.magentaBright(`"${e.received}"`)}`
-			)
-			break
-		}
-		case "typeOf": {
-			let expected = '"' + e.expected + '"'
-			let received = '"' + typeof e.received + '"'
-			write(
-				`expected type ${chalk.greenBright(
-					expected
-				)}, but got ${chalk.magentaBright(received)}`
-			)
-			break
-		}
-		case "file": {
-			write(chalk.magentaBright(e.received))
-			write(" does not exist under ")
-			write(chalk.grey(cwd))
-			break
-		}
-	}
 
 	let help = helpUrl(problem)
 	if (help) {
 		write("\n" + chalk.magenta("check " + help + " for help") + "\n")
 	}
-
-	write(chalk.grey(problem.code))
 
 	write("\n\n")
 }
@@ -189,25 +205,29 @@ if (require.main === module) {
 			cwd = dir
 		}
 
-		let option = process.argv[3]
+		let style = process.argv[3]
 		let read = (path: string) => fs.readFile(resolvePath(path), "utf-8")
 
 		let component = await createComponentNode(read)
 
-		if (option == "opm") {
+		if (style == "opm") {
 			process.stdout.write(JSON.stringify(component, null, "\t") + EOL)
 			process.exit(0)
 		}
 
+		let printer = style == "github"
+			? ghPrint
+			: print
+
 		if (component.type == "problem") {
-			print(component, cwd)
+			printer(component, cwd)
 			process.exit(131)
 		} else if (component.type == "problems") {
-			component.children.map(problem => print(problem, cwd))
+			component.children.map(problem => printer(problem, cwd))
 			process.exit(131)
 		} else {
 			for (let problemOrOpinion of getProblemsAndOpinions(component)) {
-				print(problemOrOpinion, cwd)
+				printer(problemOrOpinion, cwd)
 			}
 		}
 	})()
