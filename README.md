@@ -14,7 +14,7 @@ section](#implementation-details) below
 
 ## implementation details
 
-_the information in this section is subject to change**
+_the information in this section is subject to change_
 
 ### origami component model
 
