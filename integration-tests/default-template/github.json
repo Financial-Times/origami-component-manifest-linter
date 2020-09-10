@@ -3,12 +3,12 @@
 	"warnings": {
 		"origami-type-is-module": {
 			"line": 4,
-			"column": 17,
+			"col": 17,
 			"file": "origami.json"
 		},
 		"non-o-prefix": {
 			"line": 2,
-			"column": 10,
+			"col": 10,
 			"file": "bower.json"
 		}
 	}
