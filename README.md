@@ -13,7 +13,12 @@ files.
 This program is intended to be consumed as part of the [origami build
 tools](https://github.com/Financial-Times/origami-build-tools) `verify` step.
 
-## development information
+Advanced and unsupported usage may be found in the [implementation details
+section](#implementation-details) below
+
+## implementation details
+
+_the information in this section is subject to change_
 
 The origami-component-manifest-linter is written in TypeScript, and most of the
 work takes place in [node.ts](./src/lib/node.ts) file.
