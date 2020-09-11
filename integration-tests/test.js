@@ -21,8 +21,6 @@ const {Dirent} = require("fs")
  * @property {string} severity
  */
 
-// Here we parse the =key=value= pairs into the ProblemInfo object, coercing
-// lines and columns to numbers
 
 /**
  * @param {string} info
@@ -49,36 +47,26 @@ function parseInfo(info) {
 
 // We parse =stdout= as a series of errors/warnings
 
-/** @param {import("execa").ExecaReturnValue} result */
-function parseGithubOutput(result) {
-	let errors = {}
-	let warnings = {}
+/** @param {import("execa").ExecaReturnValue} execaReturnValue */
+function parseGithubOutput(execaReturnValue) {
+	let lines = []
 
-	let matches = result.stdout.matchAll(/::(?<severity>[^ ]+) (?<info>[^:]+)::/g)
+	let matches = execaReturnValue.stdout.matchAll(/::(?<severity>[^ ]+) (?<info>[^:]+)::/g)
 
 	for (let match of matches) {
-		let {code, severity, ...info} = parseInfo(match.groups.info)
+		let info = parseInfo(match.groups.info)
 
 		// the github log level should match the severity in the info fields
-		if (severity != match.groups.severity) {
+		if (info.severity != match.groups.severity) {
 			tap.fail(
 				`severity should match problem level. got ${severity} and ${match.groups.severity}`
 			)
 		}
 
-		if (severity == "error") {
-			errors[code] = info
-		} else if (severity == "warning") {
-			warnings[code] = info
-		} else {
-			tap.fail(`severity should be "error" or "warning", got ${severity}`)
-		}
+                lines.push(`${info.severity} ${info.file} ${info.line || 0} ${info.col || 0} ${info.code}`)
 	}
 
-	return {
-		errors,
-		warnings,
-	}
+	return lines.sort()
 }
 
 // test runner
@@ -88,21 +76,14 @@ function parseGithubOutput(result) {
 // │   │   ├── bower.json
 // │   │   ├── origami.json
 // │   │   └── package.json
-// │   │── github.json
+// │   │── github
 // │   └── model.json
 
-// The =github.json= file contains a structure the same as what is created by
+// The =github= file contains a structure the same as what is created by
 // the parse functions above:
-// {
-//         "errors": {
-//                 "bower-npm-names-no-match" : {
-//                         "file": "package.json",
-//                         "line": 2,
-//                         "col": 10
-//                 }
-//         },
-//         "warnings": {}
-// }
+// severity file-name line col code
+// severity file-name line col code
+// ...
 
 // The =model.json= file is the entire parsed model.
 
@@ -113,27 +94,23 @@ function parseGithubOutput(result) {
 /** @param {string} testName */
 async function test(testName) {
 	let testDirectory = resolvePath(__dirname, testName)
-	let githubExpectedFile = resolvePath(testDirectory, "github.json")
-	let githubExpected = JSON.parse(await fs.readFile(githubExpectedFile))
+	let githubExpectedFile = resolvePath(testDirectory, "github")
+	let githubExpected = (await fs.readFile(githubExpectedFile, "utf-8")).trim().split("\n").sort()
 
 	let modelExpectedFile = resolvePath(testDirectory, "model.json")
-	let modelExpected = JSON.parse(await fs.readFile(modelExpectedFile))
+	let modelExpected = JSON.parse(await fs.readFile(modelExpectedFile, "utf-8"))
 
 	let componentDirectory = resolvePath(testDirectory, "component")
 	let execOptions = {
-				cwd: componentDirectory,
-				env: {
-					FORCE_COLOR: 0,
-					NODE_ENV: "inner-test",
-				},
+		cwd: componentDirectory,
+		env: {
+			FORCE_COLOR: 0,
+			NODE_ENV: "inner-test",
+		},
 	}
 	let execArguments = [resolvePath(__dirname, ".."), componentDirectory]
 	let githubActual = parseGithubOutput(
-		await execa(
-			"node",
-			execArguments.concat("github"),
-			execOptions
-		)
+		await execa("node", execArguments.concat("github"), execOptions)
 	)
 	let modelActual
 	try {
@@ -147,13 +124,14 @@ async function test(testName) {
 		modelActual = error
 	}
 
+
 	tap.test(testName, t => {
-		tap.test("github output", t => {
-			t.strictDeepEqual(githubExpected, githubActual)
+		tap.test(`${testName} github output`, t => {
+			t.same(githubActual, githubExpected)
 			t.done()
 		})
-		tap.test("model output", t => {
-			t.strictDeepEqual(modelExpected, modelActual)
+		tap.test(`${testName} model output`, t => {
+			t.same(modelActual, modelExpected)
 			t.done()
 		})
 		t.done()
@@ -167,4 +145,6 @@ function maybeRunTest(entry) {
 	}
 }
 
-fs.readdir(__dirname, {withFileTypes: true}).then(files => files.forEach(maybeRunTest))
+fs.readdir(__dirname, {withFileTypes: true}).then(files =>
+	files.forEach(maybeRunTest)
+)
