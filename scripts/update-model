@@ -1,0 +1,2 @@
+#!/bin/sh
+node . integration-tests/$1/component model > integration-tests/$1/model.json
