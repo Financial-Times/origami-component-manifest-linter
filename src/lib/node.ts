@@ -72,6 +72,7 @@ interface NodeCreatorOptions {
 	getNpm?: Get
 	getOrigami: Get
 	component: Partial<Component>
+	/** a path that should be prepended to any gets, for children to use */
 	prefix?: GetPath
 }
 
@@ -752,6 +753,7 @@ export interface DemoBase {
 	documentClasses: Optional<Value<String>>
 	/** a list of components required by the demo, to be loaded via the Build Service */
 	dependencies: Optional<Value<string[]>>
+	source: Source
 }
 
 export interface Demo extends DemoBase, Node, Parent<Node> {
@@ -779,37 +781,21 @@ export interface Demos extends Parent<Optional<Demo>> {
 	defaults: Optional<DemosDefaults>
 }
 
-// TODO clean this up, lots of duplication (and between this and demosDefaults)
-// TODO fall back to default if it is not set here
-let demo: AsyncNodeCreator<Optional<Demo>> = async ({
-	getOrigami,
-	prefix,
-	component,
-	...nco
-}) => {
+async function demoBase({getOrigami, prefix}: NodeCreatorOptions): Promise<Optional<DemoBase>> {
+	let node: Partial<DemoBase> = {}
 	if (!prefix) {
-		throw new Error("must pass prefix option to demos")
+		throw new Error("demoBase must be called with a prefix opion")
 	}
 
-	let index = prefix[prefix.length - 1]
+	let {value: demoValue, source: demoSource} = getOrigami(
+		...prefix
+	)
 
-	if (typeof index != "number") {
-		throw new Error("last item in prefix must be a demo index")
+	node.source = demoSource
+
+	if (!demoValue) {
+		return empty(demoSource)
 	}
-
-	let node: Partial<Demo> = {
-		type: "demo",
-	}
-
-	let {value: demo, source: demoSource} = getOrigami(...prefix)
-
-	if (!demo) {
-		return expected
-			.object(demo, demoSource, "expected every item in the array to be a demo")
-			.problem("demo-not-demo")
-	}
-
-	// TODO fallback everything to defaults
 
 	let js = getOrigami(...prefix, "js")
 
@@ -891,7 +877,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 				node.data = {
 					type: "demo data",
 					source: data.source,
-					// TODO handle this better than just crashing if the data file is bad json
+					// TODO handle this better than crashing if the data file is bad json
 					data: JSON.parse(await fs.readFile(data.value, "utf-8")),
 				}
 			} else {
@@ -908,7 +894,7 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 		} else {
 			node.data = expected
 				.file(data.value, data.source)
-				.problem("demo-js-not-good")
+				.problem("demo-data-not-file")
 		}
 	} else {
 		node.data = empty(data.source)
@@ -939,8 +925,6 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 			if (dependencies.value.every(s => typeof s == "string")) {
 				node.dependencies = {
 					type: "demo dependencies",
-					// why does typescript not know this is
-					// an array of strings?
 					value: dependencies.value as string[],
 					source: dependencies.source,
 				}
@@ -965,6 +949,44 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 	} else {
 		node.dependencies = empty(dependencies.source)
 	}
+
+	let demoNode: DemoBase = {
+		template: node.template,
+		sass: node.sass,
+		js: node.js,
+		data: node.data,
+		documentClasses: node.documentClasses,
+		dependencies: node.dependencies,
+		source: node.source
+	}
+
+	return demoNode
+}
+
+let demo: AsyncNodeCreator<Optional<Demo>> = async ({
+	getOrigami,
+	prefix,
+	component,
+	...nodeCreatorOptions
+}) => {
+	if (!prefix) {
+		throw new Error("must pass prefix option to demos")
+	}
+
+	let base = await demoBase({...nodeCreatorOptions, getOrigami, prefix, component})
+
+	if ("type" in base && (base.type == "empty" || base.type == "problem" || base.type == "problems")) {
+		return base
+	}
+
+
+       let index = prefix[prefix.length - 1]
+
+       if (typeof index != "number") {
+               throw new Error("last item in prefix must be a demo index")
+       }
+
+	let node: Partial<Demo> = {}
 
 	// TODO this and the 3 after it are the same
 	let title = getOrigami(...prefix, "title")
@@ -996,52 +1018,6 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 		node.description = expected
 			.string(description.value, description.source)
 			.problem("demo-description-not-string")
-	}
-
-	let {value: brandsValue, source: brandsSource} = getOrigami(
-		...prefix,
-		"brands"
-	)
-
-	if (brandsValue) {
-		if (Array.isArray(brandsValue)) {
-			let rootBrands = component.brands
-			// TODO warn the user if they have not demo'd one of the brands
-			if (rootBrands && rootBrands.type == "brands") {
-				let brandsNode = brands({getOrigami, prefix, component, ...nco})
-				let rootBrandsNames = rootBrands.children.map(b => {
-					return b.type == "brand" && b.value
-				})
-				if (brandsNode.type == "brands") {
-					if (
-						(brandsNode.master && !rootBrands.master) ||
-						(brandsNode.internal && !rootBrands.internal) ||
-						(brandsNode.whitelabel && !rootBrands.whitelabel)
-					) {
-						node.brands = expected
-							.member(rootBrandsNames, brandsValue, brandsSource)
-							.problem("brand-not-valid")
-					} else {
-						node.brands = brandsNode
-					}
-				} else {
-					node.brands = brandsNode
-				}
-			} else {
-				node.brands = expected
-					.message(
-						brandsSource,
-						"demo brands have been specified, but there are no brands listed in the manifest root"
-					)
-					.problem("demo-brands-not-supported")
-			}
-		} else {
-			node.brands = expected
-				.array(brandsValue, brandsSource)
-				.problem("demo-brands-not-array")
-		}
-	} else {
-		node.brands = empty(brandsSource)
 	}
 
 	// TODO this is exactly same as hidden
@@ -1120,29 +1096,78 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 			.boolean(hidden.value, hidden.source)
 			.problem("demo-hidden-not-boolean")
 	}
+
+
+      let {value: brandsValue, source: brandsSource} = getOrigami(
+              ...prefix,
+              "brands"
+      )
+
+      if (brandsValue) {
+              if (Array.isArray(brandsValue)) {
+                      let rootBrands = component.brands
+                      // TODO warn the user if they have not demo'd one of the
+		      // brands mentioned in the origami.json#brands field
+                      if (rootBrands && rootBrands.type == "brands") {
+                              let brandsNode = brands({getOrigami, prefix, component, ...nodeCreatorOptions})
+                              let rootBrandsNames = rootBrands.children.map(b => {
+                                      return b.type == "brand" && b.value
+                              })
+                              if (brandsNode.type == "brands") {
+                                      if (
+                                              (brandsNode.master && !rootBrands.master) ||
+                                              (brandsNode.internal && !rootBrands.internal) ||
+                                              (brandsNode.whitelabel && !rootBrands.whitelabel)
+                                      ) {
+                                              node.brands = expected
+                                                      .member(rootBrandsNames, brandsValue, brandsSource)
+                                                      .problem("brand-not-valid")
+                                      } else {
+                                              node.brands = brandsNode
+                                      }
+                              } else {
+                                      node.brands = brandsNode
+                              }
+                      } else {
+                              node.brands = expected
+                                      .message(
+                                              brandsSource,
+                                              "demo brands have been specified, but there are no brands listed in the manifest root"
+                                      )
+                                      .problem("demo-brands-not-supported")
+                      }
+              } else {
+                      node.brands = expected
+                              .array(brandsValue, brandsSource)
+                               .problem("demo-brands-not-array")
+               }
+       } else {
+               node.brands = empty(brandsSource)
+       }
+
 	let demoNode: Demo = {
 		type: "demo",
-		template: node.template,
-		sass: node.sass,
-		js: node.js,
-		data: node.data,
+		template: base.template,
+		sass: base.sass,
+		js: base.js,
+		data: base.data,
 		brands: node.brands,
-		documentClasses: node.documentClasses,
-		dependencies: node.dependencies,
+		documentClasses: base.documentClasses,
+		dependencies: base.dependencies,
 		index,
-		source: demoSource,
+		source: base.source,
 		name: node.name,
 		title: node.title,
 		description: node.description,
 		hidden: node.hidden,
 		displayHtml: node.displayHtml,
 		children: [
-			node.template,
-			node.sass,
-			node.js,
-			node.data,
+			base.template,
+			base.sass,
+			base.js,
+			base.data,
 			node.brands,
-			node.documentClasses,
+			base.documentClasses,
 			node.name,
 			node.title,
 			node.description,
@@ -1154,192 +1179,32 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 	return demoNode
 }
 
-// TODO consider cleaning this up a bit, lots of duplication
-let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
-	getOrigami,
-}) => {
-	let node: Partial<DemosDefaults> = {
-		type: "demos defaults",
-	}
+let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async (nodeCreatorOptions) => {
+	let prefix = nodeCreatorOptions.prefix
+		? [...nodeCreatorOptions.prefix, "demosDefaults"]
+		: ["demosDefaults"]
 
-	let {value: demosDefaults, source: demosDefaultsSource} = getOrigami(
-		"demosDefaults"
-	)
+	let base = await demoBase({...nodeCreatorOptions, prefix})
 
-	node.source = demosDefaultsSource
-
-	if (!demosDefaults) {
-		return empty(demosDefaultsSource)
-	}
-
-	let js = getOrigami("demosDefaults", "js")
-
-	if (js.value) {
-		if (typeof js.value == "string") {
-			let jsPathType = await getPathType(js.value)
-			if (jsPathType == "file") {
-				node.js = {
-					type: "demo javascript",
-					source: js.source,
-					value: js.value,
-				}
-			} else {
-				node.js = expected.file(js.value, js.source).problem("demo-js-not-file")
-			}
-		} else {
-			node.js = expected.file(js.value, js.source).problem("demo-js-not-file")
-		}
-	} else {
-		node.js = empty(js.source)
-	}
-
-	let sass = getOrigami("demosDefaults", "sass")
-
-	if (sass.value) {
-		if (typeof sass.value == "string") {
-			let sassPathType = await getPathType(sass.value)
-			if (sassPathType == "file") {
-				node.sass = {
-					type: "demo sass",
-					source: sass.source,
-					value: sass.value,
-				}
-			} else {
-				node.sass = expected
-					.file(sass.value, sass.source)
-					.problem("demo-sass-not-file")
-			}
-		} else {
-			node.sass = expected
-				.file(sass.value, sass.source)
-				.problem("demo-sass-not-file")
-		}
-	} else {
-		node.sass = empty(sass.source)
-	}
-
-	let template = getOrigami("demosDefaults", "template")
-
-	if (template.value) {
-		if (typeof template.value == "string") {
-			let templatePathType = await getPathType(template.value)
-			if (templatePathType == "file") {
-				node.template = {
-					type: "demo template",
-					source: template.source,
-					value: template.value,
-				}
-			} else {
-				node.template = expected
-					.file(template.value, template.source)
-					.problem("demo-template-not-file")
-			}
-		} else {
-			node.template = expected
-				.file(template.value, template.source)
-				.problem("demo-template-not-file")
-		}
-	} else {
-		node.template = empty(template.source)
-	}
-
-	let data = getOrigami("demosDefaults", "data")
-
-	if (data.value) {
-		if (typeof data.value == "string") {
-			let dataPathType = await getPathType(data.value)
-			if (dataPathType == "file") {
-				node.data = {
-					type: "demo data",
-					source: data.source,
-					// TODO handle this better than just crashing if the data file is bad json
-					data: JSON.parse(await fs.readFile(data.value, "utf-8")),
-				}
-			} else {
-				node.data = expected
-					.file(data.value, data.source)
-					.problem("demo-data-bad-file")
-			}
-		} else if (isObject(data.value)) {
-			node.data = {
-				type: "demo data",
-				source: data.source,
-				data: data.value,
-			}
-		} else {
-			node.data = expected
-				.file(data.value, data.source)
-				.problem("demo-data-not-file")
-		}
-	} else {
-		node.data = empty(data.source)
-	}
-
-	let documentClasses = getOrigami("demosDefaults", "documentClasses")
-
-	if (documentClasses.value) {
-		if (typeof documentClasses.value == "string") {
-			node.documentClasses = {
-				type: "demo document classes",
-				value: documentClasses.value,
-				source: documentClasses.source,
-			}
-		} else {
-			node.documentClasses = expected
-				.string(documentClasses.value, documentClasses.source)
-				.problem("demo-classes-not-string")
-		}
-	} else {
-		node.documentClasses = empty(documentClasses.source)
-	}
-
-	let dependencies = getOrigami("demosDefaults", "dependencies")
-
-	if (dependencies.value) {
-		if (Array.isArray(dependencies.value)) {
-			if (dependencies.value.every(s => typeof s == "string")) {
-				node.dependencies = {
-					type: "demo dependencies",
-					value: dependencies.value as string[],
-					source: dependencies.source,
-				}
-			} else {
-				node.dependencies = expected
-					.array(
-						dependencies.value,
-						dependencies.source,
-						"expected an array of strings"
-					)
-					.problem("demo-deps-not-strings")
-			}
-		} else {
-			node.dependencies = expected
-				.array(
-					dependencies.value,
-					dependencies.source,
-					"expected an array of strings"
-				)
-				.problem("demo-deps-not-array")
-		}
-	} else {
-		node.dependencies = empty(dependencies.source)
+	if ("type" in base && (base.type == "empty" || base.type == "problem" || base.type == "problems")) {
+		return base
 	}
 
 	let demoNode: DemosDefaults = {
 		type: "demos defaults",
-		template: node.template,
-		sass: node.sass,
-		js: node.js,
-		data: node.data,
-		documentClasses: node.documentClasses,
-		dependencies: node.dependencies,
-		source: node.source,
+		template: base.template,
+		sass: base.sass,
+		js: base.js,
+		data: base.data,
+		documentClasses: base.documentClasses,
+		dependencies: base.dependencies,
+		source: base.source,
 		children: [
-			node.template,
-			node.sass,
-			node.js,
-			node.data,
-			node.documentClasses,
+			base.template,
+			base.sass,
+			base.js,
+			base.data,
+			base.documentClasses,
 		],
 	}
 
