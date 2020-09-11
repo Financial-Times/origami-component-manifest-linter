@@ -627,7 +627,9 @@ export interface BrowserFeature extends Node, Value<string> {
 	type: "browser feature"
 }
 
-export interface BrowserFeatures extends Node {
+export interface BrowserFeatures
+	extends Node,
+		Parent<Required<BrowserFeature>[]> {
 	type: "browser features"
 	optional: Required<BrowserFeature>[]
 	required: Required<BrowserFeature>[]
@@ -710,6 +712,7 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 			type: "browser features",
 			optional: node.optional || [],
 			required: node.required || [],
+			children: [node.optional || [], node.required || []],
 		}
 	}
 }
@@ -751,7 +754,7 @@ export interface DemoBase {
 	dependencies: Optional<Value<string[]>>
 }
 
-export interface Demo extends DemoBase, Node {
+export interface Demo extends DemoBase, Node, Parent<Node> {
 	type: "demo"
 	/** the index of the demo in the demos list */
 	index: number
@@ -767,7 +770,7 @@ export interface Demo extends DemoBase, Node {
 	displayHtml: Required<Value<Boolean>>
 }
 
-export interface DemosDefaults extends DemoBase, Node {
+export interface DemosDefaults extends DemoBase, Node, Parent<Node> {
 	type: "demos defaults"
 }
 
@@ -1133,6 +1136,19 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 		description: node.description,
 		hidden: node.hidden,
 		displayHtml: node.displayHtml,
+		children: [
+			node.template,
+			node.sass,
+			node.js,
+			node.data,
+			node.brands,
+			node.documentClasses,
+			node.name,
+			node.title,
+			node.description,
+			node.hidden,
+			node.displayHtml,
+		],
 	}
 
 	return demoNode
@@ -1318,6 +1334,13 @@ let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async ({
 		documentClasses: node.documentClasses,
 		dependencies: node.dependencies,
 		source: node.source,
+		children: [
+			node.template,
+			node.sass,
+			node.js,
+			node.data,
+			node.documentClasses,
+		],
 	}
 
 	return demoNode
@@ -1350,7 +1373,7 @@ let demos: AsyncNodeCreator<Optional<Demos>> = async options => {
 	return node
 }
 
-export interface Component extends Node {
+export interface Component extends Node, Parent<Node> {
 	type: "component"
 	origamiType: Required<OrigamiType>
 	origamiVersion: Required<OrigamiVersion>
@@ -1729,6 +1752,12 @@ export async function createComponentNode(
 				path: ["ci"],
 			})
 			.problem("ci")
+	} else {
+		component.ci = empty({
+			file: "origami.json",
+			path: ["ci"],
+			value: undefined,
+		})
 	}
 
 	component.entries = {
@@ -1761,15 +1790,27 @@ export async function createComponentNode(
 		status: component.status,
 		keywords: component.keywords,
 		browserFeatures: component.browserFeatures,
-		ci:
-			component.ci ||
-			empty({
-				file: "origami.json",
-				path: ["ci"],
-				value: undefined,
-			}),
+		ci: component.ci,
 		entries: component.entries,
 		support: component.support,
 		demos: component.demos,
+		children: [
+			component.origamiVersion,
+			component.origamiType,
+			component.brands,
+			component.category,
+			component.name,
+			component.description,
+			component.status,
+			component.keywords,
+			component.browserFeatures,
+			component.ci,
+			component.entries.sass,
+			component.entries.javascript,
+			component.support.email,
+			component.support.slack,
+			component.support.url,
+			component.demos,
+		],
 	}
 }

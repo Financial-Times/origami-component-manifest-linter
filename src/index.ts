@@ -18,7 +18,9 @@ import {
 	Node,
 	NodeType,
 	Parent,
+	Problems
 } from "./lib/node"
+
 import type * as Expectation from "./lib/expectation"
 import {promises as fs} from "fs"
 import * as chalk from "chalk"
@@ -36,24 +38,26 @@ function parseExpectation(e: Expectation.Any, cwd: string): string {
 	switch (e.type) {
 		case "valueOf": {
 			return `expected value ${chalk.greenBright(
-					e.expected
-				)}, but got ${chalk.magentaBright(JSON.stringify(e.received))}`
-                        }
+				e.expected
+			)}, but got ${chalk.magentaBright(JSON.stringify(e.received))}`
+		}
 		case "memberOf": {
 			return `expected one of ${chalk.greenBright(
-					e.list.join(chalk.white("|"))
-				)}, but got ${chalk.magentaBright(`"${e.received}"`)}`
-                        }
+				e.list.join(chalk.white("|"))
+			)}, but got ${chalk.magentaBright(`"${e.received}"`)}`
+		}
 		case "typeOf": {
 			let expected = '"' + e.expected + '"'
 			let received = '"' + typeof e.received + '"'
 			return `expected type ${chalk.greenBright(
-					expected
-				)}, but got ${chalk.magentaBright(received)}`
-                        }
+				expected
+			)}, but got ${chalk.magentaBright(received)}`
+		}
 		case "file": {
-			return `${chalk.magentaBright(e.received)} does not exist under ${chalk.grey(cwd)}`
-                        }
+			return `${chalk.magentaBright(
+				e.received
+			)} does not exist under ${chalk.grey(cwd)}`
+		}
 	}
 	return ""
 }
@@ -61,8 +65,8 @@ function parseExpectation(e: Expectation.Any, cwd: string): string {
 /**
  * This provides the output used in github actions to annotate the files view in
  * PRs with line-by-line info
-*/
-function ghPrint(problem: Problem | Opinion, cwd: string) {
+ */
+function githubPrint(problem: Problem | Opinion, cwd: string) {
 	let write = process.stdout.write.bind(process.stdout)
 	let severity = problem.type == "problem" ? "error" : "warning"
 	write("::")
@@ -71,12 +75,12 @@ function ghPrint(problem: Problem | Opinion, cwd: string) {
 	write(`file=${problem.source.file},`)
 	write(`code=${problem.code},`)
 	if (problem.source.start) {
-                write(`line=${problem.source.start.line},`)
+		write(`line=${problem.source.start.line},`)
 		write(`col=${problem.source.start.column},`)
 	}
 	write(`severity=${severity}`)
 	write("::")
-        if (problem.message) {
+	if (problem.message) {
 		write(problem.message + "\t(")
 	}
 	write(parseExpectation(problem.expectation, cwd))
@@ -125,7 +129,6 @@ function print(problem: Problem | Opinion, cwd: string) {
 
 	write("\n")
 
-
 	let help = helpUrl(problem)
 	if (help) {
 		write("\n" + chalk.magenta("check " + help + " for help") + "\n")
@@ -137,7 +140,7 @@ function print(problem: Problem | Opinion, cwd: string) {
 type SpecFn = (n: Node) => boolean
 
 export function* getProblemsAndOpinions(
-	component: Component,
+	component: Component | Problem | Problems,
 	spec?: NodeType | SpecFn
 ): Generator<Opinion | Problem, void, undefined> {
 	let test: SpecFn
@@ -149,7 +152,7 @@ export function* getProblemsAndOpinions(
 		test = (_node: Node) => true
 	}
 
-	if (test(component)) {
+	if (test(component) && "opinions" in component && component.opinions) {
 		yield* component.opinions
 	}
 
@@ -160,9 +163,11 @@ export function* getProblemsAndOpinions(
 			if (node.type == "problem") {
 				// WHY DO I HAVE TO DO THIS
 				yield node as Problem
-			} else if (node.opinions) {
+			}
+			if (node.opinions) {
 				yield* node.opinions
-			} else if ("children" in node) {
+			}
+			if ("children" in node) {
 				for (let child of node.children) {
 					yield* testNode(child)
 				}
@@ -170,27 +175,8 @@ export function* getProblemsAndOpinions(
 		}
 	}
 
-	for (let node of [
-		component.origamiVersion,
-		component.entries.javascript,
-		component.entries.sass,
-		component.support.url,
-		component.support.email,
-		component.support.slack,
-		component.origamiType,
-		component.brands,
-		component.category,
-		component.name,
-		component.description,
-		component.status,
-		component.keywords,
-		component.browserFeatures,
-		component.ci,
-	]) {
-		yield* testNode(node)
-	}
+       	yield* testNode(component)
 }
-
 
 // we run the command line interface only if this file is being executed directly
 if (require.main === module) {
@@ -215,20 +201,15 @@ if (require.main === module) {
 			process.exit(0)
 		}
 
-		let printer = style == "github"
-			? ghPrint
-			: print
+		let printer = style == "github" ? githubPrint : print
 
-		if (component.type == "problem") {
-			printer(component, cwd)
-			process.exit(131)
-		} else if (component.type == "problems") {
-			component.children.map(problem => printer(problem, cwd))
-			process.exit(131)
-		} else {
-			for (let problemOrOpinion of getProblemsAndOpinions(component)) {
-				printer(problemOrOpinion, cwd)
-			}
+		if (component.type == "problem" || component.type == "problems") {
+			// ENOTRECOVERABLE
+                        process.exitCode = 131
+		}
+
+		for (let problemOrOpinion of getProblemsAndOpinions(component)) {
+			printer(problemOrOpinion, cwd)
 		}
 	})()
 }
