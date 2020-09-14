@@ -1399,48 +1399,42 @@ let getPathType = async (path: string): Promise<PathType> => {
 		})
 }
 
-interface JavaScriptEntry extends Node, Value<string> {
+interface JavaScriptEntry extends Value<string> {
 	type: "main.js"
 }
 
-interface SassEntry extends Node, Value<string> {
+interface SassEntry extends Value<string> {
 	type: "main.scss"
 }
 
-// TODO make this return a Optional<Template<EntryNode>> instead
-let entry = async <EntryNode extends Node>(
-	nodeType: NodeType,
+let entry = async (
 	entryPath: string,
 	{getBower}: NodeCreatorOptions
-): Promise<Optional<EntryNode>> => {
+): Promise<Optional<TemplateNode<Value<string>>>> => {
 	let {value: bowerMain, source: bowerMainSource} = getBower("main")
 
 	let mainEntryFileType = await getPathType(entryPath)
 	let isFile = mainEntryFileType == "file"
 	let isMissing = mainEntryFileType == "unavailable"
+	let fileSource
+
+	if (typeof bowerMain == "string") {
+		if (bowerMain == entryPath) {
+			fileSource = bowerMainSource
+		}
+	} else if (Array.isArray(bowerMain)) {
+		for (let index = 0; index < bowerMain.length; index++) {
+			if (bowerMain[index] == entryPath) {
+				fileSource = getBower("main", index).source
+			}
+		}
+	}
 
 	if (isFile) {
-		if (typeof bowerMain == "string") {
-			if (bowerMain == entryPath) {
-				return {
-					// TODO
-					// @ts-ignore
-					type: nodeType,
-					source: bowerMainSource,
-					value: entryPath,
-				}
-			}
-		} else if (Array.isArray(bowerMain)) {
-			for (let index = 0; index < bowerMain.length; index++) {
-				if (bowerMain[index] == entryPath) {
-					return {
-						// TODO
-						// @ts-ignore
-						type: nodeType,
-						source: getBower("main", index).source,
-						value: entryPath,
-					}
-				}
+		if (fileSource) {
+			return {
+				source: fileSource,
+				value: entryPath,
 			}
 		}
 
@@ -1481,17 +1475,12 @@ let entry = async <EntryNode extends Node>(
 			return empty(bowerMainSource)
 		}
 	} else {
-		// TODO bowerMainSource is not correct here
 		return expected
-			.file(entryPath, bowerMainSource, `is ${mainEntryFileType}`)
+			.file(entryPath, fileSource || bowerMainSource, `is ${mainEntryFileType}`)
 			.problem("non-file-main")
 	}
 
 	return empty(bowerMainSource)
-}
-
-interface JavaScriptEntry extends Node, Value<string> {
-	type: "main.js"
 }
 
 export async function createComponentNode(
@@ -1645,9 +1634,28 @@ export async function createComponentNode(
 		})
 	}
 
+	let javascript = await entry("main.js", options)
+	let sass = await entry("main.scss", options)
+
 	component.entries = {
-		javascript: await entry<JavaScriptEntry>("main.js", "main.js", options),
-		sass: await entry<SassEntry>("main.scss", "main.scss", options),
+		javascript:
+			// if it ran into any trouble, type will be defined by `empty'
+			// or `problem'`
+			"type" in javascript
+				? javascript
+				: {
+						source: javascript.source,
+						value: javascript.value,
+						type: "main.js",
+				  },
+		sass:
+			"type" in sass
+				? sass
+				: {
+						source: sass.source,
+						value: sass.value,
+						type: "main.scss",
+				  },
 	}
 
 	component.support = {
