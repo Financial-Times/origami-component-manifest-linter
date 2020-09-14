@@ -30,7 +30,7 @@ export interface Source {
 	value: JsonValueU
 }
 
-interface ValueSource {
+export interface ValueSource {
 	value: JsonValueU
 	source: Source
 }
