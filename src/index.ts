@@ -18,7 +18,7 @@ import {
 	Node,
 	NodeType,
 	Parent,
-	Problems
+	Problems,
 } from "./lib/node"
 
 import type * as Expectation from "./lib/expectation"
@@ -175,7 +175,7 @@ export function* getProblemsAndOpinions(
 		}
 	}
 
-       	yield* testNode(component)
+	yield* testNode(component)
 }
 
 // we run the command line interface only if this file is being executed directly
@@ -205,7 +205,7 @@ if (require.main === module) {
 
 		if (component.type == "problem" || component.type == "problems") {
 			// ENOTRECOVERABLE
-                        process.exitCode = 131
+			process.exitCode = 131
 		}
 
 		for (let problemOrOpinion of getProblemsAndOpinions(component)) {
