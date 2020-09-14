@@ -1,10 +1,14 @@
-import type * as Manifest from "./manifest"
-import get, {Source, GetPath} from "./get"
-import type {Get, ValueSource} from "./get"
+import * as url from "url"
+import {promises as fs} from "fs"
+
 import * as Expectation from "./expectation"
+import get, {Source, GetPath} from "./get"
+import type * as Manifest from "./manifest"
+import type {Get, ValueSource} from "./get"
 import type {JsonValueU, JsonValue} from "./json-value"
 import {isObject} from "./json-value"
 
+/** An object containing all the valid node type values **/
 export let NODE_TYPE = {
 	BOWER_MANIFEST: "bower.json",
 	BRAND: "brand",
@@ -54,41 +58,124 @@ export let NODE_TYPE = {
 	URL: "url",
 } as const
 
+/**
+ * a type of NodeType which gets its values from the object of node types.
+ * this lets us write functions that take a `NodeType` as an argument.
+ */
 export type NodeType = typeof NODE_TYPE[keyof typeof NODE_TYPE]
 
+/**
+ * The base node from which other nodes extend.
+ * abstract.
+ */
 export interface Node {
+	/** a type from the set of valid node types */
 	type: NodeType
+	/**
+	 * a source object as defined in `get.ts`.
+
+	 * these provide the file, json path, line and column where a piece of
+	 * information orignated
+	 */
 	source: Source
+	/**
+	 * a list of failed expectations that are not fatal, but for which we
+	 * might provide some helpful insights
+	 */
 	opinions?: Opinion[]
 }
 
-export interface Value<T> extends Node {
-	type: NodeType
-	value: T
+/** a node that represents a raw value.
+ *
+ * designed for holding literals like
+ * booleans or strings, but could contain anything
+ */
+export interface Value<ValueType> extends Node {
+	value: ValueType
 }
 
+/**
+ * A template node is a node that does not yet have its nodetype defined.
+ *
+ * These are useful when reducing duplication by building up a common node shape
+ * in a function and then setting its `type` after the fact.
+ */
 type TemplateNode<Target extends Node> = Omit<Target, "type">
 
+/**
+ * Functions that return a node are called "node creators". Every one of them
+ * gets called with the same set of options.
+ */
 interface NodeCreatorOptions {
+	/**
+	 * a function that returns a value from the bower.json matching a json
+	 * path
+	 */
 	getBower: Get
+	/**
+	 * a function that returns a value from the package.json matching a json
+	 * path. if there is no package.json, this will not be defined.
+	 */
 	getNpm?: Get
+	/**
+	 * a function that returns a value from the origami.json matching a json
+	 * path.
+	 */
 	getOrigami: Get
+	/**
+	 * The component so far. Some nodes may rely on the parsed value of others.
+	 */
 	component: Partial<Component>
-	/** a path that should be prepended to any gets, for children to use */
+	/**
+	 *  a path that should be prepended to the getters, for children to use
+	 */
 	prefix?: GetPath
 }
 
+/**
+ * Functions that create a node are called "node creators".
+ */
 type NodeCreator<Node> = (options: NodeCreatorOptions) => Node
+
+/**
+ * Functions that create a node are called "node creators".
+ * async node creators return a promise that resolves to a Node
+ */
 type AsyncNodeCreator<Node> = (options: NodeCreatorOptions) => Promise<Node>
 
-export interface Parent<Item> extends Node {
+/**
+ * Mark a node as Required, which means it can only be the node or a problem.
+ */
+type Required<N> = N | Problem | Problems
+
+/**
+ * Mark a node as Required, which means it can be the node, a problem or the
+ * empty node
+ */
+type Optional<N> = Empty | N | Problem | Problems
+
+/**
+ * A node that has children.
+ */
+export interface Parent<Item extends Node> extends Node {
 	children: Item[]
 }
 
+/**
+ * A representation for when something optional was not present in the
+ *  manifests.
+ */
 export interface Empty extends Node {
 	type: "empty"
 }
 
+/**
+ * Create a node representing an optional property that was not present in the
+ * manifests
+ *
+ * @param {Source} source the source at which nothing was found
+ * @returns {Empty} the empty node
+ */
 function empty(source: Source): Empty {
 	return {
 		type: "empty",
@@ -96,26 +183,9 @@ function empty(source: Source): Empty {
 	}
 }
 
-export interface OrigamiVersion extends Node, Value<number> {
-	type: "origami version"
-}
-
-let origamiVersion: NodeCreator<Required<OrigamiVersion>> = ({getOrigami}) => {
-	let {value, source} = getOrigami("origamiVersion")
-	if (typeof value == "number") {
-		return {
-			type: "origami version",
-			source,
-			value,
-		}
-	} else {
-		return expected
-			.number(value, source)
-			.problem("origami-version-not-a-number")
-	}
-}
-
+/** An abstract node for problem and opinions */
 export interface Information extends Node {
+	/** the expectation that failed */
 	expectation: Expectation.Any
 	/** the error code */
 	code: string
@@ -123,14 +193,17 @@ export interface Information extends Node {
 	message?: string
 }
 
+/** a problem child. a fatal expectation failure when trying to parse a value */
 export interface Problem extends Information, Node {
 	type: "problem"
 }
 
+/** a problem parent */
 export interface Problems extends Parent<Problem>, Node {
 	type: "problems"
 }
 
+/** create a problem */
 export function problem(
 	expectation: Expectation.Any,
 	source: Source,
@@ -146,10 +219,12 @@ export function problem(
 	}
 }
 
+/** a non-fatal expectation failure when trying to parse a value */
 export interface Opinion extends Information, Node {
 	type: "opinion"
 }
 
+/** opine */
 export function opinion(
 	expectation: Expectation.Any,
 	source: Source,
@@ -165,23 +240,141 @@ export function opinion(
 	}
 }
 
-type Required<N> = N | Problem | Problems
+/**
+ * Create a helper that has a .problem and .opinion method to create a problem
+ * or opinion from any failed expectation
+ *
+ * @param expectation the expectation that failed
+ * @param source the file position information for the failure
+ * @param message a string containing an extra helpful message in addition to
+ * the expectation failure
+ */
+function po(expectation: Expectation.Any, source: Source, message?: string) {
+	return {
+		problem: (code: string) => problem(expectation, source, code, message),
+		opinion: (code: string) => opinion(expectation, source, code, message),
+	}
+}
 
-type Optional<N> = Empty | N | Problem | Problems
+/**
+ * A set of helpers for failed expectations.
+ */
+let expected = {
+	message(source: Source, message: string) {
+		return po(Expectation.message(), source, message)
+	},
+	type(
+		expected: Expectation.TypeOfType[],
+		received: JsonValueU,
+		source: Source,
+		message?: string
+	) {
+		return po(Expectation.typeOf(expected, received), source, message)
+	},
+	match(
+		regexp: RegExp,
+		received: JsonValueU,
+		source: Source,
+		message?: string
+	) {
+		return po(Expectation.match(regexp, received), source, message)
+	},
+	startsWith(
+		expectedPrefix: string,
+		received: JsonValueU,
+		source: Source,
+		message?: string
+	) {
+		return po(Expectation.startsWith(expectedPrefix, received), source, message)
+	},
+	string(received: JsonValueU, source: Source, message?: string) {
+		return po(Expectation.typeOf(["string"], received), source, message)
+	},
+	boolean(received: JsonValueU, source: Source, message?: string) {
+		return po(Expectation.typeOf(["boolean"], received), source, message)
+	},
+	array(received: JsonValueU, source: Source, message?: string) {
+		return po(Expectation.typeOf(["array"], received), source, message)
+	},
+	number(received: JsonValueU, source: Source, message?: string) {
+		return po(Expectation.typeOf(["number"], received), source, message)
+	},
+	object(received: JsonValueU, source: Source, message?: string) {
+		return po(Expectation.typeOf(["object"], received), source, message)
+	},
+	file(received: JsonValueU, source: Source, message?: string) {
+		return po(Expectation.file(received), source, message)
+	},
+	url(received: JsonValueU, source: Source, message?: string) {
+		return po(Expectation.url(received), source, message)
+	},
+	value(
+		expected: JsonValue,
+		received: JsonValueU,
+		source: Source,
+		message?: string
+	) {
+		return po(Expectation.valueOf(expected, received), source, message)
+	},
+	member(
+		list: JsonValue[],
+		received: JsonValueU,
+		source: Source,
+		message?: string
+	) {
+		return po(Expectation.memberOf(list, received), source, message)
+	},
+}
 
-export interface Name extends Node, Value<string> {
+/**
+ * A node representing the version of Origami the component implements
+ */
+export interface OrigamiVersion extends Node, Value<number> {
+	type: "origami version"
+}
+
+/**
+ * Create node representing the version of Origami the component implements
+ */
+let origamiVersion: NodeCreator<Required<OrigamiVersion>> = ({getOrigami}) => {
+	let {value, source} = getOrigami("origamiVersion")
+	if (typeof value == "number") {
+		return {
+			type: "origami version",
+			source,
+			value,
+		}
+	} else {
+		return expected
+			.number(value, source)
+			.problem("origami-version-not-a-number")
+	}
+}
+
+/**
+ * A node representing the component's name, parsed from the bower.json and, if
+ * there is one, the package.json
+ */
+export interface Name extends Value<string> {
 	type: "name"
 }
 
+/**
+ * Create a {@link Name} node.
+ * TODO: check the environment variables for GITHUB_REPOSITORY and make sure the
+ * name matches
+ */
 let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 	let problems = {
 		type: NODE_TYPE.PROBLEMS,
 		children: [] as Problem[],
 	} as Problems
 
+	// get the name from bower.json
 	let {value: bowerName, source: bowerNameSource} = getBower("name")
 
 	if (typeof bowerName == "string") {
+		// https://origami.ft.com/spec/v1/components/#naming-conventions
 		let lowerCaseAsciiRegexp = /^[a-z-]+$/
 		let lowerCaseAsciiMessage = "only lowercase ascii letters and hyphens"
 		let bowerNameIsAscii = lowerCaseAsciiRegexp.test(bowerName)
@@ -193,7 +386,7 @@ let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 				value: bowerName,
 				opinions: [],
 			}
-
+			// *should* be prefixed with o- (for Origami).
 			if (!bowerName.startsWith("o-")) {
 				node.opinions?.push(
 					expected
@@ -207,8 +400,8 @@ let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 				)
 			}
 
-			// we don't mind this if there is no npm manifest at all
-			// and we're just going to error if it's not the same as the bower one
+			// we're going to error if the npm name is not the same
+			// as the one in bower.json
 			if (getNpm) {
 				let {value: npmName, source: npmNameSource} = getNpm("name")
 
@@ -222,9 +415,11 @@ let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 					)
 				}
 			} else {
+				// but we don't mind if there is no npm manifest at all
 				return node
 			}
 		} else {
+			// The name *must* only contain lower-case ASCII letters, and hyphens.
 			problems.children.push(
 				expected
 					.match(
@@ -238,18 +433,19 @@ let name: NodeCreator<Required<Name>> = ({getBower, getNpm}) => {
 		}
 	} else {
 		problems.children.push(
-			expected.string(bowerName, bowerNameSource).problem("no-bower-name")
+			expected.string(bowerName, bowerNameSource).problem("name-not-string")
 		)
 	}
 
 	return problems
 }
 
-export interface Description extends Node {
+/** A node representing a description of the component */
+export interface Description extends Value<string> {
 	type: "description"
-	value: string
 }
 
+/** Create a {@link Description} node */
 let description: NodeCreator<Required<Description>> = ({
 	getBower,
 	getNpm,
@@ -271,6 +467,8 @@ let description: NodeCreator<Required<Description>> = ({
 			"description"
 		)
 
+		// the description should be the same in bower, npm and origami
+		// manifests
 		if (bowerDescription) {
 			if (bowerDescription != description) {
 				opinions.push(
@@ -315,22 +513,28 @@ let description: NodeCreator<Required<Description>> = ({
 	}
 }
 
+/** map of valid origamiTypes for the final tree. there is only one */
 export let ORIGAMI_TYPE = {
 	COMPONENT: "component",
 } as const
 
+/** type of valid origamiType */
 export type OrigamiTypeValue = typeof ORIGAMI_TYPE[keyof typeof ORIGAMI_TYPE]
 
-export interface OrigamiType extends Node {
+/** A node representing the origamiType */
+export interface OrigamiType extends Value<OrigamiTypeValue> {
 	type: "origami type"
 	value: OrigamiTypeValue
 }
 
+/** Create a {@link OrigamiType} node */
 let origamiType: NodeCreator<Required<OrigamiType>> = ({getOrigami}) => {
 	let {value: origamiType, source: origamiTypeSource} = getOrigami(
 		"origamiType"
 	)
 
+	// we will optionally accept `module`
+	// https://origami.ft.com/spec/v1/manifest/#origamitype
 	let validTypes = ["module", "component"]
 
 	if (typeof origamiType == "string" && validTypes.includes(origamiType)) {
@@ -357,18 +561,25 @@ let origamiType: NodeCreator<Required<OrigamiType>> = ({getOrigami}) => {
 	}
 }
 
+/** A node representing a single keyword */
 export interface Keyword extends Node {
 	type: "keyword"
 	value: string
 }
 
+/** A node representing the keywords array */
 export interface Keywords extends Node {
 	type: "keywords"
 	children: Required<Keyword>[]
 }
 
+/**
+ * Create a {@link Keywords} node
+ * TODO accept a comma separated string and return an opinion
+ */
 let keywords: NodeCreator<Required<Keywords>> = ({getOrigami}) => {
 	let {value: keywords, source: keywordsSource} = getOrigami("keywords")
+	// https://origami.ft.com/spec/v1/manifest/#keywords
 	if (Array.isArray(keywords)) {
 		let node = {
 			type: "keywords" as const,
@@ -400,18 +611,29 @@ let keywords: NodeCreator<Required<Keywords>> = ({getOrigami}) => {
 	}
 }
 
+/**
+ * A map of valid brand names
+ */
 export let BRAND_NAME = {
 	MASTER: "master",
 	INTERNAL: "internal",
 	WHITELABEL: "whitelabel",
 } as const
 
+/** a valid brand name */
 export type BrandName = typeof BRAND_NAME[keyof typeof BRAND_NAME]
 
-export interface Brand extends Node, Value<string> {
+/** A node representing a brand */
+export interface Brand extends Value<string> {
 	type: "brand"
 }
 
+/**
+ * A node representing the brands array.
+ *
+ * Contains the brands as children, as well as a boolean for each known brand,
+ * indicating whether it is present in the array.
+ */
 export interface Brands extends Node {
 	type: "brands"
 	master: boolean
@@ -420,6 +642,9 @@ export interface Brands extends Node {
 	children: Required<Brand>[]
 }
 
+/**
+ * Create a brands node.
+ */
 let brands: NodeCreator<Optional<Brands>> = ({getOrigami, prefix}) => {
 	let {value: brands, source: brandsSource} = prefix
 		? getOrigami(...prefix, "brands")
@@ -458,6 +683,9 @@ let brands: NodeCreator<Optional<Brands>> = ({getOrigami, prefix}) => {
 	}
 }
 
+/**
+ * map of valid category names
+ */
 export let CATEGORY_NAME = {
 	COMPONENTS: "components",
 	PRIMITIVES: "primitives",
@@ -465,19 +693,33 @@ export let CATEGORY_NAME = {
 	LAYOUTS: "layouts",
 }
 
+/**
+ * a valid category
+ */
 export type CategoryName = typeof CATEGORY_NAME[keyof typeof CATEGORY_NAME]
 
+/**
+ * the category names
+ */
 let CATEGORY_VALUES = Object.values(CATEGORY_NAME)
 
-export interface Category extends Node {
+/**
+ * A node representing the category.
+ *
+ * Contains the category as value, as well as a boolean for each known category,
+ * indicating whether it is the component's category
+ */
+export interface Category extends Value<CategoryName> {
 	type: "category"
 	components: boolean
 	primitives: boolean
 	utilities: boolean
 	layouts: boolean
-	value: CategoryName
 }
 
+/**
+ * Create a category node.
+ */
 let category: NodeCreator<Required<Category>> = ({getOrigami}) => {
 	let {value: category, source} = getOrigami("origamiCategory")
 
@@ -498,6 +740,9 @@ let category: NodeCreator<Required<Category>> = ({getOrigami}) => {
 	}
 }
 
+/**
+ * map of valid statuses
+ */
 export let STATUS = {
 	ACTIVE: "active",
 	MAINTAINED: "maintained",
@@ -506,20 +751,34 @@ export let STATUS = {
 	EXPERIMENTAL: "experimental",
 }
 
+/**
+ * A valid status
+ */
 export type StatusValue = typeof STATUS[keyof typeof STATUS]
 
+/**
+ * The valid status values
+ */
 export let STATUS_VALUES = Object.values(STATUS)
 
-export interface Status extends Node {
+/**
+ * A node representing the status.
+ *
+ * Contains the status as value, as well as a boolean for each known status,
+ * indicating whether it is the component's status
+ */
+export interface Status extends Value<StatusValue> {
 	type: "status"
 	active: boolean
 	maintained: boolean
 	deprecated: boolean
 	dead: boolean
 	experimental: boolean
-	value: StatusValue
 }
 
+/**
+ * Create a status node.
+ */
 let status: NodeCreator<Required<Status>> = ({getOrigami}) => {
 	let {value: status, source} = getOrigami("supportStatus")
 
@@ -541,16 +800,22 @@ let status: NodeCreator<Required<Status>> = ({getOrigami}) => {
 	}
 }
 
-import * as url from "url"
-
-export interface Url extends Node, Value<url.Url> {
+/** a node representing a component's support url */
+export interface Url extends Value<url.Url> {
 	type: "url"
 }
 
-export interface Email extends Node, Value<string> {
+/** a node representing a component's support email */
+export interface Email extends Value<string> {
 	type: "email"
 }
 
+/**
+ * a node representing a component's support slack channel
+ *
+ * It has the `workspace/channel` as a value as well as `.workspace` and
+ * `.channel` properties with their parsed values.
+ */
 export interface SlackContact extends Node {
 	type: "slack contact"
 	workspace: string
@@ -558,6 +823,7 @@ export interface SlackContact extends Node {
 	value: string
 }
 
+/** create a Url node */
 let supportUrl: NodeCreator<Required<Url>> = ({getOrigami}) => {
 	let {value: support, source} = getOrigami("support")
 	if (typeof support != "string") {
@@ -574,6 +840,7 @@ let supportUrl: NodeCreator<Required<Url>> = ({getOrigami}) => {
 	}
 }
 
+/** create a support Email node */
 let supportEmail: NodeCreator<Required<Email>> = ({getOrigami}) => {
 	let {value: email, source} = getOrigami("supportContact", "email")
 	if (typeof email != "string") {
@@ -582,7 +849,11 @@ let supportEmail: NodeCreator<Required<Email>> = ({getOrigami}) => {
 
 	let emailRegex = /^[^@]+@[^@]+$/
 	let ftEmailRegex = /@ft.com$/
+
+	// it's a problem if it's not a valid email address, which we're
+	// defining as something@something
 	if (emailRegex.test(email)) {
+		// it's our opinion the email should be on the ft.com domain
 		if (ftEmailRegex.test(email)) {
 			return {source, type: "email", value: email}
 		} else {
@@ -604,11 +875,15 @@ let supportEmail: NodeCreator<Required<Email>> = ({getOrigami}) => {
 	}
 }
 
+/** create a support Slack node */
 let supportSlack: NodeCreator<Required<SlackContact>> = ({getOrigami}) => {
 	let {value: slack, source} = getOrigami("supportContact", "slack")
 	if (typeof slack != "string") {
 		return expected.string(slack, source).problem("support-slack-not-string")
 	}
+
+	// https://origami.ft.com/spec/v1/manifest/#supportcontact
+	// this *must* be in the format organization/channelname
 	let slackRegex = /([a-z0-9]+)\/(.*)/
 	let match = slackRegex.exec(slack)
 	if (match) {
@@ -626,18 +901,25 @@ let supportSlack: NodeCreator<Required<SlackContact>> = ({getOrigami}) => {
 	}
 }
 
-export interface BrowserFeature extends Node, Value<string> {
+/** A node representing a browser feature */
+export interface BrowserFeature extends Value<string> {
 	type: "browser feature"
 }
 
+/** A node representing the browser features */
 export interface BrowserFeatures
 	extends Node,
-		Parent<Required<BrowserFeature>[]> {
+		Parent<Required<BrowserFeature>> {
 	type: "browser features"
 	optional: Required<BrowserFeature>[]
 	required: Required<BrowserFeature>[]
 }
 
+/**
+ * create a browser features node
+ *
+ * TODO check that these are valid polyfill library features
+ */
 let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 	getOrigami,
 }) => {
@@ -663,6 +945,7 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 	let node: Partial<BrowserFeatures> = {
 		optional: [],
 		required: [],
+		children: [],
 	}
 
 	for (let key in browserFeatures) {
@@ -673,6 +956,8 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 				node[key] = list.map((element, index) => {
 					let source = getOrigami("browserFeatures", key, index).source
 					if (typeof element == "string") {
+						// TODO check that the browser
+						// feature is a valid polyfill feature
 						return {
 							type: "browser feature",
 							value: element,
@@ -710,38 +995,44 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 			children: problems,
 		}
 	} else {
-		return {
+		let result: BrowserFeatures = {
 			source,
 			type: "browser features",
 			optional: node.optional || [],
 			required: node.required || [],
-			children: [node.optional || [], node.required || []],
+			children: [],
 		}
+
+		result.children = [...result.optional, ...result.required]
+
+		return result
 	}
 }
 
-export interface Map<T> extends Node {
-	type: "map"
-	value: {[key: string]: T}
-}
-
+/** a node representing the template file name for a demo */
 export interface DemoTemplate extends Node, Value<string> {
 	type: "demo template"
 }
 
+/** a node representing the javascript file name for a demo */
 export interface DemoJavaScript extends Node, Value<string> {
 	type: "demo javascript"
 }
 
+/** a node representing the sass file name for a demo */
 export interface DemoSass extends Node, Value<string> {
 	type: "demo sass"
 }
 
-export interface DemoData extends Node {
+/** a value node representing the data for a demo */
+export interface DemoData extends Value<{[key: string]: any}> {
 	type: "demo data"
-	data: {[key: string]: any}
 }
 
+/**
+ * an abstract node representing the properties present in both demo defaults
+ * and individual demos
+ */
 export interface DemoBase {
 	/** the path to the demo-specific mustache template to render */
 	template: Optional<DemoTemplate>
@@ -758,6 +1049,20 @@ export interface DemoBase {
 	source: Source
 }
 
+/**
+ * a node representing the demo defaults
+ *
+ * this is a parent so it is easier to iterate
+ */
+export interface DemosDefaults extends DemoBase, Node, Parent<Node> {
+	type: "demos defaults"
+}
+
+/**
+ * a node representing an individual demo
+ *
+ * this is a parent so it is easier to iterate
+ */
 export interface Demo extends DemoBase, Node, Parent<Node> {
 	type: "demo"
 	/** the index of the demo in the demos list */
@@ -774,15 +1079,15 @@ export interface Demo extends DemoBase, Node, Parent<Node> {
 	displayHtml: Required<Value<Boolean>>
 }
 
-export interface DemosDefaults extends DemoBase, Node, Parent<Node> {
-	type: "demos defaults"
-}
-
+/**
+ * a node representing the demos array
+ */
 export interface Demos extends Parent<Optional<Demo>> {
 	type: "demos"
 	defaults: Optional<DemosDefaults>
 }
 
+/** create a demo base, for use in demos and demo defaults */
 async function demoBase({
 	getOrigami,
 	prefix,
@@ -804,6 +1109,7 @@ async function demoBase({
 
 	if (js.value) {
 		if (typeof js.value == "string") {
+			// we make sure a named javascript file is truly a file
 			let jsPathType = await getPathType(js.value)
 			if (jsPathType == "file") {
 				node.js = {
@@ -825,6 +1131,7 @@ async function demoBase({
 
 	if (sass.value) {
 		if (typeof sass.value == "string") {
+			// we make sure a named sass file is truly a file
 			let sassPathType = await getPathType(sass.value)
 			if (sassPathType == "file") {
 				node.sass = {
@@ -874,14 +1181,18 @@ async function demoBase({
 	let data = getOrigami(...prefix, "data")
 
 	if (data.value) {
+		// data might be a file path or an object
 		if (typeof data.value == "string") {
+			// we make sure a named data file is truly a file
 			let dataPathType = await getPathType(data.value)
 			if (dataPathType == "file") {
 				node.data = {
 					type: "demo data",
 					source: data.source,
+					// we expect a named data file to be
+					// json, and parse it.
 					// TODO handle this better than crashing if the data file is bad json
-					data: JSON.parse(await fs.readFile(data.value, "utf-8")),
+					value: JSON.parse(await fs.readFile(data.value, "utf-8")),
 				}
 			} else {
 				node.data = expected
@@ -889,15 +1200,16 @@ async function demoBase({
 					.problem("demo-data-bad-file")
 			}
 		} else if (isObject(data.value)) {
+			// if it's an object, we take it directly. might be
 			node.data = {
 				type: "demo data",
 				source: data.source,
-				data: data.value,
+				value: data.value,
 			}
 		} else {
 			node.data = expected
 				.file(data.value, data.source)
-				.problem("demo-data-not-file")
+				.problem("demo-data-not-file-or-object")
 		}
 	} else {
 		node.data = empty(data.source)
@@ -966,6 +1278,12 @@ async function demoBase({
 	return demoNode
 }
 
+/**
+ * try to create a boolean value node from a boolean or a boolean string.
+ *
+ * if it's a boolean string (i.e. the string `"true"` or the string `"false"`)
+ * we warn, but parse it anyway
+ */
 function boolean({
 	value,
 	source,
@@ -1001,6 +1319,9 @@ function boolean({
 	}
 }
 
+/**
+ * try to create a string value node
+ */
 function string({
 	value,
 	source,
@@ -1015,12 +1336,16 @@ function string({
 	}
 }
 
-let demo: AsyncNodeCreator<Optional<Demo>> = async ({
-	getOrigami,
-	prefix,
-	component,
-	...nodeCreatorOptions
-}) => {
+/**
+ * create a demo node
+ *
+ * NOTE this must be run after `brands` because it uses that information
+ * TODO fall back to defaults
+ */
+let demo = async (
+	{getOrigami, prefix, component, ...nodeCreatorOptions}: NodeCreatorOptions,
+	_defaults: Optional<DemosDefaults>
+): Promise<Optional<Demo>> => {
 	if (!prefix) {
 		throw new Error("must pass prefix option to demos")
 	}
@@ -1032,37 +1357,46 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 		component,
 	})
 
-	if (
-		"type" in base &&
-		(base.type == "empty" || base.type == "problem" || base.type == "problems")
-	) {
+	// if it has a type, then that means it was `empty`, `problem` or
+	// `problems` because demoBase does not provide a type
+	if ("type" in base) {
 		return base
 	}
 
 	let index = prefix[prefix.length - 1]
 
+	// the prefix is used to drill down the origami.json to the correct
+	// child of the demos array. if it isn't a number then we don't
+	// understand what it means
 	if (typeof index != "number") {
 		throw new Error("last item in prefix must be a demo index")
 	}
 
 	let node: Partial<Demo> = {}
 
+	// the type will be overridden if `string` caused a problem
 	node.title = {
 		type: "demo title",
 		...string(getOrigami(...prefix, "title")),
 	}
 
+	// the type will be overridden if `string` caused a problem
 	node.name = {
 		type: "demo name",
 		...string(getOrigami(...prefix, "name")),
 	}
 
+	// the type will be overridden if `string` caused a problem
 	node.description = {
 		type: "demo description",
 		...string(getOrigami(...prefix, "description")),
 	}
 
 	let displayHtml = getOrigami(...prefix, "display_html")
+
+	// the spec defines display_html as the sole snake-cased item in the
+	// manifest. it would be understandable if the user camel-cased it by
+	// accident, so we parse the camelCase version and warn them
 	let displayHtmlCamelCased = getOrigami(...prefix, "displayHtml")
 	let displayHtmlOpinions = []
 	if (displayHtml.value == null && displayHtmlCamelCased.value != null) {
@@ -1114,35 +1448,41 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 
 	if (brandsValue) {
 		if (Array.isArray(brandsValue)) {
-			let rootBrands = component.brands
-			// TODO warn the user if they have not demo'd one of the
-			// brands mentioned in the origami.json#brands field
-			if (rootBrands && rootBrands.type == "brands") {
-				let brandsNode = brands({
+			let componentBrandsNode = component.brands
+			if (componentBrandsNode && componentBrandsNode.type == "brands") {
+				let demoBrandsNode = brands({
 					getOrigami,
 					prefix,
 					component,
 					...nodeCreatorOptions,
 				})
-				let rootBrandsNames = rootBrands.children.map(b => {
+
+				let componentBrandsNodeNames = componentBrandsNode.children.map(b => {
 					return b.type == "brand" && b.value
 				})
-				if (brandsNode.type == "brands") {
+
+				if (demoBrandsNode.type == "brands") {
+					// it's a problem if we are demoing a brand
+					// that is not listed as a brand
+					// implemented by this component
 					if (
-						(brandsNode.master && !rootBrands.master) ||
-						(brandsNode.internal && !rootBrands.internal) ||
-						(brandsNode.whitelabel && !rootBrands.whitelabel)
+						(demoBrandsNode.master && !componentBrandsNode.master) ||
+						(demoBrandsNode.internal && !componentBrandsNode.internal) ||
+						(demoBrandsNode.whitelabel && !componentBrandsNode.whitelabel)
 					) {
 						node.brands = expected
-							.member(rootBrandsNames, brandsValue, brandsSource)
+							.member(componentBrandsNodeNames, brandsValue, brandsSource)
 							.problem("brand-not-valid")
 					} else {
-						node.brands = brandsNode
+						// a problem
+						node.brands = demoBrandsNode
 					}
 				} else {
-					node.brands = brandsNode
+					// a problem
+					node.brands = demoBrandsNode
 				}
 			} else {
+				// a problem
 				node.brands = expected
 					.message(
 						brandsSource,
@@ -1151,11 +1491,13 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 					.problem("demo-brands-not-supported")
 			}
 		} else {
+			// a problem
 			node.brands = expected
 				.array(brandsValue, brandsSource)
 				.problem("demo-brands-not-array")
 		}
 	} else {
+		// brands is optional!!
 		node.brands = empty(brandsSource)
 	}
 
@@ -1245,7 +1587,9 @@ let demos: AsyncNodeCreator<Optional<Demos>> = async options => {
 	if (demos.value) {
 		if (Array.isArray(demos.value)) {
 			for (let index = 0; index < demos.value.length; index++) {
-				node.children.push(await demo({...options, prefix: ["demos", index]}))
+				node.children.push(
+					await demo({...options, prefix: ["demos", index]}, node.defaults)
+				)
 			}
 		} else {
 			return expected
@@ -1254,9 +1598,143 @@ let demos: AsyncNodeCreator<Optional<Demos>> = async options => {
 		}
 	}
 
+	// TODO warn the user if they have not demo'd one of the
+	// brands mentioned in the origami.json#brands field
 	return node
 }
 
+/** things filesystem paths can point at */
+type PathType =
+	| "unavailable"
+	| "file"
+	| "directory"
+	| "block device"
+	| "character device"
+	| "link"
+	| "fifo"
+	| "socket"
+	| "unknown"
+
+/**
+ * sniff a filesystem path and return what it is
+ *
+ * @param path the target path
+ */
+let getPathType = async (path: string): Promise<PathType> => {
+	return fs
+		.stat(path)
+		.then(file => {
+			if (file.isFile()) {
+				// an ordinary file
+				return "file"
+			} else if (file.isDirectory()) {
+				return "directory"
+			} else if (file.isBlockDevice()) {
+				return "block device"
+			} else if (file.isCharacterDevice()) {
+				return "character device"
+			} else if (file.isSymbolicLink()) {
+				return "link"
+			} else if (file.isFIFO()) {
+				return "fifo"
+			} else if (file.isSocket()) {
+				return "socket"
+			} else {
+				// i don't know what this could mean. might be impossible
+				return "unknown"
+			}
+		})
+		.catch(() => {
+			// this could mean we don't have permissions, or that it's not there
+			return "unavailable"
+		})
+}
+
+/** a node representing the component's javascript entry point */
+interface JavaScriptEntry extends Value<string> {
+	type: "main.js"
+}
+
+/** a node representing the component's sass entry point */
+interface SassEntry extends Value<string> {
+	type: "main.scss"
+}
+
+/**
+ * create a node representing a component's entry point (sass or javascript)
+ *
+ * this is called for "main.js" and "main.scss" whether or not those are mentioned
+ * in bower.json or they exist in the filesystem because we want to catch the
+ * mistake that only one of those is the case.
+ */
+let entry = async (
+	entryPath: string,
+	{getBower}: NodeCreatorOptions
+): Promise<Optional<TemplateNode<Value<string>>>> => {
+	let {value: bowerMain, source: bowerMainSource} = getBower("main")
+
+	let mainEntryFileType = await getPathType(entryPath)
+	let isFile = mainEntryFileType == "file"
+	let isMissing = mainEntryFileType == "unavailable"
+	let fileSource
+
+	// bower's .main can be a string or an array
+	// we look for the file there
+	if (typeof bowerMain == "string") {
+		if (bowerMain == entryPath) {
+			fileSource = bowerMainSource
+		}
+	} else if (Array.isArray(bowerMain)) {
+		for (let index = 0; index < bowerMain.length; index++) {
+			if (bowerMain[index] == entryPath) {
+				fileSource = getBower("main", index).source
+			}
+		}
+	}
+
+	if (isFile) {
+		if (fileSource) {
+			return {
+				source: fileSource,
+				value: entryPath,
+			}
+		}
+
+		// if the file is on the disk, it's a problem that we don't
+		// mention it in bower.main
+		return expected
+			.value(
+				entryPath,
+				bowerMain,
+				bowerMainSource,
+				"a main.js file existed, so must be mentioned in bower.json#main"
+			)
+			.problem("unreferenced-existing-main-js")
+	} else if (isMissing) {
+		// if the file was not on the disk it's a problem if we
+		// mention it in bower.main
+		if (fileSource) {
+			return expected
+				.value(
+					null,
+					entryPath,
+					fileSource,
+					"a main.js file did NOT exist, so should not be mentioned"
+				)
+				.problem("referenced-missing-main-js")
+		} else {
+			return empty(bowerMainSource)
+		}
+	} else {
+		// if there was something in bower.main that wasn't a file path,
+		// that's a problem
+		return expected
+			.file(entryPath, fileSource || bowerMainSource, `is ${mainEntryFileType}`)
+			.problem("non-file-main")
+	}
+}
+
+/** A node representing a whole component */
 export interface Component extends Node, Parent<Node> {
 	type: "component"
 	origamiType: Required<OrigamiType>
@@ -1283,206 +1761,7 @@ export interface Component extends Node, Parent<Node> {
 	opinions: Opinion[]
 }
 
-import {promises as fs} from "fs"
-
-function po(expectation: Expectation.Any, source: Source, message?: string) {
-	return {
-		problem: (code: string) => problem(expectation, source, code, message),
-		opinion: (code: string) => opinion(expectation, source, code, message),
-	}
-}
-
-let expected = {
-	message(source: Source, message: string) {
-		return po(Expectation.message(), source, message)
-	},
-	type(
-		expected: Expectation.TypeOfType[],
-		received: JsonValueU,
-		source: Source,
-		message?: string
-	) {
-		return po(Expectation.typeOf(expected, received), source, message)
-	},
-	match(
-		regexp: RegExp,
-		received: JsonValueU,
-		source: Source,
-		message?: string
-	) {
-		return po(Expectation.match(regexp, received), source, message)
-	},
-	startsWith(
-		expectedPrefix: string,
-		received: JsonValueU,
-		source: Source,
-		message?: string
-	) {
-		return po(Expectation.startsWith(expectedPrefix, received), source, message)
-	},
-	string(received: JsonValueU, source: Source, message?: string) {
-		return po(Expectation.typeOf(["string"], received), source, message)
-	},
-	boolean(received: JsonValueU, source: Source, message?: string) {
-		return po(Expectation.typeOf(["boolean"], received), source, message)
-	},
-	array(received: JsonValueU, source: Source, message?: string) {
-		return po(Expectation.typeOf(["array"], received), source, message)
-	},
-	number(received: JsonValueU, source: Source, message?: string) {
-		return po(Expectation.typeOf(["number"], received), source, message)
-	},
-	object(received: JsonValueU, source: Source, message?: string) {
-		return po(Expectation.typeOf(["object"], received), source, message)
-	},
-	file(received: JsonValueU, source: Source, message?: string) {
-		return po(Expectation.file(received), source, message)
-	},
-	url(received: JsonValueU, source: Source, message?: string) {
-		return po(Expectation.url(received), source, message)
-	},
-	value(
-		expected: JsonValue,
-		received: JsonValueU,
-		source: Source,
-		message?: string
-	) {
-		return po(Expectation.valueOf(expected, received), source, message)
-	},
-	member(
-		list: JsonValue[],
-		received: JsonValueU,
-		source: Source,
-		message?: string
-	) {
-		return po(Expectation.memberOf(list, received), source, message)
-	},
-}
-
-type PathType =
-	| "unavailable"
-	| "file"
-	| "directory"
-	| "block device"
-	| "character device"
-	| "link"
-	| "fifo"
-	| "socket"
-	| "unknown"
-
-let getPathType = async (path: string): Promise<PathType> => {
-	return fs
-		.stat(path)
-		.then(file => {
-			if (file.isFile()) {
-				return "file"
-			} else if (file.isDirectory()) {
-				return "directory"
-			} else if (file.isBlockDevice()) {
-				return "block device"
-			} else if (file.isCharacterDevice()) {
-				return "character device"
-			} else if (file.isSymbolicLink()) {
-				return "link"
-			} else if (file.isFIFO()) {
-				return "fifo"
-			} else if (file.isSocket()) {
-				return "socket"
-			} else {
-				// i don't know what this means
-				return "unknown"
-			}
-		})
-		.catch(() => {
-			// this could mean we don't have permissions, or that it's not there
-			return "unavailable"
-		})
-}
-
-interface JavaScriptEntry extends Value<string> {
-	type: "main.js"
-}
-
-interface SassEntry extends Value<string> {
-	type: "main.scss"
-}
-
-let entry = async (
-	entryPath: string,
-	{getBower}: NodeCreatorOptions
-): Promise<Optional<TemplateNode<Value<string>>>> => {
-	let {value: bowerMain, source: bowerMainSource} = getBower("main")
-
-	let mainEntryFileType = await getPathType(entryPath)
-	let isFile = mainEntryFileType == "file"
-	let isMissing = mainEntryFileType == "unavailable"
-	let fileSource
-
-	if (typeof bowerMain == "string") {
-		if (bowerMain == entryPath) {
-			fileSource = bowerMainSource
-		}
-	} else if (Array.isArray(bowerMain)) {
-		for (let index = 0; index < bowerMain.length; index++) {
-			if (bowerMain[index] == entryPath) {
-				fileSource = getBower("main", index).source
-			}
-		}
-	}
-
-	if (isFile) {
-		if (fileSource) {
-			return {
-				source: fileSource,
-				value: entryPath,
-			}
-		}
-
-		return expected
-			.value(
-				entryPath,
-				bowerMain,
-				bowerMainSource,
-				"a main.js file existed, so must be mentioned in bower.json#main"
-			)
-			.problem("unreferenced-existing-main-js")
-	} else if (isMissing) {
-		if (typeof bowerMain == "string") {
-			if (bowerMain == entryPath) {
-				return expected
-					.value(
-						null,
-						entryPath,
-						bowerMainSource,
-						"a main.js file did NOT exist, so should not be mentioned"
-					)
-					.problem("referenced-missing-main-js")
-			}
-		} else if (Array.isArray(bowerMain)) {
-			for (let index = 0; index < bowerMain.length; index++) {
-				if (bowerMain[index] == entryPath) {
-					return expected
-						.value(
-							null,
-							entryPath,
-							getBower("main", index).source,
-							"a main.js file did NOT exist, so should not be mentioned"
-						)
-						.problem("referenced-missing-main-js")
-				}
-			}
-		} else {
-			return empty(bowerMainSource)
-		}
-	} else {
-		return expected
-			.file(entryPath, fileSource || bowerMainSource, `is ${mainEntryFileType}`)
-			.problem("non-file-main")
-	}
-
-	return empty(bowerMainSource)
-}
-
+/** create a {@link Component} node */
 export async function createComponentNode(
 	read: (path: string) => Promise<string>
 ): Promise<Required<Component>> {
@@ -1687,6 +1966,7 @@ export async function createComponentNode(
 		entries: component.entries,
 		support: component.support,
 		demos: component.demos,
+		// we pass all these through as children too, to make iteration easier
 		children: [
 			component.origamiVersion,
 			component.origamiType,
