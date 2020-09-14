@@ -31,7 +31,7 @@ and Opinion nodes.
 origami-component-manifest-linter [path/to/component] [style]
 ```
 
-The printer that lives in [index.ts](./src/index.ts** loops through and writes
+The printer that lives in [index.ts](./src/index.ts) loops through and writes
 those Problem and Opinion nodes in a human-readable format to stdout.
 
 By default, the current working directory is expected to be the component
