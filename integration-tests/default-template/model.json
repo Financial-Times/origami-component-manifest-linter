@@ -942,7 +942,7 @@
 					}
 				},
 				"hidden": {
-					"type": "demo display html",
+					"type": "demo hidden",
 					"value": false,
 					"source": {
 						"file": "origami.json",
@@ -963,7 +963,8 @@
 							0,
 							"display_html"
 						]
-					}
+					},
+					"opinions": []
 				},
 				"children": [
 					{
@@ -1114,7 +1115,7 @@
 						}
 					},
 					{
-						"type": "demo display html",
+						"type": "demo hidden",
 						"value": false,
 						"source": {
 							"file": "origami.json",
@@ -1135,7 +1136,8 @@
 								0,
 								"display_html"
 							]
-						}
+						},
+						"opinions": []
 					}
 				]
 			},
@@ -1357,7 +1359,8 @@
 							1,
 							"display_html"
 						]
-					}
+					},
+					"opinions": []
 				},
 				"children": [
 					{
@@ -1540,7 +1543,8 @@
 								1,
 								"display_html"
 							]
-						}
+						},
+						"opinions": []
 					}
 				]
 			}
@@ -2479,7 +2483,7 @@
 						}
 					},
 					"hidden": {
-						"type": "demo display html",
+						"type": "demo hidden",
 						"value": false,
 						"source": {
 							"file": "origami.json",
@@ -2500,7 +2504,8 @@
 								0,
 								"display_html"
 							]
-						}
+						},
+						"opinions": []
 					},
 					"children": [
 						{
@@ -2651,7 +2656,7 @@
 							}
 						},
 						{
-							"type": "demo display html",
+							"type": "demo hidden",
 							"value": false,
 							"source": {
 								"file": "origami.json",
@@ -2672,7 +2677,8 @@
 									0,
 									"display_html"
 								]
-							}
+							},
+							"opinions": []
 						}
 					]
 				},
@@ -2894,7 +2900,8 @@
 								1,
 								"display_html"
 							]
-						}
+						},
+						"opinions": []
 					},
 					"children": [
 						{
@@ -3077,7 +3084,8 @@
 									1,
 									"display_html"
 								]
-							}
+							},
+							"opinions": []
 						}
 					]
 				}
