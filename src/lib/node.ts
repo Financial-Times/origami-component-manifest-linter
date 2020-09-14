@@ -1,6 +1,6 @@
 import type * as Manifest from "./manifest"
 import get, {Source, GetPath} from "./get"
-import type {Get} from "./get"
+import type {Get, ValueSource} from "./get"
 import * as Expectation from "./expectation"
 import type {JsonValueU, JsonValue} from "./json-value"
 import {isObject} from "./json-value"
@@ -66,6 +66,8 @@ export interface Value<T> extends Node {
 	type: NodeType
 	value: T
 }
+
+type TemplateNode<Target extends Node> = Omit<Target, "type">
 
 interface NodeCreatorOptions {
 	getBower: Get
@@ -781,15 +783,16 @@ export interface Demos extends Parent<Optional<Demo>> {
 	defaults: Optional<DemosDefaults>
 }
 
-async function demoBase({getOrigami, prefix}: NodeCreatorOptions): Promise<Optional<DemoBase>> {
+async function demoBase({
+	getOrigami,
+	prefix,
+}: NodeCreatorOptions): Promise<Optional<DemoBase>> {
 	let node: Partial<DemoBase> = {}
 	if (!prefix) {
 		throw new Error("demoBase must be called with a prefix opion")
 	}
 
-	let {value: demoValue, source: demoSource} = getOrigami(
-		...prefix
-	)
+	let {value: demoValue, source: demoSource} = getOrigami(...prefix)
 
 	node.source = demoSource
 
@@ -957,10 +960,59 @@ async function demoBase({getOrigami, prefix}: NodeCreatorOptions): Promise<Optio
 		data: node.data,
 		documentClasses: node.documentClasses,
 		dependencies: node.dependencies,
-		source: node.source
+		source: node.source,
 	}
 
 	return demoNode
+}
+
+function boolean({
+	value,
+	source,
+}: ValueSource): Required<TemplateNode<Value<boolean>>> {
+	if (value == null) {
+		return {
+			value: false,
+			source,
+		}
+	} else if (typeof value == "boolean") {
+		return {
+			value,
+			source,
+		}
+	} else if (
+		typeof value == "string" &&
+		(value == "true" || value == "false")
+	) {
+		let booleanStringOpinion = expected
+			.boolean(
+				value,
+				source,
+				`should be an actual boolean, got the string "${value}"`
+			)
+			.opinion("boolean-string")
+		return {
+			value: value == "true" ? true : false,
+			source: source,
+			opinions: [booleanStringOpinion],
+		}
+	} else {
+		return expected.boolean(value, source).problem("not-a-boolean")
+	}
+}
+
+function string({
+	value,
+	source,
+}: ValueSource): Required<TemplateNode<Value<string>>> {
+	if (typeof value == "string") {
+		return {
+			value,
+			source,
+		}
+	} else {
+		return expected.string(value, source).problem("not-string")
+	}
 }
 
 let demo: AsyncNodeCreator<Optional<Demo>> = async ({
