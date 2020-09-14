@@ -21,7 +21,6 @@ const {Dirent} = require("fs")
  * @property {string} severity
  */
 
-
 /**
  * @param {string} info
  * @returns {ProblemInfo}
@@ -51,7 +50,9 @@ function parseInfo(info) {
 function parseGithubOutput(execaReturnValue) {
 	let lines = []
 
-	let matches = execaReturnValue.stdout.matchAll(/::(?<severity>[^ ]+) (?<info>[^:]+)::/g)
+	let matches = execaReturnValue.stdout.matchAll(
+		/::(?<severity>[^ ]+) (?<info>[^:]+)::/g
+	)
 
 	for (let match of matches) {
 		let info = parseInfo(match.groups.info)
@@ -63,7 +64,11 @@ function parseGithubOutput(execaReturnValue) {
 			)
 		}
 
-                lines.push(`${info.severity} ${info.file} ${info.line || 0} ${info.col || 0} ${info.code}`)
+		lines.push(
+			`${info.severity} ${info.file} ${info.line || 0} ${info.col || 0} ${
+				info.code
+			}`
+		)
 	}
 
 	return lines.sort()
@@ -95,7 +100,10 @@ function parseGithubOutput(execaReturnValue) {
 async function test(testName) {
 	let testDirectory = resolvePath(__dirname, testName)
 	let githubExpectedFile = resolvePath(testDirectory, "github")
-	let githubExpected = (await fs.readFile(githubExpectedFile, "utf-8")).trim().split("\n").sort()
+	let githubExpected = (await fs.readFile(githubExpectedFile, "utf-8"))
+		.trim()
+		.split("\n")
+		.sort()
 
 	let modelExpectedFile = resolvePath(testDirectory, "model.json")
 	let modelExpected = JSON.parse(await fs.readFile(modelExpectedFile, "utf-8"))
@@ -123,7 +131,6 @@ async function test(testName) {
 	} catch (error) {
 		modelActual = error
 	}
-
 
 	tap.test(testName, t => {
 		tap.test(`${testName} github output`, t => {
