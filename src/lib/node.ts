@@ -1025,177 +1025,139 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 		throw new Error("must pass prefix option to demos")
 	}
 
-	let base = await demoBase({...nodeCreatorOptions, getOrigami, prefix, component})
+	let base = await demoBase({
+		...nodeCreatorOptions,
+		getOrigami,
+		prefix,
+		component,
+	})
 
-	if ("type" in base && (base.type == "empty" || base.type == "problem" || base.type == "problems")) {
+	if (
+		"type" in base &&
+		(base.type == "empty" || base.type == "problem" || base.type == "problems")
+	) {
 		return base
 	}
 
+	let index = prefix[prefix.length - 1]
 
-       let index = prefix[prefix.length - 1]
-
-       if (typeof index != "number") {
-               throw new Error("last item in prefix must be a demo index")
-       }
+	if (typeof index != "number") {
+		throw new Error("last item in prefix must be a demo index")
+	}
 
 	let node: Partial<Demo> = {}
 
-	// TODO this and the 3 after it are the same
-	let title = getOrigami(...prefix, "title")
-	if (typeof title.value == "string") {
-		node.title = {type: "demo title", value: title.value, source: title.source}
-	} else {
-		node.title = expected
-			.string(title.value, title.source)
-			.problem("demo-title-not-string")
+	node.title = {
+		type: "demo title",
+		...string(getOrigami(...prefix, "title")),
 	}
 
-	let name = getOrigami(...prefix, "name")
-	if (typeof name.value == "string") {
-		node.name = {type: "demo name", value: name.value, source: name.source}
-	} else {
-		node.name = expected
-			.string(name.value, name.source)
-			.problem("demo-name-not-string")
+	node.name = {
+		type: "demo name",
+		...string(getOrigami(...prefix, "name")),
 	}
 
-	let description = getOrigami(...prefix, "description")
-	if (typeof description.value == "string") {
-		node.description = {
-			type: "demo description",
-			value: description.value,
-			source: description.source,
-		}
-	} else {
-		node.description = expected
-			.string(description.value, description.source)
-			.problem("demo-description-not-string")
+	node.description = {
+		type: "demo description",
+		...string(getOrigami(...prefix, "description")),
 	}
 
-	// TODO this is exactly same as hidden
-	// TODO deal with user using camelCase by accident
 	let displayHtml = getOrigami(...prefix, "display_html")
-
-	if (displayHtml.value == null) {
-		node.displayHtml = {
-			type: "demo display html",
-			value: false,
-			source: displayHtml.source,
-		}
-	} else if (typeof displayHtml.value == "boolean") {
-		node.displayHtml = {
-			type: "demo display html",
-			value: displayHtml.value,
-			source: displayHtml.source,
-		}
-	} else if (
-		typeof displayHtml.value == "string" &&
-		(displayHtml.value == "true" || displayHtml.value == "false")
-	) {
-		node.displayHtml = {
-			type: "demo display html",
-			value: displayHtml.value == "true" ? true : false,
-			source: displayHtml.source,
-			opinions: [
-				expected
-					.boolean(
-						displayHtml.value,
-						displayHtml.source,
-						`should be an actual boolean, got the string "${displayHtml.value}"`
-					)
-					.opinion("demo-display-html-is-boolean-string"),
-			],
-		}
-	} else {
-		node.displayHtml = expected
-			.boolean(displayHtml.value, displayHtml.source)
-			.problem("demo-display-html-not-boolean")
+	let displayHtmlCamelCased = getOrigami(...prefix, "displayHtml")
+	let displayHtmlOpinions = []
+	if (displayHtml.value == null && displayHtmlCamelCased.value != null) {
+		displayHtmlOpinions.push(
+			expected
+				.message(
+					displayHtmlCamelCased.source,
+					"display_html should be snake-cased (sorry)"
+				)
+				.opinion("display-html-camel-case")
+		)
+		displayHtml = displayHtmlCamelCased
 	}
+
+	let displayHtmlResult = boolean(displayHtml)
+	// because displayHtmlResult is a Required<TemplateNode>, we know that
+	// if it has a type it is a `problem' or `problems'
+	node.displayHtml =
+		"type" in displayHtmlResult
+			? displayHtmlResult
+			: {
+					type: "demo display html",
+					value: displayHtmlResult.value,
+					source: displayHtmlResult.source,
+					opinions: displayHtmlResult.opinions
+						? displayHtmlOpinions.concat(displayHtmlResult.opinions)
+						: displayHtmlOpinions,
+			  }
 
 	let hidden = getOrigami(...prefix, "hidden")
-	if (hidden.value == null) {
-		node.hidden = {
-			type: "demo display html",
-			value: false,
-			source: hidden.source,
-		}
-	} else if (typeof hidden.value == "boolean") {
-		node.hidden = {
-			type: "demo hidden",
-			value: hidden.value,
-			source: hidden.source,
-		}
-	} else if (
-		typeof hidden.value == "string" &&
-		(hidden.value == "true" || hidden.value == "false")
-	) {
-		node.hidden = {
-			type: "demo hidden",
-			value: hidden.value == "true" ? true : false,
-			source: hidden.source,
-			opinions: [
-				expected
-					.boolean(
-						hidden.value,
-						hidden.source,
-						`should be an actual boolean, got the string "${hidden.value}"`
+	let hiddenResult = boolean(hidden)
+
+	// because hiddendResult is a Required<TemplateNode>, we know that
+	// if it has a type it is a `problem' or `problems'
+	node.hidden =
+		"type" in hiddenResult
+			? hiddenResult
+			: {
+					type: "demo hidden",
+					value: hiddenResult.value,
+					source: hiddenResult.source,
+					opinions: hiddenResult.opinions,
+			  }
+
+	let {value: brandsValue, source: brandsSource} = getOrigami(
+		...prefix,
+		"brands"
+	)
+
+	if (brandsValue) {
+		if (Array.isArray(brandsValue)) {
+			let rootBrands = component.brands
+			// TODO warn the user if they have not demo'd one of the
+			// brands mentioned in the origami.json#brands field
+			if (rootBrands && rootBrands.type == "brands") {
+				let brandsNode = brands({
+					getOrigami,
+					prefix,
+					component,
+					...nodeCreatorOptions,
+				})
+				let rootBrandsNames = rootBrands.children.map(b => {
+					return b.type == "brand" && b.value
+				})
+				if (brandsNode.type == "brands") {
+					if (
+						(brandsNode.master && !rootBrands.master) ||
+						(brandsNode.internal && !rootBrands.internal) ||
+						(brandsNode.whitelabel && !rootBrands.whitelabel)
+					) {
+						node.brands = expected
+							.member(rootBrandsNames, brandsValue, brandsSource)
+							.problem("brand-not-valid")
+					} else {
+						node.brands = brandsNode
+					}
+				} else {
+					node.brands = brandsNode
+				}
+			} else {
+				node.brands = expected
+					.message(
+						brandsSource,
+						"demo brands have been specified, but there are no brands listed in the manifest root"
 					)
-					.opinion("demo-hidden-is-boolean-string"),
-			],
+					.problem("demo-brands-not-supported")
+			}
+		} else {
+			node.brands = expected
+				.array(brandsValue, brandsSource)
+				.problem("demo-brands-not-array")
 		}
 	} else {
-		node.hidden = expected
-			.boolean(hidden.value, hidden.source)
-			.problem("demo-hidden-not-boolean")
+		node.brands = empty(brandsSource)
 	}
-
-
-      let {value: brandsValue, source: brandsSource} = getOrigami(
-              ...prefix,
-              "brands"
-      )
-
-      if (brandsValue) {
-              if (Array.isArray(brandsValue)) {
-                      let rootBrands = component.brands
-                      // TODO warn the user if they have not demo'd one of the
-		      // brands mentioned in the origami.json#brands field
-                      if (rootBrands && rootBrands.type == "brands") {
-                              let brandsNode = brands({getOrigami, prefix, component, ...nodeCreatorOptions})
-                              let rootBrandsNames = rootBrands.children.map(b => {
-                                      return b.type == "brand" && b.value
-                              })
-                              if (brandsNode.type == "brands") {
-                                      if (
-                                              (brandsNode.master && !rootBrands.master) ||
-                                              (brandsNode.internal && !rootBrands.internal) ||
-                                              (brandsNode.whitelabel && !rootBrands.whitelabel)
-                                      ) {
-                                              node.brands = expected
-                                                      .member(rootBrandsNames, brandsValue, brandsSource)
-                                                      .problem("brand-not-valid")
-                                      } else {
-                                              node.brands = brandsNode
-                                      }
-                              } else {
-                                      node.brands = brandsNode
-                              }
-                      } else {
-                              node.brands = expected
-                                      .message(
-                                              brandsSource,
-                                              "demo brands have been specified, but there are no brands listed in the manifest root"
-                                      )
-                                      .problem("demo-brands-not-supported")
-                      }
-              } else {
-                      node.brands = expected
-                              .array(brandsValue, brandsSource)
-                               .problem("demo-brands-not-array")
-               }
-       } else {
-               node.brands = empty(brandsSource)
-       }
 
 	let demoNode: Demo = {
 		type: "demo",
@@ -1231,14 +1193,19 @@ let demo: AsyncNodeCreator<Optional<Demo>> = async ({
 	return demoNode
 }
 
-let demosDefaults: AsyncNodeCreator<Optional<DemosDefaults>> = async (nodeCreatorOptions) => {
+let demosDefaults: AsyncNodeCreator<Optional<
+	DemosDefaults
+>> = async nodeCreatorOptions => {
 	let prefix = nodeCreatorOptions.prefix
 		? [...nodeCreatorOptions.prefix, "demosDefaults"]
 		: ["demosDefaults"]
 
 	let base = await demoBase({...nodeCreatorOptions, prefix})
 
-	if ("type" in base && (base.type == "empty" || base.type == "problem" || base.type == "problems")) {
+	if (
+		"type" in base &&
+		(base.type == "empty" || base.type == "problem" || base.type == "problems")
+	) {
 		return base
 	}
 
@@ -1440,6 +1407,7 @@ interface SassEntry extends Node, Value<string> {
 	type: "main.scss"
 }
 
+// TODO make this return a Optional<Template<EntryNode>> instead
 let entry = async <EntryNode extends Node>(
 	nodeType: NodeType,
 	entryPath: string,
