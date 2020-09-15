@@ -85,8 +85,8 @@ export interface Node {
 	opinions?: Opinion[]
 }
 
-/** a node that represents a raw value.
- *
+/**
+ * a node that represents a raw value.
  * designed for holding literals like
  * booleans or strings, but could contain anything
  */
