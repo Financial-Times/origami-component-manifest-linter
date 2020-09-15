@@ -362,10 +362,7 @@
 		"type": "browser features",
 		"optional": [],
 		"required": [],
-		"children": [
-			[],
-			[]
-		]
+		"children": []
 	},
 	"ci": {
 		"type": "empty",
@@ -378,7 +375,6 @@
 	},
 	"entries": {
 		"javascript": {
-			"type": "main.js",
 			"source": {
 				"file": "bower.json",
 				"path": [
@@ -397,10 +393,10 @@
 				},
 				"value": "main.js"
 			},
-			"value": "main.js"
+			"value": "main.js",
+			"type": "main.js"
 		},
 		"sass": {
-			"type": "main.scss",
 			"source": {
 				"file": "bower.json",
 				"path": [
@@ -419,7 +415,8 @@
 				},
 				"value": "main.scss"
 			},
-			"value": "main.scss"
+			"value": "main.scss",
+			"type": "main.scss"
 		}
 	},
 	"support": {
@@ -1907,10 +1904,7 @@
 			"type": "browser features",
 			"optional": [],
 			"required": [],
-			"children": [
-				[],
-				[]
-			]
+			"children": []
 		},
 		{
 			"type": "empty",
@@ -1922,7 +1916,6 @@
 			}
 		},
 		{
-			"type": "main.scss",
 			"source": {
 				"file": "bower.json",
 				"path": [
@@ -1941,10 +1934,10 @@
 				},
 				"value": "main.scss"
 			},
-			"value": "main.scss"
+			"value": "main.scss",
+			"type": "main.scss"
 		},
 		{
-			"type": "main.js",
 			"source": {
 				"file": "bower.json",
 				"path": [
@@ -1963,7 +1956,8 @@
 				},
 				"value": "main.js"
 			},
-			"value": "main.js"
+			"value": "main.js",
+			"type": "main.js"
 		},
 		{
 			"source": {
