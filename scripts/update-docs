@@ -1,4 +1,6 @@
 #!/bin/sh
 git checkout main src README.md package-lock.json package.json tsconfig.json
 npm ci
-npx typedoc src .
+npx typedoc src docs
+cp -r docs/* .
+rm -r docs
