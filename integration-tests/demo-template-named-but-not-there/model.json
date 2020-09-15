@@ -306,10 +306,7 @@
 		"type": "browser features",
 		"optional": [],
 		"required": [],
-		"children": [
-			[],
-			[]
-		]
+		"children": []
 	},
 	"ci": {
 		"type": "empty",
@@ -1801,10 +1798,7 @@
 			"type": "browser features",
 			"optional": [],
 			"required": [],
-			"children": [
-				[],
-				[]
-			]
+			"children": []
 		},
 		{
 			"type": "empty",
