@@ -1,5 +1,15 @@
 #!/bin/sh
+# pull over the latest files from main
 git checkout main src README.md package-lock.json package.json tsconfig.json
+
+# unstage those files
 git reset .
+
+# install latest lock'd deps
 npm ci
+
+# generate the docs
 npx typedoc src docs
+
+# this makes sure files that begin with underscores are viewable
+touch docs/.nojekyll
