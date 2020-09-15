@@ -4,3 +4,7 @@ node_modules/
 lib/**/*.js
 .nyc_output/
 .vscode/
+src/
+README.md
+tsconfig.json
+package*json

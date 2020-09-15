@@ -1,0 +1,4 @@
+#!/bin/sh
+git checkout main src README.md package-lock.json tsconfig.json
+npm ci
+npx typedoc src .
