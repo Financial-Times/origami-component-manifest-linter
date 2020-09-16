@@ -14,7 +14,7 @@
 	"author": "chee <chee@snoot.club>",
 	"license": "MIT",
 	"devDependencies": {
-		"prettier": "^2.1.1",
+		"prettier": "^2.1.2",
 		"execa": "^4.0.3",
 		"source-map-support": "^0.5.19",
 		"tap": "^14.10.8",
