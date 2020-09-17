@@ -103,7 +103,7 @@ async function test(testName) {
 	let githubExpected = (await fs.readFile(githubExpectedFile, "utf-8"))
 		.trim()
 		.split("\n")
-		.filter(n => n.length)
+		.filter(n => n.length && !n.startsWith("#"))
 		.sort()
 
 	let modelExpectedFile = resolvePath(testDirectory, "model.json")
