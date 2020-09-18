@@ -1,0 +1,6 @@
+#!/bin/sh
+for component in integration-tests/*/; do
+	name="${component##integration-tests/}"
+	echo updating ${name%%/}
+	scripts/update-model $name
+done
