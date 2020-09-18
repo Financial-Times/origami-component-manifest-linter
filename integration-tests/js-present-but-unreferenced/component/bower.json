@@ -1,0 +1,5 @@
+{
+	"name": "o-component",
+	"description": "description",
+	"main": ["main.scss"]
+}

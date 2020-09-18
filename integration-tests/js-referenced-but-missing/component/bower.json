@@ -1,0 +1,5 @@
+{
+	"name": "o-component",
+	"description": "a perfect component.",
+	"main": ["main.scss", "main.js"]
+}

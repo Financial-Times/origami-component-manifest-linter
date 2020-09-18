@@ -1709,7 +1709,7 @@ let entry = async (
 				bowerMainSource,
 				"a main.js file existed, so must be mentioned in bower.json#main"
 			)
-			.problem("unreferenced-existing-main-js")
+			.problem(`unreferenced-existing-${entryPath}`)
 	} else if (isMissing) {
 		// if the file was not on the disk it's a problem if we
 		// mention it in bower.main
@@ -1721,7 +1721,7 @@ let entry = async (
 					fileSource,
 					"a main.js file did NOT exist, so should not be mentioned"
 				)
-				.problem("referenced-missing-main-js")
+				.problem(`referenced-missing-${entryPath}`)
 		} else {
 			return empty(bowerMainSource)
 		}
