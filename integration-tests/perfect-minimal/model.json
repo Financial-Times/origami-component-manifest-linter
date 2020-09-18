@@ -3,7 +3,7 @@
 	"source": {
 		"file": "origami.json",
 		"path": [],
-		"value": "{\n\t\"description\": \"a perfect component.\",\n\t\"keywords\": [\"template\", \"good\", \"fine\", \"exit-0\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\", \"internal\", \"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\"\n}\n"
+		"value": "{\n\t\"description\": \"description.\",\n\t\"keywords\": [\"keyword\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\", \"internal\", \"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\"\n}\n"
 	},
 	"opinions": [],
 	"origamiVersion": {
@@ -16,12 +16,12 @@
 			"start": {
 				"line": 6,
 				"column": 20,
-				"offset": 177
+				"offset": 142
 			},
 			"end": {
 				"line": 6,
 				"column": 21,
-				"offset": 178
+				"offset": 143
 			},
 			"value": 1
 		},
@@ -36,12 +36,12 @@
 			"start": {
 				"line": 4,
 				"column": 17,
-				"offset": 111
+				"offset": 76
 			},
 			"end": {
 				"line": 4,
 				"column": 28,
-				"offset": 122
+				"offset": 87
 			},
 			"value": "component"
 		},
@@ -58,12 +58,12 @@
 			"start": {
 				"line": 7,
 				"column": 12,
-				"offset": 191
+				"offset": 156
 			},
 			"end": {
 				"line": 7,
 				"column": 48,
-				"offset": 227
+				"offset": 192
 			},
 			"value": [
 				"master",
@@ -88,12 +88,12 @@
 					"start": {
 						"line": 7,
 						"column": 13,
-						"offset": 192
+						"offset": 157
 					},
 					"end": {
 						"line": 7,
 						"column": 21,
-						"offset": 200
+						"offset": 165
 					},
 					"value": "master"
 				}
@@ -110,12 +110,12 @@
 					"start": {
 						"line": 7,
 						"column": 23,
-						"offset": 202
+						"offset": 167
 					},
 					"end": {
 						"line": 7,
 						"column": 33,
-						"offset": 212
+						"offset": 177
 					},
 					"value": "internal"
 				}
@@ -132,12 +132,12 @@
 					"start": {
 						"line": 7,
 						"column": 35,
-						"offset": 214
+						"offset": 179
 					},
 					"end": {
 						"line": 7,
 						"column": 47,
-						"offset": 226
+						"offset": 191
 					},
 					"value": "whitelabel"
 				}
@@ -153,12 +153,12 @@
 			"start": {
 				"line": 5,
 				"column": 21,
-				"offset": 144
+				"offset": 109
 			},
 			"end": {
 				"line": 5,
 				"column": 33,
-				"offset": 156
+				"offset": 121
 			},
 			"value": "components"
 		},
@@ -205,12 +205,12 @@
 			},
 			"end": {
 				"line": 2,
-				"column": 39,
-				"offset": 40
+				"column": 31,
+				"offset": 32
 			},
-			"value": "a perfect component."
+			"value": "description."
 		},
-		"value": "a perfect component.",
+		"value": "description.",
 		"opinions": []
 	},
 	"status": {
@@ -222,12 +222,12 @@
 			"start": {
 				"line": 13,
 				"column": 19,
-				"offset": 422
+				"offset": 387
 			},
 			"end": {
 				"line": 13,
 				"column": 33,
-				"offset": 436
+				"offset": 401
 			},
 			"value": "experimental"
 		},
@@ -249,24 +249,21 @@
 			"start": {
 				"line": 3,
 				"column": 14,
-				"offset": 55
+				"offset": 47
 			},
 			"end": {
 				"line": 3,
-				"column": 52,
-				"offset": 93
+				"column": 25,
+				"offset": 58
 			},
 			"value": [
-				"template",
-				"good",
-				"fine",
-				"exit-0"
+				"keyword"
 			]
 		},
 		"children": [
 			{
 				"type": "keyword",
-				"value": "template",
+				"value": "keyword",
 				"source": {
 					"file": "origami.json",
 					"path": [
@@ -276,80 +273,14 @@
 					"start": {
 						"line": 3,
 						"column": 15,
-						"offset": 56
+						"offset": 48
 					},
 					"end": {
 						"line": 3,
-						"column": 25,
-						"offset": 66
+						"column": 24,
+						"offset": 57
 					},
-					"value": "template"
-				}
-			},
-			{
-				"type": "keyword",
-				"value": "good",
-				"source": {
-					"file": "origami.json",
-					"path": [
-						"keywords",
-						1
-					],
-					"start": {
-						"line": 3,
-						"column": 27,
-						"offset": 68
-					},
-					"end": {
-						"line": 3,
-						"column": 33,
-						"offset": 74
-					},
-					"value": "good"
-				}
-			},
-			{
-				"type": "keyword",
-				"value": "fine",
-				"source": {
-					"file": "origami.json",
-					"path": [
-						"keywords",
-						2
-					],
-					"start": {
-						"line": 3,
-						"column": 35,
-						"offset": 76
-					},
-					"end": {
-						"line": 3,
-						"column": 41,
-						"offset": 82
-					},
-					"value": "fine"
-				}
-			},
-			{
-				"type": "keyword",
-				"value": "exit-0",
-				"source": {
-					"file": "origami.json",
-					"path": [
-						"keywords",
-						3
-					],
-					"start": {
-						"line": 3,
-						"column": 43,
-						"offset": 84
-					},
-					"end": {
-						"line": 3,
-						"column": 51,
-						"offset": 92
-					},
-					"value": "exit-0"
+					"value": "keyword"
 				}
 			}
 		]
@@ -402,12 +333,12 @@
 				"start": {
 					"line": 8,
 					"column": 13,
-					"offset": 241
+					"offset": 206
 				},
 				"end": {
 					"line": 8,
 					"column": 73,
-					"offset": 301
+					"offset": 266
 				},
 				"value": "https://github.com/Financial-Times/default-template/issues"
 			},
@@ -437,12 +368,12 @@
 				"start": {
 					"line": 10,
 					"column": 12,
-					"offset": 335
+					"offset": 300
 				},
 				"end": {
 					"line": 10,
 					"column": 33,
-					"offset": 356
+					"offset": 321
 				},
 				"value": "chee.rabbits@ft.com"
 			},
@@ -459,12 +390,12 @@
 				"start": {
 					"line": 11,
 					"column": 12,
-					"offset": 369
+					"offset": 334
 				},
 				"end": {
 					"line": 11,
 					"column": 42,
-					"offset": 399
+					"offset": 364
 				},
 				"value": "financialtimes/#origami-chat"
 			},
@@ -504,12 +435,12 @@
 				"start": {
 					"line": 6,
 					"column": 20,
-					"offset": 177
+					"offset": 142
 				},
 				"end": {
 					"line": 6,
 					"column": 21,
-					"offset": 178
+					"offset": 143
 				},
 				"value": 1
 			},
@@ -524,12 +455,12 @@
 				"start": {
 					"line": 4,
 					"column": 17,
-					"offset": 111
+					"offset": 76
 				},
 				"end": {
 					"line": 4,
 					"column": 28,
-					"offset": 122
+					"offset": 87
 				},
 				"value": "component"
 			},
@@ -546,12 +477,12 @@
 				"start": {
 					"line": 7,
 					"column": 12,
-					"offset": 191
+					"offset": 156
 				},
 				"end": {
 					"line": 7,
 					"column": 48,
-					"offset": 227
+					"offset": 192
 				},
 				"value": [
 					"master",
@@ -576,12 +507,12 @@
 						"start": {
 							"line": 7,
 							"column": 13,
-							"offset": 192
+							"offset": 157
 						},
 						"end": {
 							"line": 7,
 							"column": 21,
-							"offset": 200
+							"offset": 165
 						},
 						"value": "master"
 					}
@@ -598,12 +529,12 @@
 						"start": {
 							"line": 7,
 							"column": 23,
-							"offset": 202
+							"offset": 167
 						},
 						"end": {
 							"line": 7,
 							"column": 33,
-							"offset": 212
+							"offset": 177
 						},
 						"value": "internal"
 					}
@@ -620,12 +551,12 @@
 						"start": {
 							"line": 7,
 							"column": 35,
-							"offset": 214
+							"offset": 179
 						},
 						"end": {
 							"line": 7,
 							"column": 47,
-							"offset": 226
+							"offset": 191
 						},
 						"value": "whitelabel"
 					}
@@ -641,12 +572,12 @@
 				"start": {
 					"line": 5,
 					"column": 21,
-					"offset": 144
+					"offset": 109
 				},
 				"end": {
 					"line": 5,
 					"column": 33,
-					"offset": 156
+					"offset": 121
 				},
 				"value": "components"
 			},
@@ -693,12 +624,12 @@
 				},
 				"end": {
 					"line": 2,
-					"column": 39,
-					"offset": 40
+					"column": 31,
+					"offset": 32
 				},
-				"value": "a perfect component."
+				"value": "description."
 			},
-			"value": "a perfect component.",
+			"value": "description.",
 			"opinions": []
 		},
 		{
@@ -710,12 +641,12 @@
 				"start": {
 					"line": 13,
 					"column": 19,
-					"offset": 422
+					"offset": 387
 				},
 				"end": {
 					"line": 13,
 					"column": 33,
-					"offset": 436
+					"offset": 401
 				},
 				"value": "experimental"
 			},
@@ -737,24 +668,21 @@
 				"start": {
 					"line": 3,
 					"column": 14,
-					"offset": 55
+					"offset": 47
 				},
 				"end": {
 					"line": 3,
-					"column": 52,
-					"offset": 93
+					"column": 25,
+					"offset": 58
 				},
 				"value": [
-					"template",
-					"good",
-					"fine",
-					"exit-0"
+					"keyword"
 				]
 			},
 			"children": [
 				{
 					"type": "keyword",
-					"value": "template",
+					"value": "keyword",
 					"source": {
 						"file": "origami.json",
 						"path": [
@@ -764,80 +692,14 @@
 						"start": {
 							"line": 3,
 							"column": 15,
-							"offset": 56
+							"offset": 48
 						},
 						"end": {
 							"line": 3,
-							"column": 25,
-							"offset": 66
+							"column": 24,
+							"offset": 57
 						},
-						"value": "template"
-					}
-				},
-				{
-					"type": "keyword",
-					"value": "good",
-					"source": {
-						"file": "origami.json",
-						"path": [
-							"keywords",
-							1
-						],
-						"start": {
-							"line": 3,
-							"column": 27,
-							"offset": 68
-						},
-						"end": {
-							"line": 3,
-							"column": 33,
-							"offset": 74
-						},
-						"value": "good"
-					}
-				},
-				{
-					"type": "keyword",
-					"value": "fine",
-					"source": {
-						"file": "origami.json",
-						"path": [
-							"keywords",
-							2
-						],
-						"start": {
-							"line": 3,
-							"column": 35,
-							"offset": 76
-						},
-						"end": {
-							"line": 3,
-							"column": 41,
-							"offset": 82
-						},
-						"value": "fine"
-					}
-				},
-				{
-					"type": "keyword",
-					"value": "exit-0",
-					"source": {
-						"file": "origami.json",
-						"path": [
-							"keywords",
-							3
-						],
-						"start": {
-							"line": 3,
-							"column": 43,
-							"offset": 84
-						},
-						"end": {
-							"line": 3,
-							"column": 51,
-							"offset": 92
-						},
-						"value": "exit-0"
+						"value": "keyword"
 					}
 				}
 			]
@@ -888,12 +750,12 @@
 				"start": {
 					"line": 10,
 					"column": 12,
-					"offset": 335
+					"offset": 300
 				},
 				"end": {
 					"line": 10,
 					"column": 33,
-					"offset": 356
+					"offset": 321
 				},
 				"value": "chee.rabbits@ft.com"
 			},
@@ -910,12 +772,12 @@
 				"start": {
 					"line": 11,
 					"column": 12,
-					"offset": 369
+					"offset": 334
 				},
 				"end": {
 					"line": 11,
 					"column": 42,
-					"offset": 399
+					"offset": 364
 				},
 				"value": "financialtimes/#origami-chat"
 			},
@@ -933,12 +795,12 @@
 				"start": {
 					"line": 8,
 					"column": 13,
-					"offset": 241
+					"offset": 206
 				},
 				"end": {
 					"line": 8,
 					"column": 73,
-					"offset": 301
+					"offset": 266
 				},
 				"value": "https://github.com/Financial-Times/default-template/issues"
 			},
