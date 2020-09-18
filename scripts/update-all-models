@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+here=`dirname $0`
+cd $here/..
 for component in integration-tests/*/; do
 	name="${component##integration-tests/}"
 	echo updating ${name%%/}

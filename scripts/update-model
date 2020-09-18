@@ -1,2 +1,16 @@
-#!/bin/sh
+#!/bin/bash
+here=`dirname $0`
+cd $here/..
+testname="$1"
+if [ -z "$testname" ]; then
+	echo "Usage: $0 <testname>"
+	echo
+	echo 'you need to provide a test name!'
+	echo 'test names:'
+	for testdir in integration-tests/*/; do
+		       name="${testdir##integration-tests/}"
+		       echo "	${name%%/}"
+	done
+	exit 1
+fi
 node . integration-tests/$1/component model > integration-tests/$1/model.json
