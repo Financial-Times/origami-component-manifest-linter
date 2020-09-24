@@ -1,2 +1,2 @@
-error origami.json 3 3 brand-not-string
-error origami.json 10 5 brand-not-valid
+error origami.json 7 13 brand-not-valid
+error origami.json 27 15 brand-not-string
