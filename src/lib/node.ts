@@ -451,7 +451,7 @@ let description: NodeCreator<Required<Description>> = ({
 	getNpm,
 	getOrigami,
 }) => {
-	let opinions = []
+	let opinions: Opinion[] = []
 	let {value: description, source: descriptionSource} = getOrigami(
 		"description"
 	)
@@ -460,7 +460,7 @@ let description: NodeCreator<Required<Description>> = ({
 			type: NODE_TYPE.DESCRIPTION,
 			source: descriptionSource,
 			value: description,
-			opinions: [] as Opinion[],
+			opinions,
 		}
 
 		let {value: bowerDescription, source: bowerDescriptionSource} = getBower(
