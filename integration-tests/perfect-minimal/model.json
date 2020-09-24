@@ -72,9 +72,9 @@
 			]
 		},
 		"type": "brands",
-		"master": false,
-		"whitelabel": false,
-		"internal": false,
+		"master": true,
+		"whitelabel": true,
+		"internal": true,
 		"children": [
 			{
 				"type": "brand",
@@ -491,9 +491,9 @@
 				]
 			},
 			"type": "brands",
-			"master": false,
-			"whitelabel": false,
-			"internal": false,
+			"master": true,
+			"whitelabel": true,
+			"internal": true,
 			"children": [
 				{
 					"type": "brand",

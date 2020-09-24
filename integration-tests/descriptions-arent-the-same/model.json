@@ -72,9 +72,9 @@
 			]
 		},
 		"type": "brands",
-		"master": false,
-		"whitelabel": false,
-		"internal": false,
+		"master": true,
+		"whitelabel": true,
+		"internal": true,
 		"children": [
 			{
 				"type": "brand",
@@ -211,7 +211,62 @@
 			"value": "origami description"
 		},
 		"value": "origami description",
-		"opinions": []
+		"opinions": [
+			{
+				"type": "opinion",
+				"expectation": {
+					"type": "valueOf",
+					"expected": "origami description",
+					"received": "bower description"
+				},
+				"source": {
+					"file": "bower.json",
+					"path": [
+						"description"
+					],
+					"start": {
+						"line": 3,
+						"column": 17,
+						"offset": 35
+					},
+					"end": {
+						"line": 3,
+						"column": 36,
+						"offset": 54
+					},
+					"value": "bower description"
+				},
+				"code": "bower-origami-description-no-match",
+				"message": "origami.json and bower.json descriptions should be the same"
+			},
+			{
+				"type": "opinion",
+				"expectation": {
+					"type": "valueOf",
+					"expected": "origami description",
+					"received": "npm description"
+				},
+				"source": {
+					"file": "package.json",
+					"path": [
+						"description"
+					],
+					"start": {
+						"line": 3,
+						"column": 17,
+						"offset": 35
+					},
+					"end": {
+						"line": 3,
+						"column": 34,
+						"offset": 52
+					},
+					"value": "npm description"
+				},
+				"code": "npm-origami-description-no-match",
+				"message": "origami.json and package.json descriptions should be the same"
+			}
+		]
 	},
 	"status": {
 		"source": {
@@ -505,9 +560,9 @@
 				]
 			},
 			"type": "brands",
-			"master": false,
-			"whitelabel": false,
-			"internal": false,
+			"master": true,
+			"whitelabel": true,
+			"internal": true,
 			"children": [
 				{
 					"type": "brand",
@@ -644,7 +699,62 @@
 				"value": "origami description"
 			},
 			"value": "origami description",
-			"opinions": []
+			"opinions": [
+				{
+					"type": "opinion",
+					"expectation": {
+						"type": "valueOf",
+						"expected": "origami description",
+						"received": "bower description"
+					},
+					"source": {
+						"file": "bower.json",
+						"path": [
+							"description"
+						],
+						"start": {
+							"line": 3,
+							"column": 17,
+							"offset": 35
+						},
+						"end": {
+							"line": 3,
+							"column": 36,
+							"offset": 54
+						},
+						"value": "bower description"
+					},
+					"code": "bower-origami-description-no-match",
+					"message": "origami.json and bower.json descriptions should be the same"
+				},
+				{
+					"type": "opinion",
+					"expectation": {
+						"type": "valueOf",
+						"expected": "origami description",
+						"received": "npm description"
+					},
+					"source": {
+						"file": "package.json",
+						"path": [
+							"description"
+						],
+						"start": {
+							"line": 3,
+							"column": 17,
+							"offset": 35
+						},
+						"end": {
+							"line": 3,
+							"column": 34,
+							"offset": 52
+						},
+						"value": "npm description"
+					},
+					"code": "npm-origami-description-no-match",
+					"message": "origami.json and package.json descriptions should be the same"
+				}
+			]
 		},
 		{
 			"source": {

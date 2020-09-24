@@ -1,0 +1,21 @@
+error origami.json 0 0 description-not-a-string
+error origami.json 0 0 name-not-a-string
+error origami.json 0 0 title-not-a-string
+error origami.json 25 16 demo-template-not-file
+error origami.json 27 14 hidden-not-a-boolean
+error origami.json 28 19 displayHtml-not-a-boolean
+error origami.json 29 20 demo-deps-not-array
+error origami.json 30 23 demo-classes-not-string
+error origami.json 31 12 demo-data-bad-file
+error origami.json 32 12 demo-sass-not-file
+error origami.json 33 10 demo-js-not-file
+error origami.json 34 14 demo-brands-not-array
+error origami.json 42 14 brand-not-in-root
+error origami.json 43 12 demo-data-not-file-or-object
+error origami.json 46 15 brand-not-a-string
+error origami.json 46 19 brand-not-a-string
+
+
+## this one needs to be tested separately, it relies on the origami.json not
+## declaring any brands
+# error origami.json ? ? demo-brands-without-any-root-brands

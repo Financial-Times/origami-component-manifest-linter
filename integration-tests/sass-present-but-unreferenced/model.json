@@ -72,9 +72,9 @@
 			]
 		},
 		"type": "brands",
-		"master": false,
-		"whitelabel": false,
-		"internal": false,
+		"master": true,
+		"whitelabel": true,
+		"internal": true,
 		"children": [
 			{
 				"type": "brand",
@@ -688,6 +688,16 @@
 							"documentClasses"
 						]
 					}
+				},
+				{
+					"type": "empty",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demosDefaults",
+							"dependencies"
+						]
+					}
 				}
 			]
 		},
@@ -814,30 +824,6 @@
 						]
 					}
 				},
-				"index": 0,
-				"source": {
-					"file": "origami.json",
-					"path": [
-						"demos",
-						0
-					],
-					"start": {
-						"line": 19,
-						"column": 3,
-						"offset": 537
-					},
-					"end": {
-						"line": 24,
-						"column": 4,
-						"offset": 676
-					},
-					"value": {
-						"title": "A Useful Demo",
-						"name": "demo",
-						"template": "demos/src/demo.mustache",
-						"description": "Description of the demo"
-					}
-				},
 				"name": {
 					"type": "demo name",
 					"value": "demo",
@@ -932,6 +918,30 @@
 					},
 					"opinions": []
 				},
+				"index": 0,
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demos",
+						0
+					],
+					"start": {
+						"line": 19,
+						"column": 3,
+						"offset": 537
+					},
+					"end": {
+						"line": 24,
+						"column": 4,
+						"offset": 676
+					},
+					"value": {
+						"title": "A Useful Demo",
+						"name": "demo",
+						"template": "demos/src/demo.mustache",
+						"description": "Description of the demo"
+					}
+				},
 				"children": [
 					{
 						"type": "demo template",
@@ -1008,6 +1018,17 @@
 								"demos",
 								0,
 								"documentClasses"
+							]
+						}
+					},
+					{
+						"type": "empty",
+						"source": {
+							"file": "origami.json",
+							"path": [
+								"demos",
+								0,
+								"dependencies"
 							]
 						}
 					},
@@ -1198,31 +1219,6 @@
 						]
 					}
 				},
-				"index": 1,
-				"source": {
-					"file": "origami.json",
-					"path": [
-						"demos",
-						1
-					],
-					"start": {
-						"line": 25,
-						"column": 3,
-						"offset": 680
-					},
-					"end": {
-						"line": 31,
-						"column": 4,
-						"offset": 857
-					},
-					"value": {
-						"title": "Pa11y",
-						"name": "pa11y",
-						"template": "demos/src/pa11y.mustache",
-						"description": "Accessibility test will be run against this demo",
-						"hidden": true
-					}
-				},
 				"name": {
 					"type": "demo name",
 					"value": "pa11y",
@@ -1328,6 +1324,31 @@
 					},
 					"opinions": []
 				},
+				"index": 1,
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demos",
+						1
+					],
+					"start": {
+						"line": 25,
+						"column": 3,
+						"offset": 680
+					},
+					"end": {
+						"line": 31,
+						"column": 4,
+						"offset": 857
+					},
+					"value": {
+						"title": "Pa11y",
+						"name": "pa11y",
+						"template": "demos/src/pa11y.mustache",
+						"description": "Accessibility test will be run against this demo",
+						"hidden": true
+					}
+				},
 				"children": [
 					{
 						"type": "demo template",
@@ -1404,6 +1425,17 @@
 								"demos",
 								1,
 								"documentClasses"
+							]
+						}
+					},
+					{
+						"type": "empty",
+						"source": {
+							"file": "origami.json",
+							"path": [
+								"demos",
+								1,
+								"dependencies"
 							]
 						}
 					},
@@ -1583,9 +1615,9 @@
 				]
 			},
 			"type": "brands",
-			"master": false,
-			"whitelabel": false,
-			"internal": false,
+			"master": true,
+			"whitelabel": true,
+			"internal": true,
 			"children": [
 				{
 					"type": "brand",
@@ -2195,6 +2227,16 @@
 								"documentClasses"
 							]
 						}
+					},
+					{
+						"type": "empty",
+						"source": {
+							"file": "origami.json",
+							"path": [
+								"demosDefaults",
+								"dependencies"
+							]
+						}
 					}
 				]
 			},
@@ -2321,30 +2363,6 @@
 							]
 						}
 					},
-					"index": 0,
-					"source": {
-						"file": "origami.json",
-						"path": [
-							"demos",
-							0
-						],
-						"start": {
-							"line": 19,
-							"column": 3,
-							"offset": 537
-						},
-						"end": {
-							"line": 24,
-							"column": 4,
-							"offset": 676
-						},
-						"value": {
-							"title": "A Useful Demo",
-							"name": "demo",
-							"template": "demos/src/demo.mustache",
-							"description": "Description of the demo"
-						}
-					},
 					"name": {
 						"type": "demo name",
 						"value": "demo",
@@ -2439,6 +2457,30 @@
 						},
 						"opinions": []
 					},
+					"index": 0,
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0
+						],
+						"start": {
+							"line": 19,
+							"column": 3,
+							"offset": 537
+						},
+						"end": {
+							"line": 24,
+							"column": 4,
+							"offset": 676
+						},
+						"value": {
+							"title": "A Useful Demo",
+							"name": "demo",
+							"template": "demos/src/demo.mustache",
+							"description": "Description of the demo"
+						}
+					},
 					"children": [
 						{
 							"type": "demo template",
@@ -2515,6 +2557,17 @@
 									"demos",
 									0,
 									"documentClasses"
+								]
+							}
+						},
+						{
+							"type": "empty",
+							"source": {
+								"file": "origami.json",
+								"path": [
+									"demos",
+									0,
+									"dependencies"
 								]
 							}
 						},
@@ -2705,31 +2758,6 @@
 							]
 						}
 					},
-					"index": 1,
-					"source": {
-						"file": "origami.json",
-						"path": [
-							"demos",
-							1
-						],
-						"start": {
-							"line": 25,
-							"column": 3,
-							"offset": 680
-						},
-						"end": {
-							"line": 31,
-							"column": 4,
-							"offset": 857
-						},
-						"value": {
-							"title": "Pa11y",
-							"name": "pa11y",
-							"template": "demos/src/pa11y.mustache",
-							"description": "Accessibility test will be run against this demo",
-							"hidden": true
-						}
-					},
 					"name": {
 						"type": "demo name",
 						"value": "pa11y",
@@ -2835,6 +2863,31 @@
 						},
 						"opinions": []
 					},
+					"index": 1,
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1
+						],
+						"start": {
+							"line": 25,
+							"column": 3,
+							"offset": 680
+						},
+						"end": {
+							"line": 31,
+							"column": 4,
+							"offset": 857
+						},
+						"value": {
+							"title": "Pa11y",
+							"name": "pa11y",
+							"template": "demos/src/pa11y.mustache",
+							"description": "Accessibility test will be run against this demo",
+							"hidden": true
+						}
+					},
 					"children": [
 						{
 							"type": "demo template",
@@ -2911,6 +2964,17 @@
 									"demos",
 									1,
 									"documentClasses"
+								]
+							}
+						},
+						{
+							"type": "empty",
+							"source": {
+								"file": "origami.json",
+								"path": [
+									"demos",
+									1,
+									"dependencies"
 								]
 							}
 						},
