@@ -1002,22 +1002,27 @@ let browserFeatures: NodeCreator<Optional<BrowserFeatures>> = ({
 		}
 	}
 
+	let optional: Required<BrowserFeature>[] = node.optional || []
+	let required: Required<BrowserFeature>[] = node.required || []
+
+	function isProblem(node: Node): node is Problem {
+		return node.type == "problem"
+	}
+
 	if (problems.length) {
 		return {
 			source,
 			type: "problems",
-			children: problems,
+			children: [...problems, ...optional.filter(isProblem)],
 		}
 	} else {
 		let result: BrowserFeatures = {
 			source,
 			type: "browser features",
-			optional: node.optional || [],
-			required: node.required || [],
-			children: [],
+			optional,
+			required,
+			children: [...optional, ...required],
 		}
-
-		result.children = [...result.optional, ...result.required]
 
 		return result
 	}
@@ -1748,7 +1753,7 @@ let entry = async (
 		// that's a problem
 		return expected
 			.file(entryPath, fileSource || bowerMainSource, `is ${mainEntryFileType}`)
-			.problem("non-file-main")
+			.problem("non-file-in-main")
 	}
 }
 
