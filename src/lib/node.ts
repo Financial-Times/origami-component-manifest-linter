@@ -684,7 +684,7 @@ let brands: NodeCreator<Optional<Brands>> = ({getOrigami, prefix}) => {
 				}
 			} else {
 				node.children.push(
-					expected.string(brand, brandSource).problem("brand-not-string")
+					expected.string(brand, brandSource).problem("brand-not-a-string")
 				)
 			}
 		})
@@ -1302,6 +1302,7 @@ function boolean({
 	value,
 	source,
 }: ValueSource): Required<TemplateNode<Value<boolean>>> {
+	let prop = source.path[source.path.length - 1]
 	if (value == null) {
 		return {
 			value: false,
@@ -1322,14 +1323,14 @@ function boolean({
 				source,
 				`should be an actual boolean, got the string "${value}"`
 			)
-			.opinion("boolean-string")
+			.opinion(`${prop}-boolean-string`)
 		return {
 			value: value == "true" ? true : false,
 			source: source,
 			opinions: [booleanStringOpinion],
 		}
 	} else {
-		return expected.boolean(value, source).problem("not-a-boolean")
+		return expected.boolean(value, source).problem(`${prop}-not-a-boolean`)
 	}
 }
 
@@ -1340,13 +1341,14 @@ function string({
 	value,
 	source,
 }: ValueSource): Required<TemplateNode<Value<string>>> {
+	let prop = source.path[source.path.length - 1]
 	if (typeof value == "string") {
 		return {
 			value,
 			source,
 		}
 	} else {
-		return expected.string(value, source).problem("not-string")
+		return expected.string(value, source).problem(`${prop}-not-a-string`)
 	}
 }
 
@@ -1502,7 +1504,7 @@ let demo = async (
 						brandsSource,
 						"demo brands have been specified, but there are no brands listed in the manifest root"
 					)
-					.problem("demo-brands-not-supported")
+					.problem("demo-brands-without-any-root-brands")
 			}
 		} else {
 			// a problem
@@ -1524,13 +1526,13 @@ let demo = async (
 		brands: node.brands,
 		documentClasses: base.documentClasses,
 		dependencies: base.dependencies,
-		index,
-		source: base.source,
 		name: node.name,
 		title: node.title,
 		description: node.description,
 		hidden: node.hidden,
 		displayHtml: node.displayHtml,
+		index,
+		source: base.source,
 		children: [
 			base.template,
 			base.sass,
@@ -1538,6 +1540,7 @@ let demo = async (
 			base.data,
 			node.brands,
 			base.documentClasses,
+			base.dependencies,
 			node.name,
 			node.title,
 			node.description,
@@ -1580,6 +1583,7 @@ let demosDefaults: AsyncNodeCreator<Optional<
 			base.js,
 			base.data,
 			base.documentClasses,
+			base.dependencies,
 		],
 	}
 

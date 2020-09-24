@@ -3,7 +3,7 @@
 	"source": {
 		"file": "origami.json",
 		"path": [],
-		"value": "{\n\t\"description\": \"description'\",\n\t\"keywords\": [\"template\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\",\"internal\",\"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\",\n\t\"browserFeatures\": {},\n\t\"demosDefaults\": {\n\t\t\"sass\": \"demos/src/demo.scss\",\n\t\t\"js\": \"demos/src/demo.js\",\n\t\t\"documentClasses\": \"\",\n\t\t\"dependencies\": []\n\t},\n\t\"demos\": [\n\t\t{\n\t\t\t\"title\": \"A Useful Demo\",\n\t\t\t\"name\": \"demo\",\n\t\t\t\"template\": \"demos/src/demo.mustache\",\n\t\t\t\"description\": \"Description of the demo\"\n\t\t},\n\t\t{\n\t\t\t\"title\": \"Pa11y\",\n\t\t\t\"name\": \"pa11y\",\n\t\t\t\"template\": \"demos/src/pa11y.mustache\",\n\t\t\t\"description\": \"Accessibility test will be run against this demo\",\n\t\t\t\"hidden\": true\n\t\t}\n\t]\n}\n"
+		"value": "{\n\t\"description\": \"description\",\n\t\"keywords\": [\"template\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\",\"internal\",\"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\",\n\t\"browserFeatures\": {},\n\t\"demosDefaults\": {\n\t\t\"sass\": \"demos/src/demo.scss\",\n\t\t\"js\": \"demos/src/demo.js\",\n\t\t\"documentClasses\": \"\",\n\t\t\"dependencies\": []\n\t},\n\t\"demos\": [\n\t\t{\n\t\t\t\"title\": \"A Useful Demo\",\n\t\t\t\"name\": \"demo\",\n\t\t\t\"template\": \"demos/src/demo.mustache\",\n\t\t\t\"description\": \"Description of the demo\"\n\t\t},\n\t\t{\n\t\t\t\"title\": \"Pa11y\",\n\t\t\t\"name\": \"pa11y\",\n\t\t\t\"template\": \"demos/src/pa11y.mustache\",\n\t\t\t\"description\": \"Accessibility test will be run against this demo\",\n\t\t\t\"hidden\": true\n\t\t}\n\t]\n}\n"
 	},
 	"opinions": [],
 	"origamiVersion": {
@@ -16,12 +16,12 @@
 			"start": {
 				"line": 6,
 				"column": 20,
-				"offset": 143
+				"offset": 142
 			},
 			"end": {
 				"line": 6,
 				"column": 21,
-				"offset": 144
+				"offset": 143
 			},
 			"value": 1
 		},
@@ -36,12 +36,12 @@
 			"start": {
 				"line": 4,
 				"column": 17,
-				"offset": 77
+				"offset": 76
 			},
 			"end": {
 				"line": 4,
 				"column": 28,
-				"offset": 88
+				"offset": 87
 			},
 			"value": "component"
 		},
@@ -58,12 +58,12 @@
 			"start": {
 				"line": 7,
 				"column": 12,
-				"offset": 157
+				"offset": 156
 			},
 			"end": {
 				"line": 7,
 				"column": 46,
-				"offset": 191
+				"offset": 190
 			},
 			"value": [
 				"master",
@@ -72,9 +72,9 @@
 			]
 		},
 		"type": "brands",
-		"master": false,
-		"whitelabel": false,
-		"internal": false,
+		"master": true,
+		"whitelabel": true,
+		"internal": true,
 		"children": [
 			{
 				"type": "brand",
@@ -88,12 +88,12 @@
 					"start": {
 						"line": 7,
 						"column": 13,
-						"offset": 158
+						"offset": 157
 					},
 					"end": {
 						"line": 7,
 						"column": 21,
-						"offset": 166
+						"offset": 165
 					},
 					"value": "master"
 				}
@@ -110,12 +110,12 @@
 					"start": {
 						"line": 7,
 						"column": 22,
-						"offset": 167
+						"offset": 166
 					},
 					"end": {
 						"line": 7,
 						"column": 32,
-						"offset": 177
+						"offset": 176
 					},
 					"value": "internal"
 				}
@@ -132,12 +132,12 @@
 					"start": {
 						"line": 7,
 						"column": 33,
-						"offset": 178
+						"offset": 177
 					},
 					"end": {
 						"line": 7,
 						"column": 45,
-						"offset": 190
+						"offset": 189
 					},
 					"value": "whitelabel"
 				}
@@ -153,12 +153,12 @@
 			"start": {
 				"line": 5,
 				"column": 21,
-				"offset": 110
+				"offset": 109
 			},
 			"end": {
 				"line": 5,
 				"column": 33,
-				"offset": 122
+				"offset": 121
 			},
 			"value": "components"
 		},
@@ -205,12 +205,12 @@
 			},
 			"end": {
 				"line": 2,
-				"column": 31,
-				"offset": 32
+				"column": 30,
+				"offset": 31
 			},
-			"value": "description'"
+			"value": "description"
 		},
-		"value": "description'",
+		"value": "description",
 		"opinions": []
 	},
 	"status": {
@@ -222,12 +222,12 @@
 			"start": {
 				"line": 13,
 				"column": 19,
-				"offset": 386
+				"offset": 385
 			},
 			"end": {
 				"line": 13,
 				"column": 33,
-				"offset": 400
+				"offset": 399
 			},
 			"value": "experimental"
 		},
@@ -249,12 +249,12 @@
 			"start": {
 				"line": 3,
 				"column": 14,
-				"offset": 47
+				"offset": 46
 			},
 			"end": {
 				"line": 3,
 				"column": 26,
-				"offset": 59
+				"offset": 58
 			},
 			"value": [
 				"template"
@@ -273,12 +273,12 @@
 					"start": {
 						"line": 3,
 						"column": 15,
-						"offset": 48
+						"offset": 47
 					},
 					"end": {
 						"line": 3,
 						"column": 25,
-						"offset": 58
+						"offset": 57
 					},
 					"value": "template"
 				}
@@ -294,12 +294,12 @@
 			"start": {
 				"line": 14,
 				"column": 21,
-				"offset": 422
+				"offset": 421
 			},
 			"end": {
 				"line": 14,
 				"column": 23,
-				"offset": 424
+				"offset": 423
 			},
 			"value": {}
 		},
@@ -347,12 +347,12 @@
 				"start": {
 					"line": 8,
 					"column": 13,
-					"offset": 205
+					"offset": 204
 				},
 				"end": {
 					"line": 8,
 					"column": 73,
-					"offset": 265
+					"offset": 264
 				},
 				"value": "https://github.com/Financial-Times/default-template/issues"
 			},
@@ -382,12 +382,12 @@
 				"start": {
 					"line": 10,
 					"column": 12,
-					"offset": 299
+					"offset": 298
 				},
 				"end": {
 					"line": 10,
 					"column": 33,
-					"offset": 320
+					"offset": 319
 				},
 				"value": "chee.rabbits@ft.com"
 			},
@@ -404,12 +404,12 @@
 				"start": {
 					"line": 11,
 					"column": 12,
-					"offset": 333
+					"offset": 332
 				},
 				"end": {
 					"line": 11,
 					"column": 42,
-					"offset": 363
+					"offset": 362
 				},
 				"value": "financialtimes/#origami-chat"
 			},
@@ -448,12 +448,12 @@
 					"start": {
 						"line": 16,
 						"column": 11,
-						"offset": 456
+						"offset": 455
 					},
 					"end": {
 						"line": 16,
 						"column": 32,
-						"offset": 477
+						"offset": 476
 					},
 					"value": "demos/src/demo.scss"
 				},
@@ -474,12 +474,12 @@
 					"start": {
 						"line": 17,
 						"column": 9,
-						"offset": 487
+						"offset": 486
 					},
 					"end": {
 						"line": 17,
 						"column": 28,
-						"offset": 506
+						"offset": 505
 					},
 					"value": "demos/src/demo.js"
 				},
@@ -506,12 +506,12 @@
 					"start": {
 						"line": 18,
 						"column": 22,
-						"offset": 529
+						"offset": 528
 					},
 					"end": {
 						"line": 18,
 						"column": 24,
-						"offset": 531
+						"offset": 530
 					},
 					"value": ""
 				}
@@ -528,12 +528,12 @@
 					"start": {
 						"line": 19,
 						"column": 19,
-						"offset": 551
+						"offset": 550
 					},
 					"end": {
 						"line": 19,
 						"column": 21,
-						"offset": 553
+						"offset": 552
 					},
 					"value": []
 				}
@@ -546,12 +546,12 @@
 				"start": {
 					"line": 15,
 					"column": 19,
-					"offset": 444
+					"offset": 443
 				},
 				"end": {
 					"line": 20,
 					"column": 3,
-					"offset": 556
+					"offset": 555
 				},
 				"value": {
 					"sass": "demos/src/demo.scss",
@@ -586,12 +586,12 @@
 						"start": {
 							"line": 16,
 							"column": 11,
-							"offset": 456
+							"offset": 455
 						},
 						"end": {
 							"line": 16,
 							"column": 32,
-							"offset": 477
+							"offset": 476
 						},
 						"value": "demos/src/demo.scss"
 					},
@@ -612,12 +612,12 @@
 						"start": {
 							"line": 17,
 							"column": 9,
-							"offset": 487
+							"offset": 486
 						},
 						"end": {
 							"line": 17,
 							"column": 28,
-							"offset": 506
+							"offset": 505
 						},
 						"value": "demos/src/demo.js"
 					},
@@ -644,14 +644,36 @@
 						"start": {
 							"line": 18,
 							"column": 22,
-							"offset": 529
+							"offset": 528
 						},
 						"end": {
 							"line": 18,
 							"column": 24,
-							"offset": 531
+							"offset": 530
 						},
 						"value": ""
+					}
+				},
+				{
+					"type": "demo dependencies",
+					"value": [],
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demosDefaults",
+							"dependencies"
+						],
+						"start": {
+							"line": 19,
+							"column": 19,
+							"offset": 550
+						},
+						"end": {
+							"line": 19,
+							"column": 21,
+							"offset": 552
+						},
+						"value": []
 					}
 				}
 			]
@@ -664,12 +686,12 @@
 			"start": {
 				"line": 21,
 				"column": 11,
-				"offset": 568
+				"offset": 567
 			},
 			"end": {
 				"line": 35,
 				"column": 3,
-				"offset": 895
+				"offset": 894
 			},
 			"value": [
 				{
@@ -706,12 +728,12 @@
 						"start": {
 							"line": 25,
 							"column": 16,
-							"offset": 637
+							"offset": 636
 						},
 						"end": {
 							"line": 25,
 							"column": 41,
-							"offset": 662
+							"offset": 661
 						},
 						"value": "demos/src/demo.mustache"
 					},
@@ -783,30 +805,6 @@
 						]
 					}
 				},
-				"index": 0,
-				"source": {
-					"file": "origami.json",
-					"path": [
-						"demos",
-						0
-					],
-					"start": {
-						"line": 22,
-						"column": 3,
-						"offset": 572
-					},
-					"end": {
-						"line": 27,
-						"column": 4,
-						"offset": 711
-					},
-					"value": {
-						"title": "A Useful Demo",
-						"name": "demo",
-						"template": "demos/src/demo.mustache",
-						"description": "Description of the demo"
-					}
-				},
 				"name": {
 					"type": "demo name",
 					"value": "demo",
@@ -820,12 +818,12 @@
 						"start": {
 							"line": 24,
 							"column": 12,
-							"offset": 614
+							"offset": 613
 						},
 						"end": {
 							"line": 24,
 							"column": 18,
-							"offset": 620
+							"offset": 619
 						},
 						"value": "demo"
 					}
@@ -843,12 +841,12 @@
 						"start": {
 							"line": 23,
 							"column": 13,
-							"offset": 586
+							"offset": 585
 						},
 						"end": {
 							"line": 23,
 							"column": 28,
-							"offset": 601
+							"offset": 600
 						},
 						"value": "A Useful Demo"
 					}
@@ -866,12 +864,12 @@
 						"start": {
 							"line": 26,
 							"column": 19,
-							"offset": 682
+							"offset": 681
 						},
 						"end": {
 							"line": 26,
 							"column": 44,
-							"offset": 707
+							"offset": 706
 						},
 						"value": "Description of the demo"
 					}
@@ -901,6 +899,30 @@
 					},
 					"opinions": []
 				},
+				"index": 0,
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demos",
+						0
+					],
+					"start": {
+						"line": 22,
+						"column": 3,
+						"offset": 571
+					},
+					"end": {
+						"line": 27,
+						"column": 4,
+						"offset": 710
+					},
+					"value": {
+						"title": "A Useful Demo",
+						"name": "demo",
+						"template": "demos/src/demo.mustache",
+						"description": "Description of the demo"
+					}
+				},
 				"children": [
 					{
 						"type": "problem",
@@ -918,12 +940,12 @@
 							"start": {
 								"line": 25,
 								"column": 16,
-								"offset": 637
+								"offset": 636
 							},
 							"end": {
 								"line": 25,
 								"column": 41,
-								"offset": 662
+								"offset": 661
 							},
 							"value": "demos/src/demo.mustache"
 						},
@@ -985,6 +1007,17 @@
 						}
 					},
 					{
+						"type": "empty",
+						"source": {
+							"file": "origami.json",
+							"path": [
+								"demos",
+								0,
+								"dependencies"
+							]
+						}
+					},
+					{
 						"type": "demo name",
 						"value": "demo",
 						"source": {
@@ -997,12 +1030,12 @@
 							"start": {
 								"line": 24,
 								"column": 12,
-								"offset": 614
+								"offset": 613
 							},
 							"end": {
 								"line": 24,
 								"column": 18,
-								"offset": 620
+								"offset": 619
 							},
 							"value": "demo"
 						}
@@ -1020,12 +1053,12 @@
 							"start": {
 								"line": 23,
 								"column": 13,
-								"offset": 586
+								"offset": 585
 							},
 							"end": {
 								"line": 23,
 								"column": 28,
-								"offset": 601
+								"offset": 600
 							},
 							"value": "A Useful Demo"
 						}
@@ -1043,12 +1076,12 @@
 							"start": {
 								"line": 26,
 								"column": 19,
-								"offset": 682
+								"offset": 681
 							},
 							"end": {
 								"line": 26,
 								"column": 44,
-								"offset": 707
+								"offset": 706
 							},
 							"value": "Description of the demo"
 						}
@@ -1098,12 +1131,12 @@
 						"start": {
 							"line": 31,
 							"column": 16,
-							"offset": 773
+							"offset": 772
 						},
 						"end": {
 							"line": 31,
 							"column": 42,
-							"offset": 799
+							"offset": 798
 						},
 						"value": "demos/src/pa11y.mustache"
 					},
@@ -1175,31 +1208,6 @@
 						]
 					}
 				},
-				"index": 1,
-				"source": {
-					"file": "origami.json",
-					"path": [
-						"demos",
-						1
-					],
-					"start": {
-						"line": 28,
-						"column": 3,
-						"offset": 715
-					},
-					"end": {
-						"line": 34,
-						"column": 4,
-						"offset": 892
-					},
-					"value": {
-						"title": "Pa11y",
-						"name": "pa11y",
-						"template": "demos/src/pa11y.mustache",
-						"description": "Accessibility test will be run against this demo",
-						"hidden": true
-					}
-				},
 				"name": {
 					"type": "demo name",
 					"value": "pa11y",
@@ -1213,12 +1221,12 @@
 						"start": {
 							"line": 30,
 							"column": 12,
-							"offset": 749
+							"offset": 748
 						},
 						"end": {
 							"line": 30,
 							"column": 19,
-							"offset": 756
+							"offset": 755
 						},
 						"value": "pa11y"
 					}
@@ -1236,12 +1244,12 @@
 						"start": {
 							"line": 29,
 							"column": 13,
-							"offset": 729
+							"offset": 728
 						},
 						"end": {
 							"line": 29,
 							"column": 20,
-							"offset": 736
+							"offset": 735
 						},
 						"value": "Pa11y"
 					}
@@ -1259,12 +1267,12 @@
 						"start": {
 							"line": 32,
 							"column": 19,
-							"offset": 819
+							"offset": 818
 						},
 						"end": {
 							"line": 32,
 							"column": 69,
-							"offset": 869
+							"offset": 868
 						},
 						"value": "Accessibility test will be run against this demo"
 					}
@@ -1282,12 +1290,12 @@
 						"start": {
 							"line": 33,
 							"column": 14,
-							"offset": 884
+							"offset": 883
 						},
 						"end": {
 							"line": 33,
 							"column": 18,
-							"offset": 888
+							"offset": 887
 						},
 						"value": true
 					}
@@ -1304,6 +1312,31 @@
 						]
 					},
 					"opinions": []
+				},
+				"index": 1,
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"demos",
+						1
+					],
+					"start": {
+						"line": 28,
+						"column": 3,
+						"offset": 714
+					},
+					"end": {
+						"line": 34,
+						"column": 4,
+						"offset": 891
+					},
+					"value": {
+						"title": "Pa11y",
+						"name": "pa11y",
+						"template": "demos/src/pa11y.mustache",
+						"description": "Accessibility test will be run against this demo",
+						"hidden": true
+					}
 				},
 				"children": [
 					{
@@ -1322,12 +1355,12 @@
 							"start": {
 								"line": 31,
 								"column": 16,
-								"offset": 773
+								"offset": 772
 							},
 							"end": {
 								"line": 31,
 								"column": 42,
-								"offset": 799
+								"offset": 798
 							},
 							"value": "demos/src/pa11y.mustache"
 						},
@@ -1389,6 +1422,17 @@
 						}
 					},
 					{
+						"type": "empty",
+						"source": {
+							"file": "origami.json",
+							"path": [
+								"demos",
+								1,
+								"dependencies"
+							]
+						}
+					},
+					{
 						"type": "demo name",
 						"value": "pa11y",
 						"source": {
@@ -1401,12 +1445,12 @@
 							"start": {
 								"line": 30,
 								"column": 12,
-								"offset": 749
+								"offset": 748
 							},
 							"end": {
 								"line": 30,
 								"column": 19,
-								"offset": 756
+								"offset": 755
 							},
 							"value": "pa11y"
 						}
@@ -1424,12 +1468,12 @@
 							"start": {
 								"line": 29,
 								"column": 13,
-								"offset": 729
+								"offset": 728
 							},
 							"end": {
 								"line": 29,
 								"column": 20,
-								"offset": 736
+								"offset": 735
 							},
 							"value": "Pa11y"
 						}
@@ -1447,12 +1491,12 @@
 							"start": {
 								"line": 32,
 								"column": 19,
-								"offset": 819
+								"offset": 818
 							},
 							"end": {
 								"line": 32,
 								"column": 69,
-								"offset": 869
+								"offset": 868
 							},
 							"value": "Accessibility test will be run against this demo"
 						}
@@ -1470,12 +1514,12 @@
 							"start": {
 								"line": 33,
 								"column": 14,
-								"offset": 884
+								"offset": 883
 							},
 							"end": {
 								"line": 33,
 								"column": 18,
-								"offset": 888
+								"offset": 887
 							},
 							"value": true
 						}
@@ -1508,12 +1552,12 @@
 				"start": {
 					"line": 6,
 					"column": 20,
-					"offset": 143
+					"offset": 142
 				},
 				"end": {
 					"line": 6,
 					"column": 21,
-					"offset": 144
+					"offset": 143
 				},
 				"value": 1
 			},
@@ -1528,12 +1572,12 @@
 				"start": {
 					"line": 4,
 					"column": 17,
-					"offset": 77
+					"offset": 76
 				},
 				"end": {
 					"line": 4,
 					"column": 28,
-					"offset": 88
+					"offset": 87
 				},
 				"value": "component"
 			},
@@ -1550,12 +1594,12 @@
 				"start": {
 					"line": 7,
 					"column": 12,
-					"offset": 157
+					"offset": 156
 				},
 				"end": {
 					"line": 7,
 					"column": 46,
-					"offset": 191
+					"offset": 190
 				},
 				"value": [
 					"master",
@@ -1564,9 +1608,9 @@
 				]
 			},
 			"type": "brands",
-			"master": false,
-			"whitelabel": false,
-			"internal": false,
+			"master": true,
+			"whitelabel": true,
+			"internal": true,
 			"children": [
 				{
 					"type": "brand",
@@ -1580,12 +1624,12 @@
 						"start": {
 							"line": 7,
 							"column": 13,
-							"offset": 158
+							"offset": 157
 						},
 						"end": {
 							"line": 7,
 							"column": 21,
-							"offset": 166
+							"offset": 165
 						},
 						"value": "master"
 					}
@@ -1602,12 +1646,12 @@
 						"start": {
 							"line": 7,
 							"column": 22,
-							"offset": 167
+							"offset": 166
 						},
 						"end": {
 							"line": 7,
 							"column": 32,
-							"offset": 177
+							"offset": 176
 						},
 						"value": "internal"
 					}
@@ -1624,12 +1668,12 @@
 						"start": {
 							"line": 7,
 							"column": 33,
-							"offset": 178
+							"offset": 177
 						},
 						"end": {
 							"line": 7,
 							"column": 45,
-							"offset": 190
+							"offset": 189
 						},
 						"value": "whitelabel"
 					}
@@ -1645,12 +1689,12 @@
 				"start": {
 					"line": 5,
 					"column": 21,
-					"offset": 110
+					"offset": 109
 				},
 				"end": {
 					"line": 5,
 					"column": 33,
-					"offset": 122
+					"offset": 121
 				},
 				"value": "components"
 			},
@@ -1697,12 +1741,12 @@
 				},
 				"end": {
 					"line": 2,
-					"column": 31,
-					"offset": 32
+					"column": 30,
+					"offset": 31
 				},
-				"value": "description'"
+				"value": "description"
 			},
-			"value": "description'",
+			"value": "description",
 			"opinions": []
 		},
 		{
@@ -1714,12 +1758,12 @@
 				"start": {
 					"line": 13,
 					"column": 19,
-					"offset": 386
+					"offset": 385
 				},
 				"end": {
 					"line": 13,
 					"column": 33,
-					"offset": 400
+					"offset": 399
 				},
 				"value": "experimental"
 			},
@@ -1741,12 +1785,12 @@
 				"start": {
 					"line": 3,
 					"column": 14,
-					"offset": 47
+					"offset": 46
 				},
 				"end": {
 					"line": 3,
 					"column": 26,
-					"offset": 59
+					"offset": 58
 				},
 				"value": [
 					"template"
@@ -1765,12 +1809,12 @@
 						"start": {
 							"line": 3,
 							"column": 15,
-							"offset": 48
+							"offset": 47
 						},
 						"end": {
 							"line": 3,
 							"column": 25,
-							"offset": 58
+							"offset": 57
 						},
 						"value": "template"
 					}
@@ -1786,12 +1830,12 @@
 				"start": {
 					"line": 14,
 					"column": 21,
-					"offset": 422
+					"offset": 421
 				},
 				"end": {
 					"line": 14,
 					"column": 23,
-					"offset": 424
+					"offset": 423
 				},
 				"value": {}
 			},
@@ -1837,12 +1881,12 @@
 				"start": {
 					"line": 10,
 					"column": 12,
-					"offset": 299
+					"offset": 298
 				},
 				"end": {
 					"line": 10,
 					"column": 33,
-					"offset": 320
+					"offset": 319
 				},
 				"value": "chee.rabbits@ft.com"
 			},
@@ -1859,12 +1903,12 @@
 				"start": {
 					"line": 11,
 					"column": 12,
-					"offset": 333
+					"offset": 332
 				},
 				"end": {
 					"line": 11,
 					"column": 42,
-					"offset": 363
+					"offset": 362
 				},
 				"value": "financialtimes/#origami-chat"
 			},
@@ -1882,12 +1926,12 @@
 				"start": {
 					"line": 8,
 					"column": 13,
-					"offset": 205
+					"offset": 204
 				},
 				"end": {
 					"line": 8,
 					"column": 73,
-					"offset": 265
+					"offset": 264
 				},
 				"value": "https://github.com/Financial-Times/default-template/issues"
 			},
@@ -1936,12 +1980,12 @@
 						"start": {
 							"line": 16,
 							"column": 11,
-							"offset": 456
+							"offset": 455
 						},
 						"end": {
 							"line": 16,
 							"column": 32,
-							"offset": 477
+							"offset": 476
 						},
 						"value": "demos/src/demo.scss"
 					},
@@ -1962,12 +2006,12 @@
 						"start": {
 							"line": 17,
 							"column": 9,
-							"offset": 487
+							"offset": 486
 						},
 						"end": {
 							"line": 17,
 							"column": 28,
-							"offset": 506
+							"offset": 505
 						},
 						"value": "demos/src/demo.js"
 					},
@@ -1994,12 +2038,12 @@
 						"start": {
 							"line": 18,
 							"column": 22,
-							"offset": 529
+							"offset": 528
 						},
 						"end": {
 							"line": 18,
 							"column": 24,
-							"offset": 531
+							"offset": 530
 						},
 						"value": ""
 					}
@@ -2016,12 +2060,12 @@
 						"start": {
 							"line": 19,
 							"column": 19,
-							"offset": 551
+							"offset": 550
 						},
 						"end": {
 							"line": 19,
 							"column": 21,
-							"offset": 553
+							"offset": 552
 						},
 						"value": []
 					}
@@ -2034,12 +2078,12 @@
 					"start": {
 						"line": 15,
 						"column": 19,
-						"offset": 444
+						"offset": 443
 					},
 					"end": {
 						"line": 20,
 						"column": 3,
-						"offset": 556
+						"offset": 555
 					},
 					"value": {
 						"sass": "demos/src/demo.scss",
@@ -2074,12 +2118,12 @@
 							"start": {
 								"line": 16,
 								"column": 11,
-								"offset": 456
+								"offset": 455
 							},
 							"end": {
 								"line": 16,
 								"column": 32,
-								"offset": 477
+								"offset": 476
 							},
 							"value": "demos/src/demo.scss"
 						},
@@ -2100,12 +2144,12 @@
 							"start": {
 								"line": 17,
 								"column": 9,
-								"offset": 487
+								"offset": 486
 							},
 							"end": {
 								"line": 17,
 								"column": 28,
-								"offset": 506
+								"offset": 505
 							},
 							"value": "demos/src/demo.js"
 						},
@@ -2132,14 +2176,36 @@
 							"start": {
 								"line": 18,
 								"column": 22,
-								"offset": 529
+								"offset": 528
 							},
 							"end": {
 								"line": 18,
 								"column": 24,
-								"offset": 531
+								"offset": 530
 							},
 							"value": ""
+						}
+					},
+					{
+						"type": "demo dependencies",
+						"value": [],
+						"source": {
+							"file": "origami.json",
+							"path": [
+								"demosDefaults",
+								"dependencies"
+							],
+							"start": {
+								"line": 19,
+								"column": 19,
+								"offset": 550
+							},
+							"end": {
+								"line": 19,
+								"column": 21,
+								"offset": 552
+							},
+							"value": []
 						}
 					}
 				]
@@ -2152,12 +2218,12 @@
 				"start": {
 					"line": 21,
 					"column": 11,
-					"offset": 568
+					"offset": 567
 				},
 				"end": {
 					"line": 35,
 					"column": 3,
-					"offset": 895
+					"offset": 894
 				},
 				"value": [
 					{
@@ -2194,12 +2260,12 @@
 							"start": {
 								"line": 25,
 								"column": 16,
-								"offset": 637
+								"offset": 636
 							},
 							"end": {
 								"line": 25,
 								"column": 41,
-								"offset": 662
+								"offset": 661
 							},
 							"value": "demos/src/demo.mustache"
 						},
@@ -2271,30 +2337,6 @@
 							]
 						}
 					},
-					"index": 0,
-					"source": {
-						"file": "origami.json",
-						"path": [
-							"demos",
-							0
-						],
-						"start": {
-							"line": 22,
-							"column": 3,
-							"offset": 572
-						},
-						"end": {
-							"line": 27,
-							"column": 4,
-							"offset": 711
-						},
-						"value": {
-							"title": "A Useful Demo",
-							"name": "demo",
-							"template": "demos/src/demo.mustache",
-							"description": "Description of the demo"
-						}
-					},
 					"name": {
 						"type": "demo name",
 						"value": "demo",
@@ -2308,12 +2350,12 @@
 							"start": {
 								"line": 24,
 								"column": 12,
-								"offset": 614
+								"offset": 613
 							},
 							"end": {
 								"line": 24,
 								"column": 18,
-								"offset": 620
+								"offset": 619
 							},
 							"value": "demo"
 						}
@@ -2331,12 +2373,12 @@
 							"start": {
 								"line": 23,
 								"column": 13,
-								"offset": 586
+								"offset": 585
 							},
 							"end": {
 								"line": 23,
 								"column": 28,
-								"offset": 601
+								"offset": 600
 							},
 							"value": "A Useful Demo"
 						}
@@ -2354,12 +2396,12 @@
 							"start": {
 								"line": 26,
 								"column": 19,
-								"offset": 682
+								"offset": 681
 							},
 							"end": {
 								"line": 26,
 								"column": 44,
-								"offset": 707
+								"offset": 706
 							},
 							"value": "Description of the demo"
 						}
@@ -2389,6 +2431,30 @@
 						},
 						"opinions": []
 					},
+					"index": 0,
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							0
+						],
+						"start": {
+							"line": 22,
+							"column": 3,
+							"offset": 571
+						},
+						"end": {
+							"line": 27,
+							"column": 4,
+							"offset": 710
+						},
+						"value": {
+							"title": "A Useful Demo",
+							"name": "demo",
+							"template": "demos/src/demo.mustache",
+							"description": "Description of the demo"
+						}
+					},
 					"children": [
 						{
 							"type": "problem",
@@ -2406,12 +2472,12 @@
 								"start": {
 									"line": 25,
 									"column": 16,
-									"offset": 637
+									"offset": 636
 								},
 								"end": {
 									"line": 25,
 									"column": 41,
-									"offset": 662
+									"offset": 661
 								},
 								"value": "demos/src/demo.mustache"
 							},
@@ -2473,6 +2539,17 @@
 							}
 						},
 						{
+							"type": "empty",
+							"source": {
+								"file": "origami.json",
+								"path": [
+									"demos",
+									0,
+									"dependencies"
+								]
+							}
+						},
+						{
 							"type": "demo name",
 							"value": "demo",
 							"source": {
@@ -2485,12 +2562,12 @@
 								"start": {
 									"line": 24,
 									"column": 12,
-									"offset": 614
+									"offset": 613
 								},
 								"end": {
 									"line": 24,
 									"column": 18,
-									"offset": 620
+									"offset": 619
 								},
 								"value": "demo"
 							}
@@ -2508,12 +2585,12 @@
 								"start": {
 									"line": 23,
 									"column": 13,
-									"offset": 586
+									"offset": 585
 								},
 								"end": {
 									"line": 23,
 									"column": 28,
-									"offset": 601
+									"offset": 600
 								},
 								"value": "A Useful Demo"
 							}
@@ -2531,12 +2608,12 @@
 								"start": {
 									"line": 26,
 									"column": 19,
-									"offset": 682
+									"offset": 681
 								},
 								"end": {
 									"line": 26,
 									"column": 44,
-									"offset": 707
+									"offset": 706
 								},
 								"value": "Description of the demo"
 							}
@@ -2586,12 +2663,12 @@
 							"start": {
 								"line": 31,
 								"column": 16,
-								"offset": 773
+								"offset": 772
 							},
 							"end": {
 								"line": 31,
 								"column": 42,
-								"offset": 799
+								"offset": 798
 							},
 							"value": "demos/src/pa11y.mustache"
 						},
@@ -2663,31 +2740,6 @@
 							]
 						}
 					},
-					"index": 1,
-					"source": {
-						"file": "origami.json",
-						"path": [
-							"demos",
-							1
-						],
-						"start": {
-							"line": 28,
-							"column": 3,
-							"offset": 715
-						},
-						"end": {
-							"line": 34,
-							"column": 4,
-							"offset": 892
-						},
-						"value": {
-							"title": "Pa11y",
-							"name": "pa11y",
-							"template": "demos/src/pa11y.mustache",
-							"description": "Accessibility test will be run against this demo",
-							"hidden": true
-						}
-					},
 					"name": {
 						"type": "demo name",
 						"value": "pa11y",
@@ -2701,12 +2753,12 @@
 							"start": {
 								"line": 30,
 								"column": 12,
-								"offset": 749
+								"offset": 748
 							},
 							"end": {
 								"line": 30,
 								"column": 19,
-								"offset": 756
+								"offset": 755
 							},
 							"value": "pa11y"
 						}
@@ -2724,12 +2776,12 @@
 							"start": {
 								"line": 29,
 								"column": 13,
-								"offset": 729
+								"offset": 728
 							},
 							"end": {
 								"line": 29,
 								"column": 20,
-								"offset": 736
+								"offset": 735
 							},
 							"value": "Pa11y"
 						}
@@ -2747,12 +2799,12 @@
 							"start": {
 								"line": 32,
 								"column": 19,
-								"offset": 819
+								"offset": 818
 							},
 							"end": {
 								"line": 32,
 								"column": 69,
-								"offset": 869
+								"offset": 868
 							},
 							"value": "Accessibility test will be run against this demo"
 						}
@@ -2770,12 +2822,12 @@
 							"start": {
 								"line": 33,
 								"column": 14,
-								"offset": 884
+								"offset": 883
 							},
 							"end": {
 								"line": 33,
 								"column": 18,
-								"offset": 888
+								"offset": 887
 							},
 							"value": true
 						}
@@ -2792,6 +2844,31 @@
 							]
 						},
 						"opinions": []
+					},
+					"index": 1,
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"demos",
+							1
+						],
+						"start": {
+							"line": 28,
+							"column": 3,
+							"offset": 714
+						},
+						"end": {
+							"line": 34,
+							"column": 4,
+							"offset": 891
+						},
+						"value": {
+							"title": "Pa11y",
+							"name": "pa11y",
+							"template": "demos/src/pa11y.mustache",
+							"description": "Accessibility test will be run against this demo",
+							"hidden": true
+						}
 					},
 					"children": [
 						{
@@ -2810,12 +2887,12 @@
 								"start": {
 									"line": 31,
 									"column": 16,
-									"offset": 773
+									"offset": 772
 								},
 								"end": {
 									"line": 31,
 									"column": 42,
-									"offset": 799
+									"offset": 798
 								},
 								"value": "demos/src/pa11y.mustache"
 							},
@@ -2877,6 +2954,17 @@
 							}
 						},
 						{
+							"type": "empty",
+							"source": {
+								"file": "origami.json",
+								"path": [
+									"demos",
+									1,
+									"dependencies"
+								]
+							}
+						},
+						{
 							"type": "demo name",
 							"value": "pa11y",
 							"source": {
@@ -2889,12 +2977,12 @@
 								"start": {
 									"line": 30,
 									"column": 12,
-									"offset": 749
+									"offset": 748
 								},
 								"end": {
 									"line": 30,
 									"column": 19,
-									"offset": 756
+									"offset": 755
 								},
 								"value": "pa11y"
 							}
@@ -2912,12 +3000,12 @@
 								"start": {
 									"line": 29,
 									"column": 13,
-									"offset": 729
+									"offset": 728
 								},
 								"end": {
 									"line": 29,
 									"column": 20,
-									"offset": 736
+									"offset": 735
 								},
 								"value": "Pa11y"
 							}
@@ -2935,12 +3023,12 @@
 								"start": {
 									"line": 32,
 									"column": 19,
-									"offset": 819
+									"offset": 818
 								},
 								"end": {
 									"line": 32,
 									"column": 69,
-									"offset": 869
+									"offset": 868
 								},
 								"value": "Accessibility test will be run against this demo"
 							}
@@ -2958,12 +3046,12 @@
 								"start": {
 									"line": 33,
 									"column": 14,
-									"offset": 884
+									"offset": 883
 								},
 								"end": {
 									"line": 33,
 									"column": 18,
-									"offset": 888
+									"offset": 887
 								},
 								"value": true
 							}
