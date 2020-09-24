@@ -623,6 +623,8 @@ export let BRAND_NAME = {
 /** a valid brand name */
 export type BrandName = typeof BRAND_NAME[keyof typeof BRAND_NAME]
 
+let brandNames = Object.keys(BRAND_NAME)
+
 /** A node representing a brand */
 export interface Brand extends Value<string> {
 	type: "brand"
@@ -661,13 +663,25 @@ let brands: NodeCreator<Optional<Brands>> = ({getOrigami, prefix}) => {
 		}
 
 		brands.forEach((_, index) => {
-			let {value: brand, source: brandSource} = getOrigami("brands", index)
+			let {value: brand, source: brandSource} = prefix
+				? getOrigami(...prefix, "brands", index)
+				: getOrigami("brands", index)
+
 			if (typeof brand == "string") {
-				node.children.push({
-					type: "brand",
-					value: brand,
-					source: brandSource,
-				})
+				if (brand == "master" || brand == "whitelabel" || brand == "internal") {
+					node.children.push({
+						type: "brand",
+						value: brand,
+						source: brandSource,
+					})
+					node[brand] = true
+				} else {
+					node.children.push(
+						expected
+							.member(brandNames, brand, brandSource)
+							.problem("brand-not-valid")
+					)
+				}
 			} else {
 				node.children.push(
 					expected.string(brand, brandSource).problem("brand-not-string")
@@ -1472,7 +1486,7 @@ let demo = async (
 					) {
 						node.brands = expected
 							.member(componentBrandsNodeNames, brandsValue, brandsSource)
-							.problem("brand-not-valid")
+							.problem("brand-not-in-root")
 					} else {
 						// a problem
 						node.brands = demoBrandsNode
