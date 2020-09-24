@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "default-template",
+	"name": "o-default-template",
 	"devDependencies": {
 		"eslint": "^7.1.0",
 		"eslint-config-origami-component": "^2.0.1",
