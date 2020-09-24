@@ -1,0 +1,23 @@
+@import 'src/scss/variables';
+@import 'src/scss/brand';
+
+/// Output all defaultTemplate features
+/// @param {Map} $opts [()] - A map of options to configure the output
+/// @access public
+/// @example scss
+///		@include defaultTemplate($opts: (
+///			// your opts here
+///		))
+@mixin defaultTemplate ($opts: ()) {
+	// content of primary mixin
+	.default-template {
+		display: block;
+	}
+}
+
+@if ($default-template-is-silent == false) {
+	@include defaultTemplate();
+
+	// Set to silent again to avoid being output twice
+	$default-template-is-silent: true !global;
+}
