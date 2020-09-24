@@ -1,0 +1,15 @@
+{
+	"description": "origami description",
+	"keywords": ["template"],
+	"origamiType": "component",
+	"origamiCategory": "components",
+	"origamiVersion": 1,
+	"brands": ["master","internal","whitelabel"],
+	"support": "https://github.com/Financial-Times/default-template/issues",
+	"supportContact": {
+		"email": "chee.rabbits@ft.com",
+		"slack": "financialtimes/#origami-chat"
+	},
+	"supportStatus": "experimental",
+	"browserFeatures": {}
+}
