@@ -3,7 +3,7 @@
 	"source": {
 		"file": "origami.json",
 		"path": [],
-		"value": "{\n\t\"description\": \"description.\",\n\t\"keywords\": [\"keyword\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\", \"internal\", \"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\"\n}\n"
+		"value": "{\n\t\"description\": \"description.\",\n\t\"keywords\": [\"keyword\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\", \"internal\", \"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits AT ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\"\n}\n"
 	},
 	"opinions": [],
 	"origamiVersion": {
@@ -222,12 +222,12 @@
 			"start": {
 				"line": 13,
 				"column": 19,
-				"offset": 387
+				"offset": 390
 			},
 			"end": {
 				"line": 13,
 				"column": 33,
-				"offset": 401
+				"offset": 404
 			},
 			"value": "experimental"
 		},
@@ -359,6 +359,12 @@
 			}
 		},
 		"email": {
+			"type": "problem",
+			"expectation": {
+				"type": "match",
+				"regexp": {},
+				"received": "chee.rabbits AT ft.com"
+			},
 			"source": {
 				"file": "origami.json",
 				"path": [
@@ -372,13 +378,12 @@
 				},
 				"end": {
 					"line": 10,
-					"column": 33,
-					"offset": 321
+					"column": 36,
+					"offset": 324
 				},
-				"value": "chee.rabbits@ft.com"
+				"value": "chee.rabbits AT ft.com"
 			},
-			"type": "email",
-			"value": "chee.rabbits@ft.com"
+			"code": "support-email-not-email"
 		},
 		"slack": {
 			"source": {
@@ -390,12 +395,12 @@
 				"start": {
 					"line": 11,
 					"column": 12,
-					"offset": 334
+					"offset": 337
 				},
 				"end": {
 					"line": 11,
 					"column": 42,
-					"offset": 364
+					"offset": 367
 				},
 				"value": "financialtimes/#origami-chat"
 			},
@@ -641,12 +646,12 @@
 				"start": {
 					"line": 13,
 					"column": 19,
-					"offset": 387
+					"offset": 390
 				},
 				"end": {
 					"line": 13,
 					"column": 33,
-					"offset": 401
+					"offset": 404
 				},
 				"value": "experimental"
 			},
@@ -741,6 +746,12 @@
 			}
 		},
 		{
+			"type": "problem",
+			"expectation": {
+				"type": "match",
+				"regexp": {},
+				"received": "chee.rabbits AT ft.com"
+			},
 			"source": {
 				"file": "origami.json",
 				"path": [
@@ -754,13 +765,12 @@
 				},
 				"end": {
 					"line": 10,
-					"column": 33,
-					"offset": 321
+					"column": 36,
+					"offset": 324
 				},
-				"value": "chee.rabbits@ft.com"
+				"value": "chee.rabbits AT ft.com"
 			},
-			"type": "email",
-			"value": "chee.rabbits@ft.com"
+			"code": "support-email-not-email"
 		},
 		{
 			"source": {
@@ -772,12 +782,12 @@
 				"start": {
 					"line": 11,
 					"column": 12,
-					"offset": 334
+					"offset": 337
 				},
 				"end": {
 					"line": 11,
 					"column": 42,
-					"offset": 364
+					"offset": 367
 				},
 				"value": "financialtimes/#origami-chat"
 			},

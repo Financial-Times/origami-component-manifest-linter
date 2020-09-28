@@ -3,7 +3,7 @@
 	"source": {
 		"file": "origami.json",
 		"path": [],
-		"value": "{\n\t\"description\": \"description.\",\n\t\"keywords\": [\"keyword\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\", \"internal\", \"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\"\n}\n"
+		"value": "{\n\t\"description\": \"description.\",\n\t\"keywords\": [\"keyword\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\", \"internal\", \"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"incubating\"\n}\n"
 	},
 	"opinions": [],
 	"origamiVersion": {
@@ -214,6 +214,18 @@
 		"opinions": []
 	},
 	"status": {
+		"type": "problem",
+		"expectation": {
+			"type": "memberOf",
+			"list": [
+				"active",
+				"maintained",
+				"deprecated",
+				"dead",
+				"experimental"
+			],
+			"received": "incubating"
+		},
 		"source": {
 			"file": "origami.json",
 			"path": [
@@ -226,18 +238,12 @@
 			},
 			"end": {
 				"line": 13,
-				"column": 33,
-				"offset": 401
+				"column": 31,
+				"offset": 399
 			},
-			"value": "experimental"
+			"value": "incubating"
 		},
-		"type": "status",
-		"active": false,
-		"maintained": false,
-		"deprecated": false,
-		"dead": false,
-		"experimental": true,
-		"value": "experimental"
+		"code": "status-not-valid"
 	},
 	"keywords": {
 		"type": "keywords",
@@ -633,6 +639,18 @@
 			"opinions": []
 		},
 		{
+			"type": "problem",
+			"expectation": {
+				"type": "memberOf",
+				"list": [
+					"active",
+					"maintained",
+					"deprecated",
+					"dead",
+					"experimental"
+				],
+				"received": "incubating"
+			},
 			"source": {
 				"file": "origami.json",
 				"path": [
@@ -645,18 +663,12 @@
 				},
 				"end": {
 					"line": 13,
-					"column": 33,
-					"offset": 401
+					"column": 31,
+					"offset": 399
 				},
-				"value": "experimental"
+				"value": "incubating"
 			},
-			"type": "status",
-			"active": false,
-			"maintained": false,
-			"deprecated": false,
-			"dead": false,
-			"experimental": true,
-			"value": "experimental"
+			"code": "status-not-valid"
 		},
 		{
 			"type": "keywords",

@@ -3,7 +3,7 @@
 	"source": {
 		"file": "origami.json",
 		"path": [],
-		"value": "{\n\t\"description\": \"description.\",\n\t\"keywords\": [\"keyword\"],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\", \"internal\", \"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\"\n}\n"
+		"value": "{\n\t\"description\": \"description.\",\n\t\"keywords\": [\n\t\t\"keyword\",\n\t\t\"second-keyword\",\n\t\t555\n\t],\n\t\"origamiType\": \"component\",\n\t\"origamiCategory\": \"components\",\n\t\"origamiVersion\": 1,\n\t\"brands\": [\"master\", \"internal\", \"whitelabel\"],\n\t\"support\": \"https://github.com/Financial-Times/default-template/issues\",\n\t\"supportContact\": {\n\t\t\"email\": \"chee.rabbits@ft.com\",\n\t\t\"slack\": \"financialtimes/#origami-chat\"\n\t},\n\t\"supportStatus\": \"experimental\"\n}\n"
 	},
 	"opinions": [],
 	"origamiVersion": {
@@ -14,14 +14,14 @@
 				"origamiVersion"
 			],
 			"start": {
-				"line": 6,
+				"line": 10,
 				"column": 20,
-				"offset": 142
+				"offset": 174
 			},
 			"end": {
-				"line": 6,
+				"line": 10,
 				"column": 21,
-				"offset": 143
+				"offset": 175
 			},
 			"value": 1
 		},
@@ -34,14 +34,14 @@
 				"origamiType"
 			],
 			"start": {
-				"line": 4,
+				"line": 8,
 				"column": 17,
-				"offset": 76
+				"offset": 108
 			},
 			"end": {
-				"line": 4,
+				"line": 8,
 				"column": 28,
-				"offset": 87
+				"offset": 119
 			},
 			"value": "component"
 		},
@@ -56,14 +56,14 @@
 				"brands"
 			],
 			"start": {
-				"line": 7,
+				"line": 11,
 				"column": 12,
-				"offset": 156
+				"offset": 188
 			},
 			"end": {
-				"line": 7,
+				"line": 11,
 				"column": 48,
-				"offset": 192
+				"offset": 224
 			},
 			"value": [
 				"master",
@@ -86,14 +86,14 @@
 						0
 					],
 					"start": {
-						"line": 7,
+						"line": 11,
 						"column": 13,
-						"offset": 157
+						"offset": 189
 					},
 					"end": {
-						"line": 7,
+						"line": 11,
 						"column": 21,
-						"offset": 165
+						"offset": 197
 					},
 					"value": "master"
 				}
@@ -108,14 +108,14 @@
 						1
 					],
 					"start": {
-						"line": 7,
+						"line": 11,
 						"column": 23,
-						"offset": 167
+						"offset": 199
 					},
 					"end": {
-						"line": 7,
+						"line": 11,
 						"column": 33,
-						"offset": 177
+						"offset": 209
 					},
 					"value": "internal"
 				}
@@ -130,14 +130,14 @@
 						2
 					],
 					"start": {
-						"line": 7,
+						"line": 11,
 						"column": 35,
-						"offset": 179
+						"offset": 211
 					},
 					"end": {
-						"line": 7,
+						"line": 11,
 						"column": 47,
-						"offset": 191
+						"offset": 223
 					},
 					"value": "whitelabel"
 				}
@@ -151,14 +151,14 @@
 				"origamiCategory"
 			],
 			"start": {
-				"line": 5,
+				"line": 9,
 				"column": 21,
-				"offset": 109
+				"offset": 141
 			},
 			"end": {
-				"line": 5,
+				"line": 9,
 				"column": 33,
-				"offset": 121
+				"offset": 153
 			},
 			"value": "components"
 		},
@@ -220,14 +220,14 @@
 				"supportStatus"
 			],
 			"start": {
-				"line": 13,
+				"line": 17,
 				"column": 19,
-				"offset": 387
+				"offset": 419
 			},
 			"end": {
-				"line": 13,
+				"line": 17,
 				"column": 33,
-				"offset": 401
+				"offset": 433
 			},
 			"value": "experimental"
 		},
@@ -252,12 +252,14 @@
 				"offset": 47
 			},
 			"end": {
-				"line": 3,
-				"column": 25,
-				"offset": 58
+				"line": 7,
+				"column": 3,
+				"offset": 90
 			},
 			"value": [
-				"keyword"
+				"keyword",
+				"second-keyword",
+				555
 			]
 		},
 		"children": [
@@ -271,17 +273,68 @@
 						0
 					],
 					"start": {
-						"line": 3,
-						"column": 15,
-						"offset": 48
+						"line": 4,
+						"column": 3,
+						"offset": 51
 					},
 					"end": {
-						"line": 3,
-						"column": 24,
-						"offset": 57
+						"line": 4,
+						"column": 12,
+						"offset": 60
 					},
 					"value": "keyword"
 				}
+			},
+			{
+				"type": "keyword",
+				"value": "second-keyword",
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"keywords",
+						1
+					],
+					"start": {
+						"line": 5,
+						"column": 3,
+						"offset": 64
+					},
+					"end": {
+						"line": 5,
+						"column": 19,
+						"offset": 80
+					},
+					"value": "second-keyword"
+				}
+			},
+			{
+				"type": "problem",
+				"expectation": {
+					"type": "typeOf",
+					"expected": [
+						"string"
+					],
+					"received": 555
+				},
+				"source": {
+					"file": "origami.json",
+					"path": [
+						"keywords",
+						2
+					],
+					"start": {
+						"line": 6,
+						"column": 3,
+						"offset": 84
+					},
+					"end": {
+						"line": 6,
+						"column": 6,
+						"offset": 87
+					},
+					"value": 555
+				},
+				"code": "keyword-not-string"
 			}
 		]
 	},
@@ -331,14 +384,14 @@
 					"support"
 				],
 				"start": {
-					"line": 8,
+					"line": 12,
 					"column": 13,
-					"offset": 206
+					"offset": 238
 				},
 				"end": {
-					"line": 8,
+					"line": 12,
 					"column": 73,
-					"offset": 266
+					"offset": 298
 				},
 				"value": "https://github.com/Financial-Times/default-template/issues"
 			},
@@ -366,14 +419,14 @@
 					"email"
 				],
 				"start": {
-					"line": 10,
+					"line": 14,
 					"column": 12,
-					"offset": 300
+					"offset": 332
 				},
 				"end": {
-					"line": 10,
+					"line": 14,
 					"column": 33,
-					"offset": 321
+					"offset": 353
 				},
 				"value": "chee.rabbits@ft.com"
 			},
@@ -388,14 +441,14 @@
 					"slack"
 				],
 				"start": {
-					"line": 11,
+					"line": 15,
 					"column": 12,
-					"offset": 334
+					"offset": 366
 				},
 				"end": {
-					"line": 11,
+					"line": 15,
 					"column": 42,
-					"offset": 364
+					"offset": 396
 				},
 				"value": "financialtimes/#origami-chat"
 			},
@@ -433,14 +486,14 @@
 					"origamiVersion"
 				],
 				"start": {
-					"line": 6,
+					"line": 10,
 					"column": 20,
-					"offset": 142
+					"offset": 174
 				},
 				"end": {
-					"line": 6,
+					"line": 10,
 					"column": 21,
-					"offset": 143
+					"offset": 175
 				},
 				"value": 1
 			},
@@ -453,14 +506,14 @@
 					"origamiType"
 				],
 				"start": {
-					"line": 4,
+					"line": 8,
 					"column": 17,
-					"offset": 76
+					"offset": 108
 				},
 				"end": {
-					"line": 4,
+					"line": 8,
 					"column": 28,
-					"offset": 87
+					"offset": 119
 				},
 				"value": "component"
 			},
@@ -475,14 +528,14 @@
 					"brands"
 				],
 				"start": {
-					"line": 7,
+					"line": 11,
 					"column": 12,
-					"offset": 156
+					"offset": 188
 				},
 				"end": {
-					"line": 7,
+					"line": 11,
 					"column": 48,
-					"offset": 192
+					"offset": 224
 				},
 				"value": [
 					"master",
@@ -505,14 +558,14 @@
 							0
 						],
 						"start": {
-							"line": 7,
+							"line": 11,
 							"column": 13,
-							"offset": 157
+							"offset": 189
 						},
 						"end": {
-							"line": 7,
+							"line": 11,
 							"column": 21,
-							"offset": 165
+							"offset": 197
 						},
 						"value": "master"
 					}
@@ -527,14 +580,14 @@
 							1
 						],
 						"start": {
-							"line": 7,
+							"line": 11,
 							"column": 23,
-							"offset": 167
+							"offset": 199
 						},
 						"end": {
-							"line": 7,
+							"line": 11,
 							"column": 33,
-							"offset": 177
+							"offset": 209
 						},
 						"value": "internal"
 					}
@@ -549,14 +602,14 @@
 							2
 						],
 						"start": {
-							"line": 7,
+							"line": 11,
 							"column": 35,
-							"offset": 179
+							"offset": 211
 						},
 						"end": {
-							"line": 7,
+							"line": 11,
 							"column": 47,
-							"offset": 191
+							"offset": 223
 						},
 						"value": "whitelabel"
 					}
@@ -570,14 +623,14 @@
 					"origamiCategory"
 				],
 				"start": {
-					"line": 5,
+					"line": 9,
 					"column": 21,
-					"offset": 109
+					"offset": 141
 				},
 				"end": {
-					"line": 5,
+					"line": 9,
 					"column": 33,
-					"offset": 121
+					"offset": 153
 				},
 				"value": "components"
 			},
@@ -639,14 +692,14 @@
 					"supportStatus"
 				],
 				"start": {
-					"line": 13,
+					"line": 17,
 					"column": 19,
-					"offset": 387
+					"offset": 419
 				},
 				"end": {
-					"line": 13,
+					"line": 17,
 					"column": 33,
-					"offset": 401
+					"offset": 433
 				},
 				"value": "experimental"
 			},
@@ -671,12 +724,14 @@
 					"offset": 47
 				},
 				"end": {
-					"line": 3,
-					"column": 25,
-					"offset": 58
+					"line": 7,
+					"column": 3,
+					"offset": 90
 				},
 				"value": [
-					"keyword"
+					"keyword",
+					"second-keyword",
+					555
 				]
 			},
 			"children": [
@@ -690,17 +745,68 @@
 							0
 						],
 						"start": {
-							"line": 3,
-							"column": 15,
-							"offset": 48
+							"line": 4,
+							"column": 3,
+							"offset": 51
 						},
 						"end": {
-							"line": 3,
-							"column": 24,
-							"offset": 57
+							"line": 4,
+							"column": 12,
+							"offset": 60
 						},
 						"value": "keyword"
 					}
+				},
+				{
+					"type": "keyword",
+					"value": "second-keyword",
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"keywords",
+							1
+						],
+						"start": {
+							"line": 5,
+							"column": 3,
+							"offset": 64
+						},
+						"end": {
+							"line": 5,
+							"column": 19,
+							"offset": 80
+						},
+						"value": "second-keyword"
+					}
+				},
+				{
+					"type": "problem",
+					"expectation": {
+						"type": "typeOf",
+						"expected": [
+							"string"
+						],
+						"received": 555
+					},
+					"source": {
+						"file": "origami.json",
+						"path": [
+							"keywords",
+							2
+						],
+						"start": {
+							"line": 6,
+							"column": 3,
+							"offset": 84
+						},
+						"end": {
+							"line": 6,
+							"column": 6,
+							"offset": 87
+						},
+						"value": 555
+					},
+					"code": "keyword-not-string"
 				}
 			]
 		},
@@ -748,14 +854,14 @@
 					"email"
 				],
 				"start": {
-					"line": 10,
+					"line": 14,
 					"column": 12,
-					"offset": 300
+					"offset": 332
 				},
 				"end": {
-					"line": 10,
+					"line": 14,
 					"column": 33,
-					"offset": 321
+					"offset": 353
 				},
 				"value": "chee.rabbits@ft.com"
 			},
@@ -770,14 +876,14 @@
 					"slack"
 				],
 				"start": {
-					"line": 11,
+					"line": 15,
 					"column": 12,
-					"offset": 334
+					"offset": 366
 				},
 				"end": {
-					"line": 11,
+					"line": 15,
 					"column": 42,
-					"offset": 364
+					"offset": 396
 				},
 				"value": "financialtimes/#origami-chat"
 			},
@@ -793,14 +899,14 @@
 					"support"
 				],
 				"start": {
-					"line": 8,
+					"line": 12,
 					"column": 13,
-					"offset": 206
+					"offset": 238
 				},
 				"end": {
-					"line": 8,
+					"line": 12,
 					"column": 73,
-					"offset": 266
+					"offset": 298
 				},
 				"value": "https://github.com/Financial-Times/default-template/issues"
 			},
