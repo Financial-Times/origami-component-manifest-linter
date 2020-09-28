@@ -305,22 +305,58 @@
 	},
 	"entries": {
 		"javascript": {
-			"type": "empty",
+			"type": "problem",
+			"expectation": {
+				"type": "file",
+				"received": "main.js"
+			},
 			"source": {
 				"file": "bower.json",
 				"path": [
-					"main"
-				]
-			}
+					"main",
+					0
+				],
+				"start": {
+					"line": 4,
+					"column": 11,
+					"offset": 68
+				},
+				"end": {
+					"line": 4,
+					"column": 20,
+					"offset": 77
+				},
+				"value": "main.js"
+			},
+			"code": "non-file-in-main",
+			"message": "is directory"
 		},
 		"sass": {
-			"type": "empty",
+			"type": "problem",
+			"expectation": {
+				"type": "file",
+				"received": "main.scss"
+			},
 			"source": {
 				"file": "bower.json",
 				"path": [
-					"main"
-				]
-			}
+					"main",
+					1
+				],
+				"start": {
+					"line": 4,
+					"column": 22,
+					"offset": 79
+				},
+				"end": {
+					"line": 4,
+					"column": 33,
+					"offset": 90
+				},
+				"value": "main.scss"
+			},
+			"code": "non-file-in-main",
+			"message": "is directory"
 		}
 	},
 	"support": {
@@ -723,22 +759,58 @@
 			}
 		},
 		{
-			"type": "empty",
+			"type": "problem",
+			"expectation": {
+				"type": "file",
+				"received": "main.scss"
+			},
 			"source": {
 				"file": "bower.json",
 				"path": [
-					"main"
-				]
-			}
+					"main",
+					1
+				],
+				"start": {
+					"line": 4,
+					"column": 22,
+					"offset": 79
+				},
+				"end": {
+					"line": 4,
+					"column": 33,
+					"offset": 90
+				},
+				"value": "main.scss"
+			},
+			"code": "non-file-in-main",
+			"message": "is directory"
 		},
 		{
-			"type": "empty",
+			"type": "problem",
+			"expectation": {
+				"type": "file",
+				"received": "main.js"
+			},
 			"source": {
 				"file": "bower.json",
 				"path": [
-					"main"
-				]
-			}
+					"main",
+					0
+				],
+				"start": {
+					"line": 4,
+					"column": 11,
+					"offset": 68
+				},
+				"end": {
+					"line": 4,
+					"column": 20,
+					"offset": 77
+				},
+				"value": "main.js"
+			},
+			"code": "non-file-in-main",
+			"message": "is directory"
 		},
 		{
 			"source": {

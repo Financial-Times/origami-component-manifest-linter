@@ -170,26 +170,36 @@
 		"value": "components"
 	},
 	"name": {
-		"type": "name",
-		"source": {
-			"file": "bower.json",
-			"path": [
-				"name"
-			],
-			"start": {
-				"line": 2,
-				"column": 10,
-				"offset": 11
-			},
-			"end": {
-				"line": 2,
-				"column": 23,
-				"offset": 24
-			},
-			"value": "o-component"
-		},
-		"value": "o-component",
-		"opinions": []
+		"type": "problems",
+		"children": [
+			{
+				"type": "problem",
+				"expectation": {
+					"type": "match",
+					"regexp": {},
+					"received": "o-🌭"
+				},
+				"source": {
+					"file": "bower.json",
+					"path": [
+						"name"
+					],
+					"start": {
+						"line": 2,
+						"column": 10,
+						"offset": 11
+					},
+					"end": {
+						"line": 2,
+						"column": 16,
+						"offset": 17
+					},
+					"value": "o-🌭"
+				},
+				"code": "name-not-ascii",
+				"message": "only lowercase ascii letters and hyphens"
+			}
+		]
 	},
 	"description": {
 		"type": "description",
@@ -589,26 +599,36 @@
 			"value": "components"
 		},
 		{
-			"type": "name",
-			"source": {
-				"file": "bower.json",
-				"path": [
-					"name"
-				],
-				"start": {
-					"line": 2,
-					"column": 10,
-					"offset": 11
-				},
-				"end": {
-					"line": 2,
-					"column": 23,
-					"offset": 24
-				},
-				"value": "o-component"
-			},
-			"value": "o-component",
-			"opinions": []
+			"type": "problems",
+			"children": [
+				{
+					"type": "problem",
+					"expectation": {
+						"type": "match",
+						"regexp": {},
+						"received": "o-🌭"
+					},
+					"source": {
+						"file": "bower.json",
+						"path": [
+							"name"
+						],
+						"start": {
+							"line": 2,
+							"column": 10,
+							"offset": 11
+						},
+						"end": {
+							"line": 2,
+							"column": 16,
+							"offset": 17
+						},
+						"value": "o-🌭"
+					},
+					"code": "name-not-ascii",
+					"message": "only lowercase ascii letters and hyphens"
+				}
+			]
 		},
 		{
 			"type": "description",
