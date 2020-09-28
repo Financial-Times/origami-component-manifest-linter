@@ -1,3 +1,3 @@
-# perfect minimal
+# ci
 
-This one should pass
+this fails because the CI field is deprecated
