@@ -1,0 +1,14 @@
+{
+	"description": "description.",
+	"keywords": ["keyword"],
+	"origamiType": "component",
+	"origamiCategory": "components",
+	"origamiVersion": 1,
+	"brands": ["master", "internal", "whitelabel"],
+	"support": 777,
+	"supportContact": {
+		"email": "chee.rabbits@ft.com",
+		"slack": "financialtimes/#origami-chat"
+	},
+	"supportStatus": "experimental"
+}
