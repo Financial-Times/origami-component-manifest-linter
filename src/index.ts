@@ -33,7 +33,7 @@ import {resolve as resolvePath} from "path"
  * easier to be helpful here.
  *
  * @param problem the problem or opinion we want a url for
- * @returns a url if the problem was for a propert
+ * @returns a url if the problem was for a property
 in the origami.json
  */
 function helpUrl(problem: Problem | Opinion): string | undefined {
