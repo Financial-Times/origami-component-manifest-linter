@@ -1,3 +1,4 @@
-# perfect with js, sass and demos
+# js present
 
-This one should pass
+this one fails because there is a main.js on disk, but it's not mentioned in the
+bower.json!
