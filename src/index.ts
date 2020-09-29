@@ -26,6 +26,16 @@ import {promises as fs} from "fs"
 import * as chalk from "chalk"
 import {resolve as resolvePath} from "path"
 
+/**
+ * Return a helpful url for problems that occurred in the origami.json.
+ *
+ * Each property of the manifest is documented in the specification so it's
+ * easier to be helpful here.
+ *
+ * @param problem the problem or opinion we want a url for
+ * @returns a url if the problem was for a propert
+in the origami.json
+ */
 function helpUrl(problem: Problem | Opinion): string | undefined {
 	if (problem.source.file == "origami.json" && problem.source.path) {
 		let manifestKey = problem.source.path[0]
@@ -34,28 +44,38 @@ function helpUrl(problem: Problem | Opinion): string | undefined {
 	return undefined
 }
 
-function parseExpectation(e: Expectation.Any, cwd: string): string {
-	switch (e.type) {
+/**
+ * Turn an expectation into a helpful string.
+ *
+ * @param expectation the Expectation to report
+ * @param cwd the working directory, for contextual information in `file`
+ * expecations.
+ *
+ * @returns a helpful message for the user based on the type of expecation
+ * failure
+ */
+function parseExpectation(expectation: Expectation.Any, cwd: string): string {
+	switch (expectation.type) {
 		case "valueOf": {
 			return `expected value ${chalk.greenBright(
-				e.expected
-			)}, but got ${chalk.magentaBright(JSON.stringify(e.received))}`
+				expectation.expected
+			)}, but got ${chalk.magentaBright(JSON.stringify(expectation.received))}`
 		}
 		case "memberOf": {
 			return `expected one of ${chalk.greenBright(
-				e.list.join(chalk.white("|"))
-			)}, but got ${chalk.magentaBright(`"${e.received}"`)}`
+				expectation.list.join(chalk.white("|"))
+			)}, but got ${chalk.magentaBright(`"${expectation.received}"`)}`
 		}
 		case "typeOf": {
-			let expected = '"' + e.expected + '"'
-			let received = '"' + typeof e.received + '"'
+			let expected = '"' + expectation.expected + '"'
+			let received = '"' + typeof expectation.received + '"'
 			return `expected type ${chalk.greenBright(
 				expected
 			)}, but got ${chalk.magentaBright(received)}`
 		}
 		case "file": {
 			return `${chalk.magentaBright(
-				e.received
+				expectation.received
 			)} does not exist under ${chalk.grey(cwd)}`
 		}
 	}
@@ -64,7 +84,13 @@ function parseExpectation(e: Expectation.Any, cwd: string): string {
 
 /**
  * This provides the output used in github actions to annotate the files view in
- * PRs with line-by-line info
+ * PRs with line-by-line info.
+ *
+ * Side-effect only, no return.
+ *
+ * @param problem the problem that occurred
+ * @param cwd the current workig directory, for context when printing about
+ * files
  */
 function githubPrint(problem: Problem | Opinion, cwd: string) {
 	let write = process.stdout.write.bind(process.stdout)
@@ -90,6 +116,14 @@ function githubPrint(problem: Problem | Opinion, cwd: string) {
 	write("\n")
 }
 
+/**
+ * This provides the output for command line users.
+ * Side-effect only, no return.
+ *
+ * @param problem the problem that occurred
+ * @param cwd the current workig directory, for context when printing about
+ * files
+ */
 function print(problem: Problem | Opinion, cwd: string) {
 	let sourcePath = cwd + problem.source.file
 	let write = process.stdout.write.bind(process.stdout)
@@ -137,40 +171,34 @@ function print(problem: Problem | Opinion, cwd: string) {
 	write("\n\n")
 }
 
-type SpecFn = (n: Node) => boolean
-
+/**
+ * Iterate through the component model, yielding problems and opinions.
+ *
+ * @param component the component model to iterate over. it may be an entire
+ * problem if something fundamental went wrong.
+ *
+ * @yields problems and opinions in the model.
+ */
 export function* getProblemsAndOpinions(
-	component: Component | Problem | Problems,
-	spec?: NodeType | SpecFn
+	component: Component | Problem | Problems
 ): Generator<Opinion | Problem, void, undefined> {
-	let test: SpecFn
-	if (typeof spec == "string") {
-		test = (node: Node) => node.type == spec
-	} else if (typeof spec == "function") {
-		test = spec
-	} else {
-		test = (_node: Node) => true
-	}
-
-	if (test(component) && "opinions" in component && component.opinions) {
+	if ("opinions" in component && component.opinions) {
 		yield* component.opinions
 	}
 
 	function* testNode(
 		node: Node | Parent<Node>
 	): Generator<Opinion | Problem, void, undefined> {
-		if (test(node)) {
-			if (node.type == "problem") {
-				// WHY DO I HAVE TO DO THIS
-				yield node as Problem
-			}
-			if (node.opinions) {
-				yield* node.opinions
-			}
-			if ("children" in node) {
-				for (let child of node.children) {
-					yield* testNode(child)
-				}
+		if (node.type == "problem") {
+			// WHY DO I HAVE TO DO THIS
+			yield node as Problem
+		}
+		if (node.opinions) {
+			yield* node.opinions
+		}
+		if ("children" in node) {
+			for (let child of node.children) {
+				yield* testNode(child)
 			}
 		}
 	}
