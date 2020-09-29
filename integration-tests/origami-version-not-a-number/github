@@ -1,1 +1,1 @@
-error 6 20 origami-version-not-a-number
+error origami.json 6 20 origami-version-not-a-number
