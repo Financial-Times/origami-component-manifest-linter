@@ -1,3 +1,3 @@
-# perfect with js, sass and demos
+# js referenced but missing
 
-This one should pass
+a file mentioned in the main.js was not present on the disk

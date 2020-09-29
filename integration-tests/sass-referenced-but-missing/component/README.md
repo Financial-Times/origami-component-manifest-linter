@@ -1,3 +1,3 @@
-# perfect with js, sass and demos
+# sass referenced but missing
 
-This one should pass
+bower.json#main mentions main.scss, but it's not on the disk
