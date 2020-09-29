@@ -1,7 +1,6 @@
 import * as parse from "json-to-ast"
 import {JsonValue, JsonValueU} from "./json-value"
 import type * as Manifest from "./manifest"
-import {SoaRecord} from "dns"
 
 type Path = Array<number | string>
 
@@ -30,6 +29,7 @@ export interface Source {
 	value: JsonValueU
 }
 
+/** A value and where that value came from */
 export interface ValueSource {
 	value: JsonValueU
 	source: Source
@@ -41,10 +41,20 @@ export interface Get {
 	(...path: GetPath): ValueSource
 }
 
-// keypath like demos[1].template
+/**
+ * Create a getter for a specific file.
+ *
+ * The getter traverses the file's AST to get the value and also info on where
+ * in the flie the value was found.
+ *
+ * @param file one of the target manifest file names
+ * @param json the entire contents of `file`, as a strig
+ * @param manifest one of the manifest types
+ *
+ * @returns a ValueSource getter for the file
+ */
 export default function get<ManifestT extends Manifest.Manifest>(
 	file: ManifestFileName,
-	/** The contents of a json file */
 	json: string,
 	/** The manifest we are looking at */
 	manifest: ManifestT
