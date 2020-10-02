@@ -1205,13 +1205,18 @@ async function demoBase({
 			// we make sure a named data file is truly a file
 			let dataPathType = await getPathType(data.value)
 			if (dataPathType == "file") {
-				node.data = {
-					type: "demo data",
-					source: data.source,
-					// we expect a named data file to be
-					// json, and parse it.
-					// TODO handle this better than crashing if the data file is bad json
-					value: JSON.parse(await fs.readFile(data.value, "utf-8")),
+				try {
+					node.data = {
+						type: "demo data",
+						source: data.source,
+						// we expect a named data file to be
+						// json, and parse it.
+						value: JSON.parse(await fs.readFile(data.value, "utf-8")),
+					}
+				} catch (error) {
+					node.data = expected
+						.message(data.source, error)
+						.problem("demo-data-bad-json")
 				}
 			} else {
 				node.data = expected
