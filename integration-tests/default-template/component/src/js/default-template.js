@@ -20,8 +20,8 @@ class DefaultTemplate {
 			return {};
 		}
 		return Object.keys(defaultTemplateEl.dataset).reduce((options, key) => {
-			// Ignore data-o-component
-			if (key === 'oComponent') {
+			// Ignore keys which are not in the component's namespace
+			if (!key.match(/^defaultTemplate(\w)(\w+)$/)) {
 				return options;
 			}
 			// Build a concise key and get the option value
